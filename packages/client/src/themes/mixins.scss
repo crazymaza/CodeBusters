@@ -1,0 +1,24 @@
+@use 'sass:color';
+@use '@/themes/functions' as fn;
+@use '@/themes/config' as cfg;
+
+// Theme
+@mixin themify($property, $theme-color, $adjust: false, $level: 0%) {
+  @each $theme-name in cfg.$theme-names {
+    html[class='theme-#{$theme-name}'] & {
+      @if $adjust == 'blackness' {
+        #{$property}: color.adjust(
+          fn.theme-color($theme-name, $theme-color),
+          $blackness: $level
+        );
+      } @else if $adjust == 'lightness' {
+        #{$property}: color.adjust(
+          fn.theme-color($theme-name, $theme-color),
+          $lightness: $level
+        );
+      } @else {
+        #{$property}: fn.theme-color($theme-name, $theme-color);
+      }
+    }
+  }
+}

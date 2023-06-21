@@ -1,8 +1,13 @@
+@use '@/themes/mixins' as mx;
+
 .main-layout {
   &,
   &__content {
+    @include mx.themify('background-color', 'primary');
+
     display: flex;
     flex-direction: column;
+    height: 100%;
   }
 
   &__header {

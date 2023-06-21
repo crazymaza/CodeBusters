@@ -1,0 +1,13 @@
+@use 'sass:map';
+@use '@/themes/config' as cfg;
+@use '@/themes/themes' as *;
+
+@function theme-color($theme-name, $theme-color) {
+  $theme-colors: map.get($themes, $theme-name);
+
+  @if $theme-colors {
+    @return map.get($theme-colors, $theme-color);
+  }
+
+  @return null;
+}
