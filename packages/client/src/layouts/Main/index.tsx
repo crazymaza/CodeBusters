@@ -1,16 +1,19 @@
 import { FC } from 'react'
-import './styles.css'
+import classNames from 'classnames/bind'
+import styles from './styles.module.scss'
 
 export type MainLayoutProps = {
   title?: string
   children: React.ReactNode
 }
 
+const cx = classNames.bind(styles)
+
 const MainLayout: FC<MainLayoutProps> = ({ title, children }) => {
   return (
-    <section className="main-layout">
-      {title && <h1 className="main-layout__header">{title}</h1>}
-      <div className="main-layout__content">{children}</div>
+    <section className={cx('main-layout')}>
+      {title && <h1 className={cx('main-layout__header')}>{title}</h1>}
+      <div className={cx('main-layout__content')}>{children}</div>
     </section>
   )
 }

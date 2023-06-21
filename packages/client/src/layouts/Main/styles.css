@@ -1,9 +1,0 @@
-.main-layout,
-.main-layout__content {
-  display: flex;
-  flex-direction: column;
-}
-
-.main-layout__header {
-  margin-bottom: 2rem;
-}

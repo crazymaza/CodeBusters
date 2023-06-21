@@ -1,0 +1,11 @@
+.main-layout {
+  &,
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header {
+    margin-bottom: 2rem;
+  }
+}
