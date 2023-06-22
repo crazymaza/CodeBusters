@@ -1,0 +1,12 @@
+.main-layout {
+  &,
+  &__content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &__header {
+    margin-bottom: 2rem;
+  }
+}
