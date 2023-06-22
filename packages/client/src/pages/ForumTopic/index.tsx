@@ -4,14 +4,14 @@ import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
 
-const HomePage = () => {
+const ForumTopicPage = () => {
   return (
-    <MainLayout title="Home Page">
+    <MainLayout title="Topic Page">
       <div className={cx('greeting')}>
-        <p className={cx('greeting__message')}>Главная страница</p>
+        <p className={cx('greeting__message')}>Страница топика форума</p>
       </div>
     </MainLayout>
   )
 }
 
-export default HomePage
+export default ForumTopicPage
