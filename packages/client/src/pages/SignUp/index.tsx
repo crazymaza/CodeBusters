@@ -4,14 +4,14 @@ import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
 
-const HomePage = () => {
+const SignUpPage = () => {
   return (
-    <MainLayout title="Home Page">
+    <MainLayout title="SignUp Page">
       <div className={cx('greeting')}>
-        <p className={cx('greeting__message')}>Главная страница</p>
+        <p className={cx('greeting__message')}>Зарегистрируйтесь</p>
       </div>
     </MainLayout>
   )
 }
 
-export default HomePage
+export default SignUpPage
