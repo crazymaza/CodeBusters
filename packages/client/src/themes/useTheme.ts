@@ -1,7 +1,4 @@
-export enum ThemeNameEnum {
-  'LIGHT' = 'light',
-  'DARK' = 'dark',
-}
+import { ThemeNameEnum } from './types'
 
 // TODO В дальнейшем хук должн быть переделан и реализован через стор. Текущая реализация для примера
 export default function useTheme() {
