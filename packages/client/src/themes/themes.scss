@@ -1,6 +1,6 @@
 @use 'sass:color';
 @use 'sass:map';
-@use '@/themes/colors' as clr;
+@use 'themes/colors' as clr;
 
 $theme-dark: (
   primary: clr.$primary-dark,

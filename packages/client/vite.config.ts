@@ -16,6 +16,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      themes: path.resolve(__dirname, './src/themes'),
+      sprites: path.resolve(__dirname, './src/assets/sprites'),
+      images: path.resolve(__dirname, './src/assets/images'),
+      icons: path.resolve(__dirname, './src/assets/icons'),
+      fonts: path.resolve(__dirname, './src/assets/fonts'),
     },
   },
 })

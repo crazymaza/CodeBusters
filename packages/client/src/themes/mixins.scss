@@ -1,6 +1,6 @@
 @use 'sass:color';
-@use '@/themes/functions' as fn;
-@use '@/themes/config' as cfg;
+@use 'themes/functions' as fn;
+@use 'themes/config' as cfg;
 
 // Theme
 @mixin themify($property, $theme-color, $adjust: false, $level: 0%) {
