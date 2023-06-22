@@ -4,14 +4,14 @@ import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
 
-const HomePage = () => {
+const NotFoundPage = () => {
   return (
-    <MainLayout title="Home Page">
+    <MainLayout title="404">
       <div className={cx('greeting')}>
-        <p className={cx('greeting__message')}>Главная страница</p>
+        <p className={cx('greeting__message')}>Страница не найдена :(</p>
       </div>
     </MainLayout>
   )
 }
 
-export default HomePage
+export default NotFoundPage
