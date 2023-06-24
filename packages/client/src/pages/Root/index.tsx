@@ -25,7 +25,7 @@ const RootContainer = () => {
           </li>
         ))}
       </ul> */}
-      {/* <p>Вот тут будет жить ваше приложение :)</p> */}
+      <p>Вот тут будет жить ваше приложение :)</p>
       <div className={cx('root-section__outlet')}>
         <Outlet />
       </div>
