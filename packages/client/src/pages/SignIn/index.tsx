@@ -12,7 +12,7 @@ const cx = classNames.bind(styles)
 const SignInPage = () => {
   return (
     <AuthLayout>
-      <Grid className={cx('signin')}>
+      <Grid component="form" className={cx('signin')}>
         <Typography variant="h3" component="h1" className={cx('signin__title')}>
           Вход
         </Typography>

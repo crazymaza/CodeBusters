@@ -4,6 +4,8 @@ import { useTheme } from '@/themes'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 
+import { StyledEngineProvider } from '@mui/material/styles'
+
 // TODO конфиг временный, подлежит удалению, так как только служит для демонстрации подключенных роутов
 import tempRoutes from './routes.temp.config'
 
@@ -26,9 +28,11 @@ const RootContainer = () => {
         ))}
       </ul> */}
       <p>Вот тут будет жить ваше приложение :)</p>
-      <div className={cx('root-section__outlet')}>
-        <Outlet />
-      </div>
+      <StyledEngineProvider injectFirst>
+        <div className={cx('root-section__outlet')}>
+          <Outlet />
+        </div>
+      </StyledEngineProvider>
     </section>
   )
 }
