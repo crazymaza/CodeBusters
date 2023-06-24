@@ -7,6 +7,8 @@ import { Grid, Typography, TextField, Button } from '@mui/material'
 
 const cx = classNames.bind(styles)
 
+// TODO: пока без логики
+
 const SignInPage = () => {
   return (
     <AuthLayout>

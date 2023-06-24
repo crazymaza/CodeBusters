@@ -1,3 +1,5 @@
+// TODO: определиться как правильно свзять SCSS с MUI, 
+// т.к сейчас без использования !important не работают стили
 .signin {
   display: flex;
   flex-direction: column !important;
