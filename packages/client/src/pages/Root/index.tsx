@@ -17,6 +17,7 @@ const RootContainer = () => {
       {/* <Button variant="contained" onClick={switchTheme}>
         Переключить Тему
       </Button>*/}
+
       <ul>
         {tempRoutes.map((route, index) => (
           <li key={index}>
@@ -24,7 +25,7 @@ const RootContainer = () => {
           </li>
         ))}
       </ul>
-      <p>Вот тут будет жить ваше приложение :)</p>
+      {/* <p>Вот тут будет жить ваше приложение :)</p> */}
       <div className={cx('root-section__outlet')}>
         <Outlet />
       </div>
