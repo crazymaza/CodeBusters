@@ -14,9 +14,9 @@ const RootContainer = () => {
 
   return (
     <section className={cx('root-section')}>
-      <Button variant="contained" onClick={switchTheme}>
+      {/* <Button variant="contained" onClick={switchTheme}>
         Переключить Тему
-      </Button>
+      </Button>*/}
       <ul>
         {tempRoutes.map((route, index) => (
           <li key={index}>
