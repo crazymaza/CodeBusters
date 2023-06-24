@@ -20,10 +20,9 @@ const SignInPage = () => {
           <TextField label="Логин" variant="standard" />
           <TextField label="Пароль" variant="standard" />
         </Grid>
-        <Grid item className={cx('signin__buttons')}>
-          <Link to={'/sign-up'}>Создать аккаунт</Link>
-          <Button variant="contained">Авторизоваться</Button>
-        </Grid>
+
+        <Link to={'/sign-up'}>Создать аккаунт</Link>
+        <Button variant="contained">Авторизоваться</Button>
       </Grid>
     </AuthLayout>
   )
