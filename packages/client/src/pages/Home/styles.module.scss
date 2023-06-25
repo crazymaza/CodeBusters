@@ -1,5 +1,109 @@
-.greeting {
-  margin: 1.2rem;
-  font-size: 1.6rem;
-  font-weight: 500;
+.main__page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background: url(../../assets/images/background_light_theme.png) no-repeat;
+  background-size: cover;
+  background-color: #3276c5;
+
+  &_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4.6rem;
+    width: 122.6rem;
+    height: 67.8rem;
+    border-radius: 1.5rem;
+    opacity: 0.8999999761581421;
+    background: #f4f4f4;
+    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+
+    hr {
+      height: 80%;
+      border: 0.1rem solid #1673e0;
+      margin: 0;
+    }
+  }
+
+  .box {
+    &__about {
+      height: 80%;
+      flex-basis: 42.4rem;
+      font-size: 3.6rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      padding-top: 3rem;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    &__menu {
+      flex-basis: 49.2rem;
+
+      .menu {
+        &__item {
+          &:first-child {
+            .menu__item_link {
+              border-bottom: 0.4rem solid #3276c5;
+
+              .link {
+                &__button {
+                  &_label {
+                    span {
+                      font-size: 4rem;
+                      color: #3276c5;
+                      font-weight: 700;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          &:last-child {
+            .menu__item_link {
+              border-bottom: none;
+            }
+          }
+
+          &_link {
+            display: flex;
+            height: 12rem;
+            width: 49.2rem;
+            color: #000;
+            text-decoration: none;
+            border-bottom: 0.2rem solid #3276c5;
+
+            .link {
+              &__button {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+
+                &_label {
+                  span {
+                    color: #000;
+                    font-size: 3.6rem;
+                  }
+                }
+
+                &_icon {
+                  max-width: 7rem;
+                  height: 5rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
