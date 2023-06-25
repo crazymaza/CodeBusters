@@ -30,24 +30,9 @@ const HomePage: React.FC = () => {
       <div className={cx('main__page')}>
         <Paper variant="outlined" className={cx('main__page_box')} square>
           <div className={cx('box__about')}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta cum
-            id omnis voluptates laudantium ipsum inventore earum, minus harum,
-            doloremque, voluptate eius natus aperiam reiciendis iste ab veniam.
-            Vitae, deserunt? Modi tenetur cumque tempora commodi tempore
-            reprehenderit consectetur sequi praesentium natus ad neque officiis
-            dolorem sed, perferendis, laudantium placeat veniam, maxime
-            excepturi aspernatur facere optio quas ea! Eius, dolor unde? Maiores
-            similique ea magnam quod facilis! Odio qui adipisci reprehenderit!
-            Corporis debitis nisi nulla facere adipisci repudiandae in
-            molestiae, tempora rerum iusto fugit quae, vitae expedita cupiditate
-            ipsam blanditiis doloribus? Dolor incidunt beatae saepe tenetur,
-            mollitia amet, fuga provident, cumque iusto enim cupiditate! Hic
-            illo odio quis minima distinctio ipsa, ratione tempora molestias
-            ducimus quia amet, fugit architecto nesciunt voluptate! Nisi ab, ut
-            laborum aliquid voluptatum doloremque commodi iure, rem ducimus
-            sapiente sequi consequatur consequuntur magni, vel a placeat omnis
-            corrupti recusandae excepturi. Qui veritatis, distinctio nesciunt
-            rem molestiae iste!
+            <p>Описание самой лучшей, классной игры</p>
+            <p>Описание самой лучшей, классной игры</p>
+            <p>Описание самой лучшей, классной игры</p>
           </div>
           <hr />
           <div className={cx('box__menu')}>

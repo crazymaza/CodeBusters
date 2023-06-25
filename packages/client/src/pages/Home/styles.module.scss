@@ -33,8 +33,16 @@
       flex-basis: 424px;
       font-size: 36px;
       overflow-y: auto;
-      margin-top: 60px;
-      margin-bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      padding-top: 30px;
+
+      p {
+        margin: 0;
+      }
     }
 
     &__menu {
@@ -45,6 +53,7 @@
           &:first-child {
             .menu__item_link {
               border-bottom: 4px solid #3276C5;
+
               .link {
                 &__button {
                   &_label {
@@ -56,6 +65,12 @@
                   }
                 }
               }
+            }
+          }
+
+          &:last-child {
+            .menu__item_link {
+              border-bottom: none;
             }
           }
 
