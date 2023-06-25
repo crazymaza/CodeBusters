@@ -1,0 +1,13 @@
+.auth-layout {
+    &,
+    &__content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      background-image: url("images/background_light_theme.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  }
+  
