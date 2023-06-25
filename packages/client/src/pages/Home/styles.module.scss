@@ -12,17 +12,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 46px;
-    width: 1226px;
-    height: 678px;
-    border-radius: 15px;
+    gap: 4.6rem;
+    width: 122.6rem;
+    height: 67.8rem;
+    border-radius: 1.5rem;
     opacity: 0.8999999761581421;
     background: #f4f4f4;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
 
     hr {
       height: 80%;
-      border: 1px solid #1673e0;
+      border: 0.1rem solid #1673e0;
       margin: 0;
     }
   }
@@ -30,15 +30,15 @@
   .box {
     &__about {
       height: 80%;
-      flex-basis: 424px;
-      font-size: 36px;
+      flex-basis: 42.4rem;
+      font-size: 3.6rem;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 30px;
-      padding-top: 30px;
+      gap: 3rem;
+      padding-top: 3rem;
 
       p {
         margin: 0;
@@ -46,19 +46,19 @@
     }
 
     &__menu {
-      flex-basis: 492px;
+      flex-basis: 49.2rem;
 
       .menu {
         &__item {
           &:first-child {
             .menu__item_link {
-              border-bottom: 4px solid #3276c5;
+              border-bottom: 0.4rem solid #3276c5;
 
               .link {
                 &__button {
                   &_label {
                     span {
-                      font-size: 40px;
+                      font-size: 4rem;
                       color: #3276c5;
                       font-weight: 700;
                     }
@@ -76,28 +76,28 @@
 
           &_link {
             display: flex;
-            height: 119px;
-            width: 492px;
+            height: 12rem;
+            width: 49.2rem;
             color: #000;
             text-decoration: none;
-            border-bottom: 2px solid #3276c5;
+            border-bottom: 0.2rem solid #3276c5;
 
             .link {
               &__button {
                 display: flex;
                 align-items: center;
-                gap: 15px;
+                gap: 1.5rem;
 
                 &_label {
                   span {
                     color: #000;
-                    font-size: 36px;
+                    font-size: 3.6rem;
                   }
                 }
 
                 &_icon {
-                  max-width: 70px;
-                  height: 50px;
+                  max-width: 7rem;
+                  height: 5rem;
                 }
               }
             }
