@@ -9,10 +9,10 @@ import {
   ListItemText,
   Paper,
 } from '@mui/material'
-import Cup from '@/assets/icons/cup.png'
-import Forum from '@/assets/icons/forum_light_theme.png'
-import Gear from '@/assets/icons/gear.png'
-import Wheel from '@/assets/icons/wheel.png'
+import Cup from 'icons/cup.png'
+import Forum from 'icons/forum_light_theme.png'
+import Gear from 'icons/gear.png'
+import Wheel from 'icons/wheel.png'
 import { Link } from 'react-router-dom'
 
 const cx = classNames.bind(styles)
