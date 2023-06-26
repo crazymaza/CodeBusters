@@ -15,10 +15,6 @@ class UserPageService {
     } as ChangePasswordRequest
     await UserApi.changeUserPassword(data)
   }
-
-  public async changeUserInfo() {
-    await UserApi.changeUserInfo(data)
-  }
 }
 
 export default new UserPageService()
