@@ -1,8 +1,8 @@
 import { RouterProvider } from 'react-router-dom'
 import routes from './routes'
 
-// TODO Добавить обработку приватных и публичных роутов
 const Router = () => {
+  // TODO: обернуть в authcontext
   return <RouterProvider router={routes} fallbackElement={<p>Loading</p>} />
 }
 

@@ -21,8 +21,10 @@ const SignInPage = () => {
   const submitLoginHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     dispatch(signin({ login, password }))
-      // .then(() => dispatch(getUserInfo()))
-      .then(() => navigate('/profile'))
+      .unwrap()
+      .then(() => dispatch(getUserInfo()))
+      .then(() => navigate('/'))
+      .catch(error => console.log(error))
   }
 
   const onChangeLoginHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,14 +1,26 @@
-import { Outlet, Navigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import { selectUserInfo } from '@/store/slices/authSlice/selectors'
-import { useEffect } from 'react'
 import { getUserInfo } from '@/store/slices/authSlice/thunks'
+import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const ProtectedRoute = () => {
-  const dispatch = useAppDispatch()
   const user = useAppSelector(selectUserInfo)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
-  return user ? <Outlet /> : <Navigate to="/sign-in" />
+  useEffect(() => {
+    if (!user) {
+      dispatch(getUserInfo())
+        .unwrap()
+        .catch(() => {
+          navigate('/sign-in')
+        })
+    }
+  }, [user])
+
+  return <>{user && <Outlet />}</>
 }
 
 export default ProtectedRoute

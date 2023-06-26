@@ -42,6 +42,7 @@ const authSlice = createSlice({
       state.loading = true
     })
     builder.addCase(logout.fulfilled, state => {
+      state.userInfo = null
       state.loading = false
     })
     builder.addCase(logout.rejected, state => {
