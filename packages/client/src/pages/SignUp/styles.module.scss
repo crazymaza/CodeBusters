@@ -1,5 +1,30 @@
-.greeting {
-  margin: 1.2rem;
-  font-size: 1.6rem;
-  font-weight: 500;
+.signup {
+  min-width: 30%;
+  max-height: 60rem;
+  padding: 7rem 8rem 5rem 8rem;
+  border: 1px solid #858585;
+  border-radius: 0.8rem;
+  background-color: #f4f4f4ce;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 2rem;
+
+  &__title {
+    margin-bottom: 2rem;
+  }
+
+  & > a {
+    color: #1673e0;
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3rem;
+
+    & > *:not(:last-child) {
+      margin-bottom: 1.5rem;
+    }
+  }
 }
