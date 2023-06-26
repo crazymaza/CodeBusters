@@ -6,19 +6,46 @@ import { Box, Button, IconButton, Switch, TextField } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { MainLayout } from '@/layouts'
-import { useState } from 'react'
+import { SyntheticEvent, useState } from 'react'
 
 const cx = classNames.bind(styles)
 
 const ProfilePage = () => {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+  const [password, setPassword] = useState({
+    oldPassword: '',
+    newPassword: '',
+  })
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const setNewPassword = (event: SyntheticEvent) => {
+    const newPassword = (event.target as HTMLInputElement).value
+    setPassword(previousState => {
+      return { ...previousState, newPassword }
+    })
+  }
+
+  const setOldPassword = (event: SyntheticEvent) => {
+    const oldPassword = (event.target as HTMLInputElement).value
+    setPassword(previousState => {
+      return { ...previousState, oldPassword }
+    })
+  }
 
   const changeAvatar = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const files = ev.target.files ?? null
     if (files) UserPageService.changeUserAvatar(files)
+  }
+
+  const changePassword = () => {
+    UserPageService.changeUserPassword(
+      password.oldPassword,
+      password.newPassword
+    ).then(() => {
+      setOpen(false)
+    })
   }
 
   const cancelClick = () => {
@@ -29,16 +56,23 @@ const ProfilePage = () => {
     return (
       <Modal open={open} onClose={handleClose}>
         <div className={cx('modal-password__content')}>
-          <TextField label="Пароль" variant="standard" type="password" />
           <TextField
-            label="Подтверждение пароля"
+            label="Старый пароль"
+            onKeyUp={setOldPassword}
+            variant="standard"
+            type="password"
+          />
+          <TextField
+            onKeyUp={setNewPassword}
+            label="Новый пароль"
             variant="standard"
             type="password"
           />
           <Button
             className={cx('modal-password__content_button')}
             variant="contained"
-            type="submit">
+            onClick={changePassword}
+            type="button">
             Сохранить
           </Button>
         </div>
@@ -50,7 +84,9 @@ const ProfilePage = () => {
     <MainLayout>
       <div className={cx('profile__page')}>
         <div className={cx('profile__page_content')}>
-          <form className={cx('profile__page_form')}>
+          <form
+            className={cx('profile__page_form')}
+            onSubmit={ev => console.log(ev)}>
             <div className={cx('profile__form_content')}>
               <div className={cx('form__content_settings')}>
                 <Avatar changeAvatar={changeAvatar}></Avatar>
