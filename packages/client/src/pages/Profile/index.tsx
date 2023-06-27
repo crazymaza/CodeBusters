@@ -2,7 +2,13 @@ import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 import { Avatar, Modal } from '@/components'
 import { UserPageService } from '@/services'
-import { Box, Button, IconButton, Switch, TextField } from '@mui/material'
+import {
+  Button,
+  IconButton,
+  Switch,
+  TextField,
+  TextFieldVariants,
+} from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { MainLayout } from '@/layouts'
@@ -11,6 +17,17 @@ import { SyntheticEvent, useState } from 'react'
 const cx = classNames.bind(styles)
 
 const ProfilePage = () => {
+  const formFields: {
+    label: string
+    variant?: TextFieldVariants | undefined
+    type?: string
+  }[] = [
+    { label: 'Логин' },
+    { label: 'Имя' },
+    { label: 'Фамилия' },
+    { label: 'Email', type: 'email' },
+    { label: 'Телефон', type: 'tel' },
+  ]
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [password, setPassword] = useState({
@@ -39,7 +56,8 @@ const ProfilePage = () => {
     if (files) UserPageService.changeUserAvatar(files)
   }
 
-  const changePassword = () => {
+  const changePassword = (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault()
     UserPageService.changeUserPassword(
       password.oldPassword,
       password.newPassword
@@ -55,15 +73,17 @@ const ProfilePage = () => {
   const renderModal = () => {
     return (
       <Modal open={open} onClose={handleClose}>
-        <div className={cx('modal-password__content')}>
+        <form
+          className={cx('modal-password__content')}
+          onSubmit={changePassword}>
           <TextField
             label="Старый пароль"
-            onKeyUp={setOldPassword}
+            onChange={setOldPassword}
             variant="standard"
             type="password"
           />
           <TextField
-            onKeyUp={setNewPassword}
+            onChange={setNewPassword}
             label="Новый пароль"
             variant="standard"
             type="password"
@@ -71,11 +91,10 @@ const ProfilePage = () => {
           <Button
             className={cx('modal-password__content_button')}
             variant="contained"
-            onClick={changePassword}
-            type="button">
+            type="submit">
             Сохранить
           </Button>
-        </div>
+        </form>
       </Modal>
     )
   }
@@ -99,11 +118,16 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div className={cx('form__content_inputlist')}>
-                <TextField label="Логин" variant="standard" />
-                <TextField label="Имя" variant="standard" />
-                <TextField label="Фамилия" variant="standard" />
-                <TextField label="Email" variant="standard" type="email" />
-                <TextField label="Телефон" variant="standard" type="tel" />
+                {formFields.map(
+                  ({ label, variant = 'standard', type = 'text' }) => (
+                    <TextField
+                      key={label}
+                      label={label}
+                      variant={variant}
+                      type={type}
+                    />
+                  )
+                )}
                 <Button
                   className={cx('form__content_inputlist_button')}
                   variant="contained"

@@ -4,23 +4,17 @@ import {
   Box,
 } from '@mui/material'
 import { FC } from 'react'
+import styles from './style.module.scss'
+import classNames from 'classnames/bind'
 
 type ModalProps = FC<MUIModalProps>
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  borderRadius: '15px',
-  p: 4,
-}
+const cx = classNames.bind(styles)
 
 const Modal: ModalProps = ({ children, ...props }) => {
   return (
-    <MUIModal {...props}>
-      <Box sx={style}>{children}</Box>
+    <MUIModal {...props} className={cx('modal__component')}>
+      <Box className={cx('modal__component_content')}>{children}</Box>
     </MUIModal>
   )
 }

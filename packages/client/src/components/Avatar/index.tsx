@@ -3,7 +3,10 @@ import {
   Avatar as MUIAvatar,
   AvatarProps as MUIAvatarProps,
 } from '@mui/material'
+import AvatarIcon from 'images/stub_avatar.png'
 import { FC } from 'react'
+import styles from './style.module.scss'
+import classNames from 'classnames/bind'
 
 type Props = {
   changeAvatar?: (ev: React.ChangeEvent<HTMLInputElement>) => void
@@ -11,9 +14,9 @@ type Props = {
 
 type AvatarProps = FC<Props>
 
-const Avatar: AvatarProps = ({ children, ...props }) => {
-  const { changeAvatar, ...otherProps } = props
+const cx = classNames.bind(styles)
 
+const Avatar: AvatarProps = ({ children, changeAvatar, ...props }) => {
   return (
     <>
       <input
@@ -26,9 +29,9 @@ const Avatar: AvatarProps = ({ children, ...props }) => {
       <label htmlFor="upload-avatar-file">
         <MUIIconButton aria-label="upload picture" component="span">
           <MUIAvatar
-            sx={{ width: 140, height: 140, bgcolor: '#B4B2B2', padding: 1 }}
-            src={'../../src/assets/images/stub_avatar.png'}
-            {...otherProps}>
+            src={AvatarIcon}
+            {...props}
+            className={cx('avatar__component')}>
             {children}
           </MUIAvatar>
         </MUIIconButton>
