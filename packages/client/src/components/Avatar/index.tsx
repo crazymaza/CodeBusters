@@ -3,7 +3,7 @@ import {
   Avatar as MUIAvatar,
   AvatarProps as MUIAvatarProps,
 } from '@mui/material'
-import AvatarIcon from 'images/stub_avatar.png'
+import AvatarIcon from 'icons/stub_avatar.png'
 import { FC } from 'react'
 import styles from './style.module.scss'
 import classNames from 'classnames/bind'
