@@ -7,7 +7,7 @@ import { Grid, Typography, TextField, Button } from '@mui/material'
 import { AuthLayout } from '@/layouts'
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
-import { getUserInfo, signin } from '@/store/slices/authSlice/thunks'
+import { signin } from '@/store/slices/authSlice/thunks'
 
 const cx = classNames.bind(styles)
 
@@ -22,7 +22,6 @@ const SignInPage = () => {
     e.preventDefault()
     dispatch(signin({ login, password }))
       .unwrap()
-      .then(() => dispatch(getUserInfo()))
       .then(() => navigate('/'))
       .catch(error => console.log(error))
   }

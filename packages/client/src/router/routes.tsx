@@ -5,17 +5,17 @@ import {
   Route,
 } from 'react-router-dom'
 
-import ProtectedRoute from './ProtectedRoute'
+import AuthWrapper from './AuthWrapper'
 
 export default createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      path="/"
-      errorElement={<Pages.ErrorPage />}
-      element={<Pages.RootContainer />}>
-      <Route path="sign-in" element={<Pages.SignInPage />} />
-      <Route path="sign-up" element={<Pages.SignUpPage />} />
-      <Route element={<ProtectedRoute />}>
+    <Route element={<AuthWrapper />}>
+      <Route
+        path="/"
+        errorElement={<Pages.ErrorPage />}
+        element={<Pages.RootContainer />}>
+        <Route path="sign-in" element={<Pages.SignInPage />} />
+        <Route path="sign-up" element={<Pages.SignUpPage />} />
         <Route index element={<Pages.HomePage />} />
         <Route path="play" element={<Pages.PlayPage />} />
         <Route path="leader-board" element={<Pages.LeaderBoardPage />} />
