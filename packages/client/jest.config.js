@@ -12,7 +12,7 @@ export default {
     '^images/(.*)$': '<rootDir>/src/assets/images/$1',
     '^icons/(.*)$': '<rootDir>/src/assets/icons/$1',
     '^fonts/(.*)$': '<rootDir>/src/assets/fonts/$1',
-    '^.+\\.(css|scss)$': 'identity-obj-proxy',
+    '^.+\\.(css|sass|scss|png|jpg|ttf|woff|woff2)$': 'identity-obj-proxy',
   },
   globals: {
     __SERVER_PORT__: process.env.SERVER_PORT,
