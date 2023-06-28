@@ -1,0 +1,26 @@
+0 silly argv {
+0 silly argv   _: [ 'run' ],
+0 silly argv   scope: 'client',
+0 silly argv   lernaVersion: '5.4.3',
+0 silly argv   '$0': 'node_modules/.bin/lerna',
+0 silly argv   script: 'dev'
+0 silly argv }
+1 notice cli v5.4.3
+2 verbose rootPath /home/sans/documents/CodeBusters
+3 notice filter including "client"
+4 info filter [ 'client' ]
+5 error Error: Unable to connect to the daemon process.
+5 error Messages from the log:
+5 error [NX Daemon Server] - 2023-06-22T18:32:40.034Z - Started listening on: /home/sans/documents/CodeBusters/node_modules/.cache/nx/d/d.sock
+5 error
+5 error  >  NX   Invalid BSER
+5 error
+5 error
+5 error
+5 error
+5 error More information: /home/sans/documents/CodeBusters/node_modules/.cache/nx/d/daemon.log
+5 error     at daemonProcessException (/home/sans/documents/CodeBusters/node_modules/nx/src/daemon/client/client.js:66:16)
+5 error     at Socket.<anonymous> (/home/sans/documents/CodeBusters/node_modules/nx/src/daemon/client/client.js:155:29)
+5 error     at Socket.emit (node:events:513:28)
+5 error     at emitErrorNT (node:internal/streams/destroy:151:8)
+5 error     at emitErrorCloseNT (node:internal/streams/destroy:116:3)

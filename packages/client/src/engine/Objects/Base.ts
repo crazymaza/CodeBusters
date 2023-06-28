@@ -3,10 +3,11 @@ export interface BaseObjectSpecs {
   y: number
   width: number
   height: number
-  fill: string
+  fill?: string
+  type?: string
 }
 
-export default class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
+export default abstract class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
   constructor(
     protected ctx: CanvasRenderingContext2D,
     protected specs: TObjectSpecs
@@ -14,20 +15,23 @@ export default class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
     return this
   }
 
-  public drawRect(specs?: Partial<TObjectSpecs>) {
-    const updateSpecs = { ...this.specs, ...specs }
+  protected updateSpecs(
+    newSpecs: Partial<TObjectSpecs>,
+    callback?: (
+      prevSpecs: TObjectSpecs,
+      newSpecs: Partial<TObjectSpecs>
+    ) => TObjectSpecs
+  ) {
+    if (typeof callback === 'function') {
+      callback(this.specs, newSpecs)
+    }
 
-    this.specs = updateSpecs
-
-    return this.ctx.fillRect(
-      this.specs.x,
-      this.specs.y,
-      this.specs.width,
-      this.specs.height
-    )
+    return (this.specs = { ...this.specs, ...newSpecs })
   }
 
-  public getSpecs() {
-    return this.specs
+  protected abstract draw(specs?: Partial<TObjectSpecs>): TObjectSpecs
+
+  public getUniqSpecs(): Partial<TObjectSpecs> | null {
+    return null
   }
 }

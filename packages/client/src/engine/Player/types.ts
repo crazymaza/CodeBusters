@@ -8,9 +8,3 @@ export type PlayerControlKeyCodeMap = {
 export type PlayerOptions = {
   controls: PlayerControlKeyCodeMap
 }
-
-export default class Player {
-  constructor(public name: string, private options: PlayerOptions) {
-    return this
-  }
-}
