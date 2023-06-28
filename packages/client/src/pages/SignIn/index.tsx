@@ -8,6 +8,7 @@ import { AuthLayout } from '@/layouts'
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
 import { getUserInfo, signin } from '@/store/slices/authSlice/thunks'
+import { isAxiosError } from 'axios'
 
 const cx = classNames.bind(styles)
 
@@ -24,7 +25,13 @@ const SignInPage = () => {
       .unwrap()
       .then(() => dispatch(getUserInfo()))
       .then(() => navigate('/'))
-      .catch(error => console.log(error))
+      .catch(error => {
+        if (isAxiosError(error)) {
+          if (error.message === 'User already in system') {
+            navigate('/')
+          }
+        }
+      })
   }
 
   const onChangeLoginHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

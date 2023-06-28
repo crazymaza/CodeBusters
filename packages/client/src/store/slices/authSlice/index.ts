@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { signin, signup, logout, getUserInfo } from './thunks'
-import { UserInfo } from '@/api/Auth'
+import { UserInfo } from '@/api/Auth/types'
 
-interface AuthState {
+export interface AuthState {
   loading: boolean
   userInfo: UserInfo | null
 }

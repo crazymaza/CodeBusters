@@ -123,7 +123,9 @@ const ProfilePage = () => {
                     <span>Сменить тему</span>
                     <Switch defaultChecked />
                   </div>
-                  <Link to={'/sign-in'}>Выйти из аккаунта</Link>
+                  <Link onClick={logoutHandler} to={'/sign-in'}>
+                    Выйти из аккаунта
+                  </Link>
                 </div>
               </div>
               <div className={cx('form__content_inputlist')}>
