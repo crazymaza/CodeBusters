@@ -1,9 +1,7 @@
 import BaseObject, { BaseObjectSpecs } from './Base'
 
-export interface TrackObjectSpecs extends BaseObjectSpecs {
-  borders?: BaseObjectSpecs
-  leftField?: BaseObjectSpecs
-  rightField?: BaseObjectSpecs
+export default class TrackObject extends BaseObject<BaseObjectSpecs> {
+  protected draw(specs: Partial<BaseObjectSpecs>): BaseObjectSpecs {
+    return this.updateSpecs(specs)
+  }
 }
-
-export default class TrackObject extends BaseObject<TrackObjectSpecs> {}
