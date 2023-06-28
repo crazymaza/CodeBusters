@@ -1,11 +1,11 @@
 .modal__component {
-    display: flex;
-    justify-content: center; 
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    &_content {
-        background-color: #fff;
-        border-radius: 15px;
-        padding: 25px;
-    }
+  &_content {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 25px;
+  }
 }
