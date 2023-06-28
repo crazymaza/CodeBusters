@@ -3,7 +3,6 @@ export type PlayerControlKeyCodeMap = {
   left: string
   right: string
   break: string
-  startOrPause: string
 }
 
 export type PlayerOptions = {
