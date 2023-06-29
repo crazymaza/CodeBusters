@@ -22,6 +22,7 @@ export default createBrowserRouter(
         <Route path="forum" element={<Pages.ForumPage />} />
         <Route path="forum/:topicId" element={<Pages.ForumTopicPage />} />
         <Route path="profile" element={<Pages.ProfilePage />} />
+        <Route path="end-game" element={<Pages.EndGamePage />} />
         <Route path="*" element={<Pages.NotFoundPage />} />
       </Route>
     </Route>

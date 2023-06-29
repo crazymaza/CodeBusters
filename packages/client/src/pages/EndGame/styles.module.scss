@@ -1,0 +1,36 @@
+.endgame__page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: url('images/background_light_theme.png') no-repeat;
+    background-size: cover;
+
+    &_content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 30px;
+        border-radius: 15px;
+        background: rgba(244, 244, 244, 0.9);
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+        &_result {
+            color: rgb(178, 34, 34)
+        }
+
+        .endgame__content {
+            &_body{
+                margin: 15px;
+            }
+            
+            &_buttons {
+                display: flex;
+                width: 100%;
+                justify-content: space-evenly;
+                flex-direction: row;
+            }
+        }
+    }
+}
