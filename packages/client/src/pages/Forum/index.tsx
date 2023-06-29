@@ -1,22 +1,19 @@
 import { MainLayout } from '@/layouts'
 import {
   Badge,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  Grid,
   ListItem,
   ListItemText,
   Paper,
-  Fab,
   Stack,
-  Typography,
-  Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  Button,
-  DialogActions,
   TextField,
-  Grid,
-  FormControl,
+  Tooltip,
+  Typography,
 } from '@mui/material'
 import classNames from 'classnames/bind'
 import Forum from 'icons/forum_light_theme.png'
@@ -100,7 +97,7 @@ const ForumPage: React.FC = () => {
                 <Fab
                   color="primary"
                   aria-label="add"
-                  className={cx('button__tooltip')}
+                  className={cx('button__icon')}
                   onClick={() => handleClickOpen()}>
                   +
                 </Fab>
@@ -134,9 +131,9 @@ const ForumPage: React.FC = () => {
           <div className={cx('block__topics_popular')}>
             <Paper
               variant="outlined"
-              className={cx('items-list__wrapper')}
+              className={cx('block__topics_popular_wrapper')}
               square>
-              ТРТПАЛУР
+              <Typography variant="h4">Топ-10 тем</Typography>
             </Paper>
           </div>
         </Paper>

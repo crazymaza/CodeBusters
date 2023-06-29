@@ -14,7 +14,7 @@
     row-gap: 3.6rem;
     margin-bottom: 2rem;
 
-    .button__tooltip {
+    .button__icon {
       font-size: 3rem;
       align-items: center;
     }
@@ -23,7 +23,7 @@
   &_container {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     width: 100rem;
     height: 67.8rem;
     border-radius: 1.5rem;
@@ -94,10 +94,19 @@
 
     .block__topics_popular{
       display: flex;
-    }
-    .items-list__wrapper {
-      width: 100%;
       height: 100%;
+      flex: 0 30rem;
+      align-items: center;
+
+      &_wrapper {
+        display: flex;
+        height: 52rem;
+        width: 100%;
+        border-radius: 1.5rem;
+        padding: 1rem;
+        background-color: #fffcfc;
+        justify-content: center;
+      }
     }
   }
 }
