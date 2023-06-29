@@ -4,7 +4,7 @@ import http, { HTTPOptions } from '@/utils/http'
 export default class BaseApi {
   public request: ReturnType<typeof http>
 
-  constructor(private options: HTTPOptions = {}) {
+  constructor(options: HTTPOptions = {}) {
     this.request = http(options)
   }
 }

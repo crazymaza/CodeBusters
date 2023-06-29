@@ -14,6 +14,9 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { MainLayout } from '@/layouts'
 import { SyntheticEvent, useState } from 'react'
 
+import { useAppDispatch } from '@/store/typedHooks'
+import { logout } from '@/store/slices/authSlice/thunks'
+
 const cx = classNames.bind(styles)
 
 const ProfilePage = () => {
@@ -99,6 +102,12 @@ const ProfilePage = () => {
     )
   }
 
+  const dispatch = useAppDispatch()
+
+  const logoutHandler = () => {
+    dispatch(logout())
+  }
+
   return (
     <MainLayout>
       <div className={cx('profile__page')}>
@@ -114,7 +123,9 @@ const ProfilePage = () => {
                     <span>Сменить тему</span>
                     <Switch defaultChecked />
                   </div>
-                  <Link to={'/sign-in'}>Выйти из аккаунта</Link>
+                  <Link onClick={logoutHandler} to={'/sign-in'}>
+                    Выйти из аккаунта
+                  </Link>
                 </div>
               </div>
               <div className={cx('form__content_inputlist')}>
