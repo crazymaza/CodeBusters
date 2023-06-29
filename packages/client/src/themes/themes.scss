@@ -4,10 +4,16 @@
 
 $theme-dark: (
   primary: clr.$primary-dark,
+  authform-border: clr.$border-dark,
+  authform-bg: clr.$bgcolor-dark,
+  authform-link: clr.$btncolor-dark,
 ) !default;
 
 $theme-light: (
   primary: clr.$primary-light,
+  authform-border: clr.$border-light,
+  authform-bg: clr.$bgcolor-light,
+  authform-link: clr.$btncolor-light,
 ) !default;
 
 $themes: (
