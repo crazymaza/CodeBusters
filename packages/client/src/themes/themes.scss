@@ -4,10 +4,16 @@
 
 $theme-dark: (
   primary: clr.$primary-dark,
+  signup-border: clr.$border-dark,
+  signup-bg: clr.$bgcolor-dark,
+  signup-link: clr.$btncolor-dark,
 ) !default;
 
 $theme-light: (
   primary: clr.$primary-light,
+  signup-border: clr.$border-light,
+  signup-bg: clr.$bgcolor-light,
+  signup-link: clr.$btncolor-light,
 ) !default;
 
 $themes: (

@@ -22,7 +22,9 @@ const SignUpPage = () => {
           <TextField label="Пароль" variant="standard" name="password" />
         </Grid>
 
-        <Link to={'/sign-in'}>Уже есть аккаунт</Link>
+        <Link to={'/sign-in'} className={cx('signup__link')}>
+          Уже есть аккаунт
+        </Link>
         <Button variant="contained">Создать аккаунт</Button>
       </Grid>
     </AuthLayout>
