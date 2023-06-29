@@ -1,13 +1,15 @@
 @use 'themes/mixins' as mx;
 
+
+
 .signin {
+  @include mx.themify('border-color', 'authform-border');
+  @include mx.themify('background-color', 'authform-bg');
   min-width: 30%;
   max-height: 45rem;
   padding: 7rem 8rem 5rem 8rem;
-  @include mx.themify('border-color', 'authform-border');
   border: 1px solid;
   border-radius: 0.8rem;
-  @include mx.themify('background-color', 'authform-bg');
   display: flex;
   flex-direction: column;
   text-align: center;
