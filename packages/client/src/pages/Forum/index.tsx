@@ -7,7 +7,9 @@ import {
   DialogTitle,
   Fab,
   Grid,
+  List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   Paper,
   Stack,
@@ -17,6 +19,7 @@ import {
 } from '@mui/material'
 import classNames from 'classnames/bind'
 import Forum from 'icons/forum_light_theme.png'
+import Zvezda from 'icons/zvezda.png'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styles from './styles.module.scss'
@@ -68,6 +71,14 @@ const topicsList: {
     description: 'Делимся опытом разработки игровых механик',
     count_messages: 10,
   },
+]
+
+const topicsPopular = [
+  'Лучшие текстуры для игр',
+  'Игры как искусство',
+  'Культовые саундтреки для игр',
+  'Технологии',
+  'Игровые механики',
 ]
 
 const ForumPage: React.FC = () => {
@@ -133,7 +144,24 @@ const ForumPage: React.FC = () => {
               variant="outlined"
               className={cx('block__topics_popular_wrapper')}
               square>
-              <Typography variant="h4">Топ-10 тем</Typography>
+              <Typography variant="h3">Топ-5 тем</Typography>
+              <List>
+                {topicsPopular.map((topic, index) => (
+                  <ListItem key={index}>
+                    <ListItemIcon className={cx('popular-list_icon')}>
+                      <img src={Zvezda}></img>
+                    </ListItemIcon>
+                    <Link
+                      to={`/forum/${index}`}
+                      className={cx('popular-list_link')}>
+                      <ListItemText
+                        primary={topic}
+                        className={cx('popular-list_text')}
+                      />
+                    </Link>
+                  </ListItem>
+                ))}
+              </List>
             </Paper>
           </div>
         </Paper>

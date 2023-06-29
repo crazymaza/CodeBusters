@@ -30,7 +30,7 @@
     background: rgb(244, 244, 244, 0.8);
     box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
 
-    hr {
+    &>hr {
       height: 80%;
       border: 0.1rem solid #1673e0;
       margin: 0;
@@ -40,12 +40,12 @@
     .block__topics {
       height: 100%;
       width: 60%;
-      margin-left: 5rem;
+      margin-left: 3rem;
       padding-top: 5rem;
 
       &_wrapper {
         display: flex;
-        height: 410px;
+        height: 41rem;
       }
 
       .topics {
@@ -58,7 +58,7 @@
           &__item {
             background: #C4DCFA;
             height: 6rem;
-            border-radius: 15px;
+            border-radius: 1.5rem;
 
             a {
               display: flex;
@@ -92,7 +92,7 @@
       }
     }
 
-    .block__topics_popular{
+    .block__topics_popular {
       display: flex;
       height: 100%;
       flex: 0 30rem;
@@ -100,12 +100,34 @@
 
       &_wrapper {
         display: flex;
+        flex-direction: column;
         height: 52rem;
         width: 100%;
         border-radius: 1.5rem;
-        padding: 1rem;
-        background-color: #fffcfc;
-        justify-content: center;
+        padding: 1.3rem;
+        background-color: #e5efff;
+        align-items: center;
+        row-gap: 2rem;
+        color: #1673e0;
+        box-shadow: 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+      }
+
+
+
+      .popular-list {
+        &_icon>img {
+          width: 2rem;
+          height: 2rem;
+        }
+
+        &_link {
+          text-decoration: none;
+          color: #000;
+        }
+
+        &_text>span {
+          font-size: 2rem;
+        }
       }
     }
   }
