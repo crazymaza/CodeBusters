@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 const cx = classNames.bind(styles)
 
 const PlayPage = () => {
-  const [level, setLevel] = useState<number>(10)
+  const [level, setLevel] = useState(10)
   const navigate = useNavigate()
 
   const restartGame = () => {
