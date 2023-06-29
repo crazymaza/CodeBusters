@@ -11,20 +11,23 @@ const useAuth = () => {
   const { pathname } = useLocation()
   const isProtectedRoute = pathname !== '/sign-in' && pathname !== '/sign-up'
 
+  const getUserAndRedirect = async () => {
+    try {
+      await dispatch(getUserInfo()).unwrap()
+
+      if (!isProtectedRoute) {
+        navigate('/')
+      } else {
+        navigate(pathname)
+      }
+    } catch (error) {
+      navigate('/sign-in')
+    }
+  }
+
   useEffect(() => {
     if (!user) {
-      dispatch(getUserInfo())
-        .unwrap()
-        .then(() => {
-          if (!isProtectedRoute) {
-            navigate('/')
-          } else {
-            navigate(pathname)
-          }
-        })
-        .catch(() => {
-          navigate('/sign-in')
-        })
+      getUserAndRedirect()
     }
   }, [user])
 

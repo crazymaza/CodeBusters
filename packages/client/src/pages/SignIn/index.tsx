@@ -19,19 +19,18 @@ const SignInPage = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const submitLoginHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitLoginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    dispatch(signin({ login, password }))
-      .unwrap()
-      .then(() => dispatch(getUserInfo()))
-      .then(() => navigate('/'))
-      .catch(error => {
-        if (isAxiosError(error)) {
-          if (error.message === 'User already in system') {
-            navigate('/')
-          }
-        }
-      })
+
+    try {
+      await dispatch(signin({ login, password })).unwrap()
+      await dispatch(getUserInfo())
+      navigate('/')
+    } catch (error) {
+      if (isAxiosError(error) && error.message === 'User already in system') {
+        navigate('/')
+      }
+    }
   }
 
   const onChangeLoginHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
