@@ -9,11 +9,9 @@ import store from '@/store'
 import { Provider } from 'react-redux'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <StyledEngineProvider injectFirst>
-        <App />
-      </StyledEngineProvider>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <StyledEngineProvider injectFirst>
+      <App />
+    </StyledEngineProvider>
+  </Provider>
 )

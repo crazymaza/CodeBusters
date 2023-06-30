@@ -8,6 +8,7 @@ import {
   TextField,
   Button,
   FormHelperText,
+  TextFieldVariants,
 } from '@mui/material'
 import { AuthLayout } from '@/layouts'
 import { useAppDispatch } from '@/store/typedHooks'
@@ -15,31 +16,25 @@ import { useNavigate } from 'react-router-dom'
 import { getUserInfo, signin } from '@/store/slices/authSlice/thunks'
 import { isAxiosError } from 'axios'
 
-import * as yup from 'yup'
+import { schema } from './validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import { SigninData } from '@/api/Auth/types'
 
 const cx = classNames.bind(styles)
 
-const schema = yup.object().shape({
-  login: yup
-    .string()
-    .required('Необходимое поле')
-    .matches(
-      /^(?=.*[a-zA-Z])([a-zA-Z0-9-_]){3,20}$/,
-      'от 3 до 20 символов, латиница, может содержать цифры, но не состоять из них, без пробелов, без спецсимволов (допустимы дефис и нижнее подчёркивание)'
-    ),
-  password: yup
-    .string()
-    .required('Необходимое поле')
-    .matches(
-      /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d].{8,40}$/,
-      'от 8 до 40 символов, обязательно хотя бы одна заглавная буква и цифра'
-    ),
-})
-
 const SignInPage = () => {
+  const formFields: {
+    field: 'login' | 'password'
+
+    label: string
+    variant?: TextFieldVariants | undefined
+    type?: string
+  }[] = [
+    { label: 'Логин', field: 'login' },
+    { label: 'Пароль', type: 'text', field: 'password' },
+  ]
+
   const {
     handleSubmit,
     control,
@@ -79,50 +74,34 @@ const SignInPage = () => {
           Вход
         </Typography>
         <Grid className={cx('signin__inputs')}>
-          <Controller
-            name="login"
-            control={control}
-            render={({ field: { onChange, ...props } }) => (
-              <TextField
-                {...props}
-                onChange={onChange}
-                onFocus={onChange}
-                variant="standard"
-                label="Логин"
-              />
-            )}
-          />
-          {errors.login && (
-            <FormHelperText
-              sx={{ color: 'red' }}
-              required
-              id="login"
-              component="span">
-              {errors.login.message}
-            </FormHelperText>
-          )}
-
-          <Controller
-            name="password"
-            control={control}
-            render={({ field: { onChange, ...props } }) => (
-              <TextField
-                {...props}
-                onChange={onChange}
-                onFocus={onChange}
-                variant="standard"
-                label="Логин"
-              />
-            )}
-          />
-          {errors.password && (
-            <FormHelperText
-              sx={{ color: 'red' }}
-              required
-              id="password"
-              component="span">
-              {errors.password.message}
-            </FormHelperText>
+          {formFields.map(
+            ({ label, variant = 'standard', type = 'text', field }) => (
+              <>
+                <Controller
+                  name={field}
+                  control={control}
+                  render={({ field: { onChange, ...props } }) => (
+                    <TextField
+                      {...props}
+                      onChange={onChange}
+                      // onFocus={onChange}
+                      variant={variant}
+                      label={label}
+                      type={type}
+                    />
+                  )}
+                />
+                {errors[field] && (
+                  <FormHelperText
+                    sx={{ color: 'red' }}
+                    required
+                    id={field}
+                    component="span">
+                    {errors[field]?.message}
+                  </FormHelperText>
+                )}
+              </>
+            )
           )}
         </Grid>
 
