@@ -11,13 +11,13 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
-  TextField,
   Typography,
 } from '@mui/material'
 import classNames from 'classnames/bind'
 import Avatar1 from 'images/avatar1.png'
 import Avatar2 from 'images/avatar2.png'
 import Avatar3 from 'images/avatar3.png'
+import InputEmoji from 'react-input-emoji'
 import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
@@ -98,7 +98,6 @@ const renderCommentsBlock = () => (
               {date}
             </ListItemText>
           </ListItem>
-          ,
           <Divider variant="fullWidth" />
         </div>,
       ])}
@@ -117,6 +116,7 @@ const renderCloseButton = () => (
     </IconButton>
   </div>
 )
+InputEmoji
 
 const ForumTopicPage = () => {
   return (
@@ -126,13 +126,7 @@ const ForumTopicPage = () => {
           {renderCloseButton()}
           <Typography variant="h2">Технологии</Typography>
           <form className={cx('topicpage__form')}>
-            <TextField
-              variant="filled"
-              multiline={true}
-              minRows={4}
-              maxRows={4}
-              placeholder="Ваш комментарий"
-            />
+            <InputEmoji placeholder="Ваш комментарий"></InputEmoji>
             <Button type="submit" variant="contained">
               Оставить комментарий
             </Button>
