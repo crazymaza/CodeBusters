@@ -84,7 +84,40 @@ const topicsPopular = [
 const ForumPage: React.FC = () => {
   const [open, setOpen] = React.useState(false)
 
-  const handleClickOpen = () => {
+  const renderDialog = () => (
+    <Dialog open={open}>
+      <DialogTitle variant="h3">Создание новой темы</DialogTitle>
+      <Grid component={'form'} className={cx('dialog-form__container')}>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            id="topic_name"
+            label="Название темы"
+            fullWidth
+            variant="standard"
+            className={cx('dialog-form__textfield')}
+          />
+          <TextField
+            margin="dense"
+            id="topic_description"
+            label="Описание темы"
+            fullWidth
+            variant="standard"
+            className={cx('dialog-form__textfield')}
+          />
+          <Button
+            type={'submit'}
+            variant="contained"
+            className={cx('dialog-form__button')}
+            onClick={handleClose}>
+            Создать
+          </Button>
+        </DialogContent>
+      </Grid>
+    </Dialog>
+  )
+
+  const handleOpen = () => {
     setOpen(true)
   }
 
@@ -109,7 +142,7 @@ const ForumPage: React.FC = () => {
                   color="primary"
                   aria-label="add"
                   className={cx('button__icon')}
-                  onClick={() => handleClickOpen()}>
+                  onClick={() => handleOpen()}>
                   +
                 </Fab>
               </Tooltip>
@@ -166,28 +199,7 @@ const ForumPage: React.FC = () => {
           </div>
         </Paper>
       </div>
-      <Dialog open={open}>
-        <DialogTitle variant="h3">Создание нового топика</DialogTitle>
-        <Grid component={'form'} className={cx('dialog-form__container')}>
-          <DialogContent>
-            <TextField
-              margin="dense"
-              id="topic_name"
-              label="Название топика"
-              fullWidth
-              variant="standard"
-              className={cx('dialog-form__textfield')}
-            />
-            <Button
-              type={'submit'}
-              variant="contained"
-              className={cx('dialog-form__button')}
-              onClick={handleClose}>
-              Создать
-            </Button>
-          </DialogContent>
-        </Grid>
-      </Dialog>
+      {renderDialog()}
     </MainLayout>
   )
 }
