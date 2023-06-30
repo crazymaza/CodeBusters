@@ -1,4 +1,4 @@
-.forum__page {
+.forumpage {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,19 +8,20 @@
   background-size: cover;
   background-color: #3276c5;
 
-  &_title {
+  &-title {
     display: flex;
     flex-direction: column;
     row-gap: 3.6rem;
     margin-bottom: 2rem;
-
-    .button__icon {
-      font-size: 3rem;
-      align-items: center;
-    }
   }
 
-  &_container {
+  .button__icon {
+    font-size: 3rem;
+    align-items: center;
+    margin: 2rem 0 2rem;
+  }
+
+  &-container {
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -37,25 +38,25 @@
     }
 
 
-    .block__topics {
+    .block-topics {
       height: 100%;
       width: 60%;
       margin-left: 3rem;
       padding-top: 5rem;
 
-      &_wrapper {
+      &-wrapper {
         display: flex;
         height: 41rem;
       }
 
       .topics {
-        &_list {
+        &__list {
           display: block;
           overflow-y: scroll;
           width: 100%;
           padding-top: 1rem;
 
-          &__item {
+          &-item {
             background: #C4DCFA;
             height: 6rem;
             border-radius: 1.5rem;
@@ -71,6 +72,10 @@
 
             span {
               font-size: 2.0rem;
+              // text-overflow: ellipsis;
+              // white-space: nowrap;
+              // overflow: hidden;
+              // width: 300px;
             }
 
             p {
@@ -78,7 +83,7 @@
             }
           }
 
-          .link_badge {
+          .link__badge {
             span {
               font-size: 1.0rem;
             }
@@ -92,13 +97,13 @@
       }
     }
 
-    .block__topics_popular {
+    .block-topics-popular {
       display: flex;
       height: 100%;
       flex: 0 30rem;
       align-items: center;
 
-      &_wrapper {
+      &-wrapper {
         display: flex;
         flex-direction: column;
         height: 52rem;
@@ -114,27 +119,30 @@
 
 
 
-      .popular-list {
-        &_icon>img {
+      .popular__list {
+        &-icon>img {
           width: 2rem;
           height: 2rem;
         }
 
-        &_link {
+        &-link {
           text-decoration: none;
           color: #000;
         }
-
-        &_text>span {
+  
+        &-text>span {
           font-size: 2rem;
         }
       }
+
+      
     }
   }
 }
 
-.dialog-form {
-  &__container {
+
+.dialog__form {
+  &-container {
     width: 50rem;
   }
 
@@ -142,7 +150,7 @@
     font-size: 4rem;
   }
 
-  &__textfield {
+  &-textfield {
     label {
       font-size: 1.2rem;
     }
@@ -150,9 +158,13 @@
     input {
       font-size: 2rem;
     }
+
+    &>:last-child {
+      margin-bottom: 5rem;
+    }
   }
 
-  &__button {
+  &-button {
     display: block;
     margin-left: auto;
   }

@@ -1,4 +1,4 @@
-.topic__page {
+.topicpage {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,7 +8,7 @@
   background-size: cover;
   background-color: #3276c5;
 
-  &_container {
+  &-container {
     display: flex;
     flex-direction: column;
     padding: 5rem;
@@ -21,7 +21,7 @@
 
   }
 
-  &_form {
+  &__form {
     display: flex;
     flex-direction: column;
 
@@ -32,30 +32,28 @@
      }
   }
 
-  
-
   .comments {
-    &_container {
+    &-container {
       display: flex;
       width: 100%;
       height: 50rem;
     }
 
-    &_list {
+    &__list {
       display: block;
       overflow-y: scroll;
     }
 
-    &_item {
+    &-item {
       display: flex;
       min-height: 12rem;
 
-      &__icon {
+      &-icon {
         width: 7rem;
         height: 7rem;
       }
 
-      &_text {
+      &-text {
         flex-basis: fit-content;
         flex-grow: 1;
         margin: 2rem;
@@ -72,7 +70,7 @@
         }
       }
 
-      &_date {
+      &-date {
         display: flex;
         color: gray;
         height: 10rem;

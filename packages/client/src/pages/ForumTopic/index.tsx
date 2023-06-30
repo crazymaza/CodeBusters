@@ -79,13 +79,10 @@ const comments: {
 const ForumTopicPage = () => {
   return (
     <MainLayout>
-      <div className={cx('topic__page')}>
-        <Paper
-          variant="outlined"
-          className={cx('topic__page_container')}
-          square>
+      <div className={cx('topicpage')}>
+        <Paper variant="outlined" className={cx('topicpage-container')} square>
           <Typography variant="h2">Название темы</Typography>
-          <form className={cx('topic__page_form')}>
+          <form className={cx('topicpage__form')}>
             <TextField
               variant="filled"
               multiline={true}
@@ -97,25 +94,28 @@ const ForumTopicPage = () => {
               Оставить комментарий
             </Button>
           </form>
-          <Box className={cx('comments_container')}>
-            <List component={Paper} className={cx('comments_list')}>
+          <Box className={cx('comments-container')}>
+            <List component={Paper} className={cx('comments__list')}>
               {comments.map(({ avatar, text, date, user_name }, index) => [
-                <ListItem key={index} className={cx('comments_item')}>
-                  <ListItemIcon>
-                    <Avatar
-                      src={avatar}
-                      className={cx('comments_item__icon')}></Avatar>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={text}
-                    secondary={user_name}
-                    className={cx('comments_item_text')}
-                  />
-                  <ListItemText className={cx('comments_item_date')}>
-                    {date}
-                  </ListItemText>
-                </ListItem>,
-                <Divider variant="fullWidth" />,
+                <div key={index}>
+                  <ListItem key={index} className={cx('comments_item')}>
+                    <ListItemIcon>
+                      <Avatar
+                        src={avatar}
+                        className={cx('comments-item-icon')}></Avatar>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      secondary={user_name}
+                      className={cx('comments-item-text')}
+                    />
+                    <ListItemText className={cx('comments-item-date')}>
+                      {date}
+                    </ListItemText>
+                  </ListItem>
+                  ,
+                  <Divider variant="fullWidth" />
+                </div>,
               ])}
             </List>
           </Box>

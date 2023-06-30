@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogTitle,
   Fab,
-  Grid,
   List,
   ListItem,
   ListItemIcon,
@@ -87,7 +86,7 @@ const ForumPage: React.FC = () => {
   const renderDialog = () => (
     <Dialog open={open}>
       <DialogTitle variant="h3">Создание новой темы</DialogTitle>
-      <Grid component={'form'} className={cx('dialog-form__container')}>
+      <form className={cx('dialog__form-container')}>
         <DialogContent>
           <TextField
             margin="dense"
@@ -95,7 +94,7 @@ const ForumPage: React.FC = () => {
             label="Название темы"
             fullWidth
             variant="standard"
-            className={cx('dialog-form__textfield')}
+            className={cx('dialog__form-textfield')}
           />
           <TextField
             margin="dense"
@@ -103,17 +102,17 @@ const ForumPage: React.FC = () => {
             label="Описание темы"
             fullWidth
             variant="standard"
-            className={cx('dialog-form__textfield')}
+            className={cx('dialog__form-textfield')}
           />
           <Button
             type={'submit'}
             variant="contained"
-            className={cx('dialog-form__button')}
+            className={cx('dialog__form-button')}
             onClick={handleClose}>
             Создать
           </Button>
         </DialogContent>
-      </Grid>
+      </form>
     </Dialog>
   )
 
@@ -127,13 +126,10 @@ const ForumPage: React.FC = () => {
 
   return (
     <MainLayout>
-      <div className={cx('forum__page')}>
-        <Paper
-          variant="outlined"
-          className={cx('forum__page_container')}
-          square>
-          <div className={cx('block__topics')}>
-            <div className={cx('forum__page_title')}>
+      <div className={cx('forumpage')}>
+        <Paper variant="outlined" className={cx('forumpage-container')} square>
+          <div className={cx('block-topics')}>
+            <div className={cx('forumpage_title')}>
               <Typography variant="h2">Форум игроков</Typography>
               <Tooltip
                 title={<h1 style={{ color: 'lightblue' }}>Новый топик</h1>}
@@ -147,21 +143,21 @@ const ForumPage: React.FC = () => {
                 </Fab>
               </Tooltip>
             </div>
-            <div className={cx('block__topics_wrapper')}>
+            <div className={cx('block-topics-wrapper')}>
               <Stack
                 direction={'column'}
                 spacing={1}
-                className={cx('topics_list')}>
+                className={cx('topics__list')}>
                 {topicsList.map(
                   ({ title, description, count_messages }, index) => (
-                    <ListItem key={index} className={cx('topics_list__item')}>
+                    <ListItem key={index} className={cx('topics__list-item')}>
                       <Link to={`/forum/${index}`}>
                         <ListItemText primary={title} secondary={description} />
                         <Badge
                           badgeContent={count_messages}
                           color="primary"
                           max={999}
-                          className={cx('link_badge')}>
+                          className={cx('link__badge')}>
                           <img src={Forum} alt="количество сообщений" />
                         </Badge>
                       </Link>
@@ -172,24 +168,24 @@ const ForumPage: React.FC = () => {
             </div>
           </div>
           <hr />
-          <div className={cx('block__topics_popular')}>
+          <div className={cx('block-topics-popular')}>
             <Paper
               variant="outlined"
-              className={cx('block__topics_popular_wrapper')}
+              className={cx('block-topics-popular-wrapper')}
               square>
               <Typography variant="h3">Топ-5 тем</Typography>
               <List>
                 {topicsPopular.map((topic, index) => (
                   <ListItem key={index}>
-                    <ListItemIcon className={cx('popular-list_icon')}>
+                    <ListItemIcon className={cx('popular__list-icon')}>
                       <img src={Zvezda}></img>
                     </ListItemIcon>
                     <Link
                       to={`/forum/${index}`}
-                      className={cx('popular-list_link')}>
+                      className={cx('popular__list-link')}>
                       <ListItemText
                         primary={topic}
-                        className={cx('popular-list_text')}
+                        className={cx('popular__list-text')}
                       />
                     </Link>
                   </ListItem>
