@@ -10,41 +10,52 @@ const cx = classNames.bind(styles)
 
 const EndGamePage = () => {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
 
-  const logoutHandler = () => {
-    dispatch(logout())
+  const routeToMainMenuHandler = () => {
+    navigate('/')
   }
 
-  const playHandler = () => {
+  const routeToPlayHandler = () => {
     navigate('/play')
+  }
+
+  const routeToLeaderBoardHandler = () => {
+    navigate('/leader-board')
   }
 
   return (
     <MainLayout>
-      <div className={cx('endgame__page')}>
-        <div className={cx('endgame__page_content')}>
-          <div className={cx('endgame__content_title')}>
-            <Typography variant="h3" component="h1">
-              Игра окончена!
-            </Typography>
-          </div>
-          <div className={cx('endgame__content_body')}>
-            <Typography variant="h5" component="h1">
-              Ваш результат:
-            </Typography>
-            <Typography
-              variant="h1"
-              component="h1"
-              className={cx('endgame__page_content_result')}>
-              100
-            </Typography>
-          </div>
-          <div className={cx('endgame__content_buttons')}>
-            <Button onClick={playHandler} variant="contained" type="button">
+      <div className={cx('endgame')}>
+        <div className={cx('endgame__content')}>
+          <Typography variant="h3" component="h3">
+            Игра окончена!
+          </Typography>
+          <Typography variant="h5" component="h5">
+            Ваш результат:
+          </Typography>
+          <Typography
+            variant="h1"
+            component="h1"
+            className={cx('endgame__content_result')}>
+            100
+          </Typography>
+          <div className={cx('endgame__content-buttons')}>
+            <Button
+              onClick={routeToLeaderBoardHandler}
+              variant="outlined"
+              type="button">
+              Таблица результатов
+            </Button>
+            <Button
+              onClick={routeToPlayHandler}
+              variant="contained"
+              type="button">
               Начать снова
             </Button>
-            <Button onClick={logoutHandler} variant="outlined" type="button">
+            <Button
+              onClick={routeToMainMenuHandler}
+              variant="outlined"
+              type="button">
               Выйти
             </Button>
           </div>
