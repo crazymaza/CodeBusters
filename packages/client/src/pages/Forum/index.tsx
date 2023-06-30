@@ -1,4 +1,5 @@
 import { MainLayout } from '@/layouts'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import {
   Badge,
   Button,
@@ -6,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   Fab,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -82,6 +84,23 @@ const topicsPopular = [
 
 const ForumPage: React.FC = () => {
   const [open, setOpen] = React.useState(false)
+  // const navigate = useNavigate()
+
+  const handleOpenDialog = () => {
+    setOpen(true)
+  }
+
+  const handleCloseDialog = () => {
+    setOpen(false)
+  }
+
+  const renderCloseButton = () => (
+    <div className={cx('page-content-close')}>
+      <IconButton>
+        <HighlightOffIcon />
+      </IconButton>
+    </div>
+  )
 
   const renderDialog = () => (
     <Dialog open={open}>
@@ -108,21 +127,13 @@ const ForumPage: React.FC = () => {
             type={'submit'}
             variant="contained"
             className={cx('dialog__form-button')}
-            onClick={handleClose}>
+            onClick={handleCloseDialog}>
             Создать
           </Button>
         </DialogContent>
       </form>
     </Dialog>
   )
-
-  const handleOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
 
   return (
     <MainLayout>
@@ -138,7 +149,7 @@ const ForumPage: React.FC = () => {
                   color="primary"
                   aria-label="add"
                   className={cx('button__icon')}
-                  onClick={() => handleOpen()}>
+                  onClick={() => handleOpenDialog()}>
                   +
                 </Fab>
               </Tooltip>
@@ -169,6 +180,7 @@ const ForumPage: React.FC = () => {
           </div>
           <hr />
           <div className={cx('block-topics-popular')}>
+            {renderCloseButton()}
             <Paper
               variant="outlined"
               className={cx('block-topics-popular-wrapper')}

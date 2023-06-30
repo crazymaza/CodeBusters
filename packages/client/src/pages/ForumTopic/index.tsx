@@ -1,9 +1,11 @@
 import { Button } from '@/components'
 import { MainLayout } from '@/layouts'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import {
   Avatar,
   Box,
   Divider,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -76,12 +78,53 @@ const comments: {
   },
 ]
 
+const renderCommentsBlock = () => (
+  <Box className={cx('comments-container')}>
+    <List component={Paper} className={cx('comments__list')}>
+      {comments.map(({ avatar, text, date, user_name }, index) => [
+        <div key={index}>
+          <ListItem className={cx('comments_item')}>
+            <ListItemIcon>
+              <Avatar
+                src={avatar}
+                className={cx('comments-item-icon')}></Avatar>
+            </ListItemIcon>
+            <ListItemText
+              primary={text}
+              secondary={user_name}
+              className={cx('comments-item-text')}
+            />
+            <ListItemText className={cx('comments-item-date')}>
+              {date}
+            </ListItemText>
+          </ListItem>
+          ,
+          <Divider variant="fullWidth" />
+        </div>,
+      ])}
+    </List>
+  </Box>
+)
+
+const renderStub = () => (
+  <Typography variant="h3">Ещё никто не оставил свой комментарий</Typography>
+)
+
+const renderCloseButton = () => (
+  <div className={cx('page-content-close')}>
+    <IconButton>
+      <HighlightOffIcon />
+    </IconButton>
+  </div>
+)
+
 const ForumTopicPage = () => {
   return (
     <MainLayout>
       <div className={cx('topicpage')}>
         <Paper variant="outlined" className={cx('topicpage-container')} square>
-          <Typography variant="h2">Название темы</Typography>
+          {renderCloseButton()}
+          <Typography variant="h2">Технологии</Typography>
           <form className={cx('topicpage__form')}>
             <TextField
               variant="filled"
@@ -94,31 +137,7 @@ const ForumTopicPage = () => {
               Оставить комментарий
             </Button>
           </form>
-          <Box className={cx('comments-container')}>
-            <List component={Paper} className={cx('comments__list')}>
-              {comments.map(({ avatar, text, date, user_name }, index) => [
-                <div key={index}>
-                  <ListItem key={index} className={cx('comments_item')}>
-                    <ListItemIcon>
-                      <Avatar
-                        src={avatar}
-                        className={cx('comments-item-icon')}></Avatar>
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={text}
-                      secondary={user_name}
-                      className={cx('comments-item-text')}
-                    />
-                    <ListItemText className={cx('comments-item-date')}>
-                      {date}
-                    </ListItemText>
-                  </ListItem>
-                  ,
-                  <Divider variant="fullWidth" />
-                </div>,
-              ])}
-            </List>
-          </Box>
+          {comments.length === 0 ? renderStub() : renderCommentsBlock()}
         </Paper>
       </div>
     </MainLayout>

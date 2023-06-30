@@ -37,12 +37,15 @@
       margin: 0;
     }
 
-
     .block-topics {
       height: 100%;
       width: 60%;
       margin-left: 3rem;
       padding-top: 5rem;
+
+      &-popular {
+        flex-direction: column;
+      }
 
       &-wrapper {
         display: flex;
@@ -101,7 +104,8 @@
       display: flex;
       height: 100%;
       flex: 0 30rem;
-      align-items: center;
+      justify-content: center;
+      align-items: end;
 
       &-wrapper {
         display: flex;
@@ -117,25 +121,30 @@
         box-shadow: 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
       }
 
-
+      .page-content-close {
+        position: relative;
+        top: -5rem;
+      }
 
       .popular__list {
-        &-icon>img {
-          width: 2rem;
-          height: 2rem;
+        &-icon {
+          min-width: 4rem;
+
+          &>img {
+            width: 2rem;
+            height: 2rem;
+          }
         }
 
         &-link {
           text-decoration: none;
           color: #000;
         }
-  
+
         &-text>span {
           font-size: 2rem;
         }
       }
-
-      
     }
   }
 }
