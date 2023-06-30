@@ -10,10 +10,7 @@ import AuthWrapper from './AuthWrapper'
 export default createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthWrapper />}>
-      <Route
-        path="/"
-        errorElement={<Pages.ErrorPage />}
-        element={<Pages.RootContainer />}>
+      <Route path="/" element={<Pages.RootContainer />}>
         <Route path="sign-in" element={<Pages.SignInPage />} />
         <Route path="sign-up" element={<Pages.SignUpPage />} />
         <Route index element={<Pages.HomePage />} />
