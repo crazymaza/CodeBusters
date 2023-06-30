@@ -84,7 +84,6 @@ const SignInPage = () => {
                     <TextField
                       {...props}
                       onChange={onChange}
-                      // onFocus={onChange}
                       variant={variant}
                       label={label}
                       type={type}
