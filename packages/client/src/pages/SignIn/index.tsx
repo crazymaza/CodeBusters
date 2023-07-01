@@ -2,14 +2,9 @@ import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 
 import { Link } from 'react-router-dom'
-import {
-  Grid,
-  Typography,
-  TextField,
-  Button,
-  FormHelperText,
-  TextFieldVariants,
-} from '@mui/material'
+import { Grid, Typography, Button, TextFieldVariants } from '@mui/material'
+import { TextField } from '@/components'
+
 import { AuthLayout } from '@/layouts'
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
@@ -18,28 +13,27 @@ import { isAxiosError } from 'axios'
 
 import { schema } from './validation'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { SigninData } from '@/api/Auth/types'
 
 const cx = classNames.bind(styles)
 
 const SignInPage = () => {
   const formFields: {
-    field: 'login' | 'password'
-
+    name: 'login' | 'password'
     label: string
     variant?: TextFieldVariants | undefined
     type?: string
   }[] = [
-    { label: 'Логин', field: 'login' },
-    { label: 'Пароль', type: 'text', field: 'password' },
+    { label: 'Логин', name: 'login' },
+    { label: 'Пароль', type: 'password', name: 'password' },
   ]
 
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
+  } = useForm<SigninData>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
@@ -75,31 +69,15 @@ const SignInPage = () => {
         </Typography>
         <Grid className={cx('signin__inputs')}>
           {formFields.map(
-            ({ label, variant = 'standard', type = 'text', field }) => (
-              <>
-                <Controller
-                  name={field}
-                  control={control}
-                  render={({ field: { onChange, ...props } }) => (
-                    <TextField
-                      {...props}
-                      onChange={onChange}
-                      variant={variant}
-                      label={label}
-                      type={type}
-                    />
-                  )}
-                />
-                {errors[field] && (
-                  <FormHelperText
-                    sx={{ color: 'red' }}
-                    required
-                    id={field}
-                    component="span">
-                    {errors[field]?.message}
-                  </FormHelperText>
-                )}
-              </>
+            ({ variant = 'standard', type = 'text', name, ...props }) => (
+              <TextField
+                control={control}
+                fieldError={errors[name]}
+                name={name}
+                variant={variant}
+                type={type}
+                {...props}
+              />
             )
           )}
         </Grid>
