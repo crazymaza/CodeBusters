@@ -22,7 +22,7 @@ import classNames from 'classnames/bind'
 import Forum from 'icons/forum_light_theme.png'
 import Zvezda from 'icons/zvezda.png'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
@@ -84,7 +84,6 @@ const topicsPopular = [
 
 const ForumPage: React.FC = () => {
   const [open, setOpen] = React.useState(false)
-  // const navigate = useNavigate()
 
   const handleOpenDialog = () => {
     setOpen(true)
@@ -94,18 +93,26 @@ const ForumPage: React.FC = () => {
     setOpen(false)
   }
 
-  const renderCloseButton = () => (
-    <div className={cx('page-content-close')}>
-      <IconButton>
-        <HighlightOffIcon />
-      </IconButton>
-    </div>
-  )
+  const renderCloseButton = () => {
+    const navigate = useNavigate()
+    const handleClosePage = () => {
+      navigate('/')
+    }
+    return (
+      <div className={cx('page-content-close')}>
+        <IconButton onClick={handleClosePage}>
+          <HighlightOffIcon />
+        </IconButton>
+      </div>
+    )
+  }
 
   const renderDialog = () => (
     <Dialog open={open}>
       <DialogTitle variant="h3">Создание новой темы</DialogTitle>
-      <form className={cx('dialog__form-container')}>
+      <form
+        className={cx('dialog__form-container')}
+        onSubmit={e => e.preventDefault()}>
         <DialogContent>
           <TextField
             margin="dense"
@@ -123,13 +130,24 @@ const ForumPage: React.FC = () => {
             variant="standard"
             className={cx('dialog__form-textfield')}
           />
-          <Button
-            type={'submit'}
-            variant="contained"
-            className={cx('dialog__form-button')}
-            onClick={handleCloseDialog}>
-            Создать
-          </Button>
+          <div className={cx('buttons-container')}>
+            <Button
+              type={'submit'}
+              variant="contained"
+              className={cx('dialog__form-button')}
+              onClick={e => {
+                e.preventDefault()
+              }}>
+              Создать
+            </Button>
+            <Button
+              type={'button'}
+              variant="contained"
+              className={cx('dialog__form-button')}
+              onClick={handleCloseDialog}>
+              Отмена
+            </Button>
+          </div>
         </DialogContent>
       </form>
     </Dialog>

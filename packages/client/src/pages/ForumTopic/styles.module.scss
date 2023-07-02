@@ -6,7 +6,7 @@
   align-items: center;
   width: 100%;
   height: 100vh;
-  background: url(../../assets/images/background_light_theme.png) no-repeat;
+  background: url(images/background_light_theme.png) no-repeat;
   background-size: cover;
 
   .page-content-close {
@@ -20,7 +20,7 @@
     flex-direction: column;
     padding: 5rem;
     gap: 1.5rem;
-    width: 120rem;
+    width: 125rem;
     height: 80rem;
     border-radius: 1.5rem;
     background: rgb(244, 244, 244, 0.8);
@@ -32,11 +32,36 @@
     display: flex;
     flex-direction: column;
 
+    &-textfield textarea {
+      font-size: 1.4rem;
+    }
+
+    .buttons-container {
+      margin-top: 2rem;
+      justify-content: end;
+      display: flex;
+    }
+
+    .link-back {
+      text-decoration: none;
+    }
+
     &>button {
-      width:20rem;
+      width: 20rem;
       margin-top: 1rem;
       align-self: flex-end;
-     }
+    }
+  }
+
+  .emoji-picker {
+    position: absolute;
+    top: 32rem;
+    left: 120rem;
+
+    &-container {
+      position: relative;
+      z-index: 9999;
+    }
   }
 
   .comments {
