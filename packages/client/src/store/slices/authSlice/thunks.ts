@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AuthApi } from '@/api'
-import { SigninData, SignupData, UserInfo } from '@/api/Auth'
+import { SigninData, SignupData, UserInfo } from '@/api/Auth/types'
 
 export const signin = createAsyncThunk<void, SigninData>(
   'auth/signin',

@@ -1,29 +1,54 @@
-import { useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 
 import { Link } from 'react-router-dom'
-import { Grid, Typography, TextField, Button } from '@mui/material'
+import { Grid, Typography, Button, TextFieldVariants } from '@mui/material'
+import { TextField } from '@/components'
+
 import { AuthLayout } from '@/layouts'
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
 import { getUserInfo, signin } from '@/store/slices/authSlice/thunks'
 import { isAxiosError } from 'axios'
 
+import { schema } from './validation'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
+import { SigninData } from '@/api/Auth/types'
+
 const cx = classNames.bind(styles)
 
 const SignInPage = () => {
-  // TODO: пока так, иная реализация будет при подключении react-hook-form
-  const [login, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const formFields: {
+    name: 'login' | 'password'
+    label: string
+    variant?: TextFieldVariants | undefined
+    type?: string
+  }[] = [
+    { label: 'Логин', name: 'login' },
+    { label: 'Пароль', type: 'password', name: 'password' },
+  ]
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<SigninData>({
+    resolver: yupResolver(schema),
+    mode: 'all',
+  })
+
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const submitLoginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async (data: SigninData) => {
+    const signInData = {
+      login: data.login,
+      password: data.password,
+    }
 
     try {
-      await dispatch(signin({ login, password })).unwrap()
+      await dispatch(signin(signInData)).unwrap()
       await dispatch(getUserInfo())
       navigate('/')
     } catch (error) {
@@ -33,34 +58,28 @@ const SignInPage = () => {
     }
   }
 
-  const onChangeLoginHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value)
-  }
-
-  const onChangePasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }
-
   return (
     <AuthLayout>
       <Grid
         component="form"
         className={cx('signin')}
-        onSubmit={submitLoginHandler}>
+        onSubmit={handleSubmit(onSubmit)}>
         <Typography variant="h3" component="h1" className={cx('signin__title')}>
           Вход
         </Typography>
         <Grid className={cx('signin__inputs')}>
-          <TextField
-            label="Логин"
-            variant="standard"
-            onChange={onChangeLoginHandler}
-          />
-          <TextField
-            label="Пароль"
-            variant="standard"
-            onChange={onChangePasswordHandler}
-          />
+          {formFields.map(
+            ({ variant = 'standard', type = 'text', name, ...props }) => (
+              <TextField
+                control={control}
+                fieldError={errors[name]}
+                name={name}
+                variant={variant}
+                type={type}
+                {...props}
+              />
+            )
+          )}
         </Grid>
 
         <Link to={'/sign-up'}>Создать аккаунт</Link>
