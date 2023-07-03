@@ -1,7 +1,7 @@
 import BaseObject, { BaseObjectSpecs } from './Base'
 
 export interface ObstacleObjectSpecs extends BaseObjectSpecs {
-  type: 'oil' | 'border'
+  type: 'car' | 'oil' | 'border'
 }
 
 export default class ObstacleObject extends BaseObject<ObstacleObjectSpecs> {
