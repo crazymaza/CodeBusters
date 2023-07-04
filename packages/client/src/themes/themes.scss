@@ -7,6 +7,9 @@ $theme-dark: (
   authform-border: clr.$border-dark,
   authform-bg: clr.$bgcolor-dark,
   authform-link: clr.$btncolor-dark,
+  hr-border: clr.$hrcolor-dark,
+  text-color: clr.$text-dark,
+  p-color: clr.$p-dark,
 ) !default;
 
 $theme-light: (
@@ -14,6 +17,9 @@ $theme-light: (
   authform-border: clr.$border-light,
   authform-bg: clr.$bgcolor-light,
   authform-link: clr.$btncolor-light,
+  hr-border: clr.$hrcolor-light,
+  text-color: clr.$text-light,
+  p-color: clr.$p-light,
 ) !default;
 
 $themes: (
