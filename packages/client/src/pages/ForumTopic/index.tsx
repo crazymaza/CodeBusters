@@ -16,77 +16,19 @@ import {
 } from '@mui/material'
 import classNames from 'classnames/bind'
 import Picker from 'emoji-picker-react'
-import Avatar1 from 'images/avatar1.png'
-import Avatar2 from 'images/avatar2.png'
-import Avatar3 from 'images/avatar3.png'
 import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.scss'
+import * as data from './data'
 
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 
 const cx = classNames.bind(styles)
 
-const comments: {
-  avatar: string
-  user_name: string
-  text: string
-  date: Date
-}[] = [
-  {
-    avatar: Avatar1,
-    user_name: 'Alex',
-    text:
-      'Развитие технологий и инвестиции продолжаются, ' +
-      'импортозамещение приводит к дополнительным расходам. Важно' +
-      'подчеркнуть, как меняется спрос на инженеров. Если в пандемию' +
-      'ценились те, кто пишет клиентские приложения, то теперь сформирован' +
-      'спрос на более глубокие компетенции — системное программирование, ' +
-      ' программирование программно-аппаратных вещей и т. д.',
-    date: new Date(),
-  },
-  {
-    avatar: Avatar2,
-    user_name: 'Denis',
-    text:
-      'Развитие технологий и инвестиции продолжаются, ' +
-      'импортозамещение приводит к дополнительным расходам. Важно' +
-      'подчеркнуть, как меняется спрос на инженеров. Если в пандемию' +
-      'ценились те, кто пишет клиентские приложения, то теперь сформирован' +
-      'спрос на более глубокие компетенции — системное программирование, ' +
-      ' программирование программно-аппаратных вещей и т. д.',
-    date: new Date(),
-  },
-  {
-    avatar: Avatar3,
-    user_name: 'Геймер007',
-    text:
-      'Развитие технологий и инвестиции продолжаются, ' +
-      'импортозамещение приводит к дополнительным расходам. Важно' +
-      'подчеркнуть, как меняется спрос на инженеров. Если в пандемию ' +
-      'ценились те, кто пишет клиентские приложения, то теперь сформирован ' +
-      'спрос на более глубокие компетенции — системное программирование, ' +
-      ' программирование программно-аппаратных вещей и т. д.',
-    date: new Date(),
-  },
-  {
-    avatar: Avatar3,
-    user_name: 'Гонщик',
-    text:
-      'Развитие технологий и инвестиции продолжаются, ' +
-      'импортозамещение приводит к дополнительным расходам. Важно' +
-      'подчеркнуть, как меняется спрос на инженеров. Если в пандемию ' +
-      'ценились те, кто пишет клиентские приложения, то теперь сформирован ' +
-      'спрос на более глубокие компетенции — системное программирование, ' +
-      ' программирование программно-аппаратных вещей и т. д.',
-    date: new Date(),
-  },
-]
-
 const renderCommentsBlock = () => (
   <Box className={cx('comments-container')}>
     <List component={Paper} className={cx('comments__list')}>
-      {comments.map(({ avatar, text, date, user_name }, index) => [
+      {data.comments.map(({ avatar, text, date, user_name }, index) => [
         <div key={index}>
           <ListItem className={cx('comments-item')}>
             <ListItemIcon>
@@ -180,7 +122,7 @@ const ForumTopicPage = () => {
               ) : null}
             </div>
           </div>
-          {comments.length === 0 ? renderStub() : renderCommentsBlock()}
+          {data.comments.length === 0 ? renderStub() : renderCommentsBlock()}
         </Paper>
       </div>
     </MainLayout>

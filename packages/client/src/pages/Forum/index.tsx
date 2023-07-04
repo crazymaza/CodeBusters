@@ -21,69 +21,15 @@ import {
 import classNames from 'classnames/bind'
 import Forum from 'icons/forum_light_theme.png'
 import Zvezda from 'icons/zvezda.png'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.scss'
+import * as data from './data'
 
 const cx = classNames.bind(styles)
 
-const topicsList: {
-  title: string
-  description: string
-  count_messages: number
-}[] = [
-  {
-    title: 'Новые игры',
-    description: 'Обсуждаем новые игры',
-    count_messages: 10,
-  },
-  {
-    title: 'Геймдизайнеры',
-    description: 'Всё о работе геймдизайнера',
-    count_messages: 1000,
-  },
-  {
-    title: 'Технологии',
-    description: 'Новости из мира технологий',
-    count_messages: 1,
-  },
-  {
-    title: 'Игровые механики',
-    description: 'Делимся опытом разработки игровых механик',
-    count_messages: 10,
-  },
-  {
-    title: 'Технологии',
-    description: 'Новости из мира технологий',
-    count_messages: 2324,
-  },
-  {
-    title: 'Игровые механики',
-    description: 'Делимся опытом разработки игровых механик',
-    count_messages: 1333,
-  },
-  {
-    title: 'Технологии',
-    description: 'Новости из мира технологий',
-    count_messages: 109,
-  },
-  {
-    title: 'Игровые механики',
-    description: 'Делимся опытом разработки игровых механик',
-    count_messages: 10,
-  },
-]
-
-const topicsPopular = [
-  'Лучшие текстуры для игр',
-  'Игры как искусство',
-  'Культовые саундтреки для игр',
-  'Технологии',
-  'Игровые механики',
-]
-
 const ForumPage: React.FC = () => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
   const handleOpenDialog = () => {
     setOpen(true)
@@ -93,6 +39,7 @@ const ForumPage: React.FC = () => {
     setOpen(false)
   }
 
+  // TODO: рефакторинг
   const renderCloseButton = () => {
     const navigate = useNavigate()
     const handleClosePage = () => {
@@ -107,6 +54,7 @@ const ForumPage: React.FC = () => {
     )
   }
 
+  // TODO: рефакторинг
   const renderDialog = () => (
     <Dialog open={open}>
       <DialogTitle variant="h3">Создание новой темы</DialogTitle>
@@ -177,7 +125,7 @@ const ForumPage: React.FC = () => {
                 direction={'column'}
                 spacing={1}
                 className={cx('topics__list')}>
-                {topicsList.map(
+                {data.topicsList.map(
                   ({ title, description, count_messages }, index) => (
                     <ListItem key={index} className={cx('topics__list-item')}>
                       <Link to={`/forum/${index}`}>
@@ -205,7 +153,7 @@ const ForumPage: React.FC = () => {
               square>
               <Typography variant="h3">Топ-5 тем</Typography>
               <List>
-                {topicsPopular.map((topic, index) => (
+                {data.topicsPopular.map((topic, index) => (
                   <ListItem key={index}>
                     <ListItemIcon className={cx('popular__list-icon')}>
                       <img src={Zvezda}></img>
