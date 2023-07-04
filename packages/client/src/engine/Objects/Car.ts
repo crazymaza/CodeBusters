@@ -1,9 +1,12 @@
 import BaseObject, { BaseObjectSpecs } from './Base'
 
 export interface CarObjectSpecs extends BaseObjectSpecs {
+  fuelCapacity: number
+  fuel: number
   maxSpeed: number
   speed: number
-  gear: 'low' | 'higth'
+  type: 'player' | 'enemy' | 'bonus'
+  view: 'roadster' | 'sedan' | 'bolid' | 'refueler'
 }
 
 export default class CarObject extends BaseObject<CarObjectSpecs> {
@@ -15,7 +18,8 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
     return {
       maxSpeed: this.specs.maxSpeed,
       speed: this.specs.speed,
-      gear: this.specs.gear,
+      type: this.specs.type,
+      view: this.specs.view,
     }
   }
 }

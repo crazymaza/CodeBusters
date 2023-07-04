@@ -1,9 +1,4 @@
-export type CBEngineOptionObject = {
-  instance: any
-  specs: any
-}
-
 export type CBEngineOptions = {
-  objects?: CBEngineOptionObject[]
+  objects?: any
   canvasOptions?: CanvasRenderingContext2DSettings
 }
