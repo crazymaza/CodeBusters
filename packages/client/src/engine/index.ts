@@ -1,2 +1,1 @@
-export { default as CBEngine } from './Core'
-export { default as Session } from './Session'
+export { default as CBEngine } from './CBEngine'
