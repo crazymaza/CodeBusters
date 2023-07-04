@@ -1,4 +1,7 @@
 import { v4 as uuid } from 'uuid'
+import { CBEngine } from '@/engine'
+import levels from '@/engine/levels'
+import { canvas } from '@/utils'
 import { isFunction } from '@/helpers'
 
 export type SessionState = {
@@ -7,6 +10,10 @@ export type SessionState = {
   level: number | null
   timeLeft: number
   distanceLeft: number
+}
+
+export type SessionCanvas = {
+  [key in 'track' | 'car' | 'obstacle']: HTMLCanvasElement
 }
 
 export type SessionCallback<T = void> = (state: SessionState | null) => T
@@ -24,11 +31,13 @@ export type SessionOptions = {
 const SECOND = 1000
 
 export default class Session {
-  private history: SessionState[] = []
   private state: SessionState | null = null
   private timeId: NodeJS.Timer | null = null
 
-  constructor(private options: Partial<SessionOptions> = {}) {
+  constructor(
+    private canvasElements: SessionCanvas,
+    private options: Partial<SessionOptions> = {}
+  ) {
     return this
   }
 
@@ -41,11 +50,13 @@ export default class Session {
       distanceLeft: distance,
     })
 
-    if (this.state) {
-      this.history.push(this.state)
-    }
-
     this.updateTimeLeft()
+
+    levels[0].objects.forEach(gameObject => {
+      const canvasApi = canvas(this.canvasElements.track)
+
+      new CBEngine(canvasApi, { objects: [gameObject.instance] })
+    })
 
     this.onStart()
   }
@@ -75,10 +86,6 @@ export default class Session {
 
   public getState() {
     return this.state
-  }
-
-  public getHistory() {
-    return this.history
   }
 
   private setState(state: Partial<SessionState>) {
