@@ -1,53 +1,33 @@
-import { canvas } from '@/utils'
-
 export interface BaseObjectSpecs {
   x: number
   y: number
   width: number
   height: number
-  fill?: string
-  type?: string
+  fill: string
 }
 
-export default abstract class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
+export default class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
   constructor(
-    protected canvasApi: ReturnType<typeof canvas>,
+    protected ctx: CanvasRenderingContext2D,
     protected specs: TObjectSpecs
   ) {
-    this.draw(performance.now(), this.specs)
-
     return this
   }
 
-  protected updateSpecs(
-    newSpecs: Partial<TObjectSpecs>,
-    callback?: (
-      prevSpecs: TObjectSpecs,
-      newSpecs: Partial<TObjectSpecs>
-    ) => TObjectSpecs
-  ) {
-    if (typeof callback === 'function') {
-      callback(this.specs, newSpecs)
-    }
+  public drawRect(specs?: Partial<TObjectSpecs>) {
+    const updateSpecs = { ...this.specs, ...specs }
 
-    return (this.specs = { ...this.specs, ...newSpecs })
-  }
+    this.specs = updateSpecs
 
-  protected abstract draw(
-    deltaTime: number,
-    specs?: Partial<TObjectSpecs>
-  ): TObjectSpecs
-
-  public getUniqSpecs(): Partial<TObjectSpecs> | null {
-    return null
-  }
-
-  protected clear() {
-    this.canvasApi.ctx?.clearRect(
-      0,
-      0,
-      this.canvasApi.element.width,
-      this.canvasApi.element.height
+    return this.ctx.fillRect(
+      this.specs.x,
+      this.specs.y,
+      this.specs.width,
+      this.specs.height
     )
+  }
+
+  public getSpecs() {
+    return this.specs
   }
 }
