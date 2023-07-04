@@ -12,7 +12,7 @@ import { ErrorPage } from '@/pages'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ErrorBoundary errorComponent={<ErrorPage />}>
+    <ErrorBoundary errorComponent={<ErrorPage topMessage={'Что-то пошло не так...'} />}>
       <Provider store={store}>
         <StyledEngineProvider injectFirst>
           <App />
