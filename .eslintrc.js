@@ -19,6 +19,10 @@ module.exports = {
   },
   ignorePatterns: [
     'node_modules/',
-    'src/assets/'
+    'src/assets/',
+    '.idea/',
+    '.github/',
+    '.husky/',
+    'dist/'
   ],
 }
