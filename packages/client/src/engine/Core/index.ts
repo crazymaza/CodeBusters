@@ -9,11 +9,17 @@ import { CBEngineOptions } from './types'
  */
 
 export default class CBEngine {
-  private canvasApi: ReturnType<typeof canvas>
+  private objects: any[] = []
+  private lastTimestamp = performance.now()
   private fps = 0
 
-  constructor(canvasElement: HTMLCanvasElement, option?: CBEngineOptions) {
-    this.canvasApi = canvas(canvasElement, option?.canvasOptions)
+  constructor(
+    private canvasApi: ReturnType<typeof canvas>,
+    private options?: CBEngineOptions
+  ) {
+    this.options?.objects?.forEach(object => {
+      this.objects.push(new object.instance(this.canvasApi, object.specs))
+    })
   }
 
   public setFPS(fps: number) {
@@ -24,10 +30,10 @@ export default class CBEngine {
     return this.fps
   }
 
-  public run(timestamp: number) {
+  public run() {
     console.log('RUN')
 
-    this.animation(timestamp)
+    requestAnimationFrame(this.animation)
   }
 
   public stop() {
@@ -35,15 +41,14 @@ export default class CBEngine {
   }
 
   private animation(timestamp: number) {
-    this.clear()
-  }
+    const deltaTime = timestamp - this.lastTimestamp
 
-  private clear() {
-    this.canvasApi.ctx?.clearRect(
-      0,
-      0,
-      this.canvasApi.element.width,
-      this.canvasApi.element.height
-    )
+    this.lastTimestamp = timestamp
+
+    this.objects.forEach(object => {
+      object.redraw(this.canvasApi, deltaTime)
+    })
+
+    requestAnimationFrame(this.animation)
   }
 }
