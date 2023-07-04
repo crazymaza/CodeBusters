@@ -5,7 +5,14 @@ export interface ObstacleObjectSpecs extends BaseObjectSpecs {
 }
 
 export default class ObstacleObject extends BaseObject<ObstacleObjectSpecs> {
-  protected draw(specs: Partial<ObstacleObjectSpecs>): ObstacleObjectSpecs {
+  protected draw(
+    delta: number,
+    specs: Partial<ObstacleObjectSpecs>
+  ): ObstacleObjectSpecs {
+    if (this.canvasApi.ctx) {
+      this.clear()
+    }
+
     return this.updateSpecs(specs)
   }
 

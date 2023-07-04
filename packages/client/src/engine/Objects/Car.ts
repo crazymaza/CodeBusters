@@ -10,12 +10,21 @@ export interface CarObjectSpecs extends BaseObjectSpecs {
 }
 
 export default class CarObject extends BaseObject<CarObjectSpecs> {
-  protected draw(specs: Partial<CarObjectSpecs>): CarObjectSpecs {
+  protected draw(
+    delta: number,
+    specs: Partial<CarObjectSpecs>
+  ): CarObjectSpecs {
+    if (this.canvasApi.ctx) {
+      this.clear()
+    }
+
     return this.updateSpecs(specs)
   }
 
   public getUniqSpecs(): Partial<CarObjectSpecs> {
     return {
+      fuelCapacity: this.specs.fuelCapacity,
+      fuel: this.specs.fuel,
       maxSpeed: this.specs.maxSpeed,
       speed: this.specs.speed,
       type: this.specs.type,
