@@ -1,5 +1,5 @@
-import { canvas } from '@/utils'
 import { CBEngineOptions } from './types'
+import { TrackObject } from '@/engine/Objects'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -9,17 +9,14 @@ import { CBEngineOptions } from './types'
  */
 
 export default class CBEngine {
-  private objects: any[] = []
-  private lastTimestamp = performance.now()
+  private sessionId = 0
+  private lastTimestamp = 0
   private fps = 0
 
-  constructor(
-    private canvasApi: ReturnType<typeof canvas>,
-    private options?: CBEngineOptions
-  ) {
-    this.options?.objects?.forEach(object => {
-      this.objects.push(new object.instance(this.canvasApi, object.specs))
-    })
+  constructor(private options: CBEngineOptions) {
+    this.lastTimestamp = performance.now()
+
+    return this
   }
 
   public setFPS(fps: number) {
@@ -33,22 +30,29 @@ export default class CBEngine {
   public run() {
     console.log('RUN')
 
-    requestAnimationFrame(this.animation)
+    this.animation(performance.now())
   }
 
   public stop() {
     console.log('STOP')
+
+    cancelAnimationFrame(this.sessionId)
   }
 
-  private animation(timestamp: number) {
+  public animation(timestamp: number) {
     const deltaTime = timestamp - this.lastTimestamp
 
     this.lastTimestamp = timestamp
 
-    this.objects.forEach(object => {
-      object.redraw(this.canvasApi, deltaTime)
+    this.options.objects.forEach(object => {
+      const prevSpecs = object.getSpecs()
+
+      if (object instanceof TrackObject) {
+        object.drawBoundary(deltaTime * 2)
+        // console.log('OBJECT', object)
+      }
     })
 
-    requestAnimationFrame(this.animation)
+    this.sessionId = requestAnimationFrame(this.animation.bind(this))
   }
 }

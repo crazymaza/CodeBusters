@@ -10,12 +10,12 @@ export interface BaseObjectSpecs {
 }
 
 export default abstract class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
-  constructor(
-    protected canvasApi: ReturnType<typeof canvas>,
-    protected specs: TObjectSpecs
-  ) {
-    this.draw(performance.now(), this.specs)
+  protected deltaTime = 0
+  protected specs: TObjectSpecs | null = null
 
+  public type = ''
+
+  constructor(protected canvasApi: ReturnType<typeof canvas>) {
     return this
   }
 
@@ -26,23 +26,27 @@ export default abstract class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
       newSpecs: Partial<TObjectSpecs>
     ) => TObjectSpecs
   ) {
-    if (typeof callback === 'function') {
+    if (this.specs && typeof callback === 'function') {
       callback(this.specs, newSpecs)
-    }
 
-    return (this.specs = { ...this.specs, ...newSpecs })
+      return (this.specs = { ...this.specs, ...newSpecs })
+    }
   }
 
-  protected abstract draw(
-    deltaTime: number,
-    specs?: Partial<TObjectSpecs>
-  ): TObjectSpecs
+  public draw(deltaTime: number, specs: TObjectSpecs) {
+    this.deltaTime = deltaTime
+    this.specs = specs
+  }
 
   public getUniqSpecs(): Partial<TObjectSpecs> | null {
     return null
   }
 
-  protected clear() {
+  public getSpecs() {
+    return this.specs
+  }
+
+  public clear() {
     this.canvasApi.ctx?.clearRect(
       0,
       0,

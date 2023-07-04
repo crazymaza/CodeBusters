@@ -1,9 +1,5 @@
-export type CBEngineOptionObject = {
-  instance: any
-  specs: any
-}
+import BaseObject, { BaseObjectSpecs } from '@/engine/Objects/Base'
 
 export type CBEngineOptions = {
-  objects?: CBEngineOptionObject[]
-  canvasOptions?: CanvasRenderingContext2DSettings
+  objects: BaseObject<BaseObjectSpecs>[]
 }
