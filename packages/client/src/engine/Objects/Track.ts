@@ -2,20 +2,23 @@ import BaseObject, { BaseObjectSpecs } from './Base'
 
 export default class TrackObject extends BaseObject<BaseObjectSpecs> {
   private boundaryCount = 14
+  private boundaryTopOffset = 0
 
-  private boundarySpecs = {
+  public type = 'track'
+
+  static boundarySpecs = {
     leftOffset: 2,
     width: 10,
     height: 80,
     padding: 8,
-    fillOdd: '#ffffff',
+    fillOdd: '#a3c6ff',
     fillEvent: '#d33939',
   }
 
-  public type = 'track'
+  static width = 500
 
   static createBaseTrackSpecs(containerHTML: HTMLElement) {
-    const trackWidth = 500
+    const trackWidth = TrackObject.width
     const trackHeight = containerHTML.offsetHeight || 0
     const trackFill = 'gray'
 
@@ -28,27 +31,27 @@ export default class TrackObject extends BaseObject<BaseObjectSpecs> {
     }
   }
 
-  private createBoundary(side: 'left' | 'right', topOffset = 0) {
+  private createBoundary(side: 'left' | 'right') {
     return Array.from({ length: this.boundaryCount }).map(() => {
+      const boundarySpecs = TrackObject.boundarySpecs
+
       const offset =
         side === 'left'
-          ? this.boundarySpecs.leftOffset
-          : this.boundarySpecs.leftOffset -
-            (this.boundarySpecs.width + this.boundarySpecs.leftOffset * 2) +
+          ? boundarySpecs.leftOffset
+          : boundarySpecs.leftOffset -
+            (TrackObject.boundarySpecs.width + boundarySpecs.leftOffset * 2) +
             (this.specs?.width || 0)
-
-      console.log('OFFSET', topOffset)
 
       return {
         offset,
-        topOffset,
-        width: this.boundarySpecs.width,
-        height: this.boundarySpecs.height,
+        topOffset: this.boundaryTopOffset,
+        width: boundarySpecs.width,
+        height: boundarySpecs.height,
       }
     })
   }
 
-  protected drawTrack() {
+  public drawTrack() {
     if (this.canvasApi.ctx && this.specs) {
       const specs = this.specs as BaseObjectSpecs
 
@@ -61,24 +64,28 @@ export default class TrackObject extends BaseObject<BaseObjectSpecs> {
   }
 
   public drawBoundary(topOffset = 0) {
-    if (this.canvasApi.ctx && this.boundarySpecs) {
-      const leftBoundary = this.createBoundary('left', topOffset)
-      const rightBoundary = this.createBoundary('right', topOffset)
+    if (this.canvasApi.ctx) {
+      this.boundaryTopOffset = topOffset
+
+      const boundarySpecs = TrackObject.boundarySpecs
+
+      const leftBoundary = this.createBoundary('left')
+      const rightBoundary = this.createBoundary('right')
+
+      const totalCycle = boundarySpecs.height + boundarySpecs.padding
 
       let cycle = 0
 
-      const totalCycle = this.boundarySpecs.height + this.boundarySpecs.padding
-
       cycle = (cycle + 1) % totalCycle
 
+      // TODO Требует оптимизации и рефакторинга. Отвечает за перерисовку боковых ограничителей трассы
       for (const boundary of [leftBoundary, rightBoundary]) {
         for (let i = 0; i < boundary.length; i++) {
-          boundary[i].topOffset = cycle + (i - 1) * totalCycle
+          boundary[i].topOffset =
+            cycle + (i - 1) * totalCycle + this.boundaryTopOffset
 
           this.canvasApi.ctx.fillStyle =
-            i % 2 === 0
-              ? this.boundarySpecs.fillEvent
-              : this.boundarySpecs.fillOdd
+            i % 2 === 0 ? boundarySpecs.fillEvent : boundarySpecs.fillOdd
 
           this.canvasApi.ctx.fillRect(
             boundary[i].offset,
