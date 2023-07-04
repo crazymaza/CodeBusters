@@ -1,5 +1,6 @@
 import { CBEngineOptions } from './types'
-import { TrackObject } from '@/engine/Objects'
+import { CarObject, TrackObject } from '@/engine/Objects'
+import { CarObjectSpecs } from '@/engine/Objects/Car'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -11,7 +12,8 @@ import { TrackObject } from '@/engine/Objects'
 export default class CBEngine {
   private sessionId = 0
   private lastTimestamp = 0
-  private fps = 0
+  private boundaryTrackTopOffset = 0
+  private speed = 5
 
   constructor(private options: CBEngineOptions) {
     this.lastTimestamp = performance.now()
@@ -19,22 +21,44 @@ export default class CBEngine {
     return this
   }
 
-  public setFPS(fps: number) {
-    this.fps = fps
-  }
-
-  public getFFS() {
-    return this.fps
-  }
-
   public run() {
     console.log('RUN')
+
+    this.options.objects.forEach(object => {
+      if (object instanceof CarObject) {
+        object.addListeners()
+      }
+    })
 
     this.animation(performance.now())
   }
 
   public stop() {
     console.log('STOP')
+
+    this.options.objects.forEach(object => {
+      if (object instanceof CarObject) {
+        const prevSpecs = object.getSpecs() as CarObjectSpecs
+        const xPositionCar = object.getCenterOnTrack(TrackObject.width)
+
+        object.clear()
+        object.draw(0, {
+          ...prevSpecs,
+          x: xPositionCar,
+          y: 0,
+        })
+
+        object.removeListeners()
+      }
+
+      if (object instanceof TrackObject) {
+        this.boundaryTrackTopOffset = 0
+
+        object.clear()
+        object.drawTrack()
+        object.drawBoundary(this.boundaryTrackTopOffset)
+      }
+    })
 
     cancelAnimationFrame(this.sessionId)
   }
@@ -45,11 +69,33 @@ export default class CBEngine {
     this.lastTimestamp = timestamp
 
     this.options.objects.forEach(object => {
-      const prevSpecs = object.getSpecs()
+      if (object instanceof CarObject) {
+        const boundarySpecs = TrackObject.boundarySpecs
+        const xPositionCar = object.getSpecs()?.x as number
+
+        const isOutLeftSideTrack = xPositionCar <= boundarySpecs.leftOffset
+
+        const isOutRightSideTrack =
+          xPositionCar >=
+          TrackObject.width -
+            boundarySpecs.leftOffset -
+            CarObject.dimensions.with
+
+        if (isOutLeftSideTrack || isOutRightSideTrack) {
+          alert('Вы вылетели с трассы!')
+
+          this.stop()
+
+          return
+        }
+      }
 
       if (object instanceof TrackObject) {
-        object.drawBoundary(deltaTime * 2)
-        // console.log('OBJECT', object)
+        this.boundaryTrackTopOffset += this.speed
+
+        object.clear()
+        object.drawTrack()
+        object.drawBoundary(this.boundaryTrackTopOffset)
       }
     })
 
