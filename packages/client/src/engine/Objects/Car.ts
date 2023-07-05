@@ -1,13 +1,18 @@
 import BaseObject, { BaseObjectSpecs } from './Base'
 import { canvas } from '@/utils'
 
+/*
+ * @INFO Объект машины
+ *
+ * Включает в себя описание отрисовки машины и, возможно, других машин на трассе
+ *
+ */
+
 export interface CarObjectSpecs extends BaseObjectSpecs {
   image: CanvasImageSource
 }
 
 export default class CarObject extends BaseObject<CarObjectSpecs> {
-  public type = 'car'
-
   static dimensions = {
     with: 60,
     height: 130,
@@ -39,6 +44,7 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
   public drawCar() {
     if (this.canvasApi.ctx && this.specs) {
       this.clear()
+
       this.canvasApi.ctx.drawImage(
         this.specs.image,
         this.specs.x,
