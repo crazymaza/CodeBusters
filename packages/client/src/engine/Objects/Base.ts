@@ -1,5 +1,12 @@
 import { canvas } from '@/utils'
 
+/*
+ * @INFO Базовый объект
+ *
+ * Служит для описания общих характеристик объектов
+ *
+ */
+
 export interface BaseObjectSpecs {
   x: number
   y: number
@@ -12,8 +19,6 @@ export interface BaseObjectSpecs {
 export default abstract class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
   protected deltaTime = 0
   protected specs: TObjectSpecs | null = null
-
-  public type = ''
 
   constructor(protected canvasApi: ReturnType<typeof canvas>) {
     return this
