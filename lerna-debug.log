@@ -11,7 +11,7 @@
 4 info filter [ 'client' ]
 5 error Error: Unable to connect to the daemon process.
 5 error Messages from the log:
-5 error [NX Daemon Server] - 2023-06-30T01:59:58.026Z - Started listening on: /home/sans/documents/CodeBusters/node_modules/.cache/nx/d/d.sock
+5 error [NX Daemon Server] - 2023-07-05T14:42:24.752Z - Started listening on: /home/sans/documents/CodeBusters/node_modules/.cache/nx/d/d.sock
 5 error
 5 error  >  NX   Invalid BSER
 5 error

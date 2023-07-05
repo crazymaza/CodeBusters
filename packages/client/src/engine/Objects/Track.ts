@@ -37,7 +37,8 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
       width: trackWidth,
       height: trackHeight,
       fill: trackFill,
-      boundaryCount: Math.round(trackHeight / TrackObject.boundarySpecs.height),
+      boundaryCount:
+        Math.round(trackHeight / TrackObject.boundarySpecs.height) + 1,
     }
   }
 
