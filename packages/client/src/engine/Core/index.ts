@@ -31,6 +31,7 @@ export default class CBEngine {
   private lastTimestamp = 0
   private boundaryTrackTopOffset = 0
   private speed = CBEngine.startSpeed
+  private process: 'play' | 'stop' | 'pause' = 'stop'
 
   constructor(private options: CBEngineOptions) {
     this.lastTimestamp = performance.now()
@@ -38,7 +39,17 @@ export default class CBEngine {
     return this
   }
 
+  public getProcess() {
+    return this.process
+  }
+
   public run() {
+    if (this.process === 'play') {
+      return
+    }
+
+    this.process = 'play'
+
     this.options.objects.forEach(object => {
       if (object instanceof CarObject) {
         // Подключение управления машиной
@@ -59,6 +70,12 @@ export default class CBEngine {
   }
 
   public stop() {
+    if (this.process === 'stop') {
+      return
+    }
+
+    this.process = 'stop'
+
     this.speed = CBEngine.startSpeed
 
     this.options.objects.forEach(object => {

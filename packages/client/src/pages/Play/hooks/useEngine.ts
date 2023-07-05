@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { CBEngine } from '@/engine'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { canvas } from '@/utils'
+import { loadImage } from '@/helpers'
 
 import sportCarImage from 'images/sport_car.png'
 
@@ -43,18 +44,21 @@ export default function useEngine({
         0
       )
 
-      // Рисуем трассу для начального отображения
-      trackObject.draw(0, baseTrackSpecs)
+      // Ждем пока загрузиться изображение машины
+      loadImage(sportCarImage).then(() => {
+        // Рисуем трассу для начального отображения
+        trackObject.draw(0, baseTrackSpecs)
 
-      // Рисуем машину
-      carObject.draw(0, baseCarSpecs)
+        // Рисуем машину
+        carObject.draw(0, baseCarSpecs)
 
-      // Создаем экземпляр движка для обработки анимации и управлением процессом игры
-      setEngine(
-        new CBEngine({
-          objects: [trackObject, carObject],
-        })
-      )
+        // Создаем экземпляр движка для обработки анимации и управлением процессом игры
+        setEngine(
+          new CBEngine({
+            objects: [trackObject, carObject],
+          })
+        )
+      })
     }
   }, [])
 

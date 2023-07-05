@@ -11,13 +11,13 @@ import { ErrorBoundary } from '@/components'
 import { ErrorPage } from '@/pages'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  // <React.StrictMode>
-  <ErrorBoundary errorComponent={<ErrorPage />}>
-    <Provider store={store}>
-      <StyledEngineProvider injectFirst>
-        <App />
-      </StyledEngineProvider>
-    </Provider>
-  </ErrorBoundary>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <ErrorBoundary errorComponent={<ErrorPage />}>
+      <Provider store={store}>
+        <StyledEngineProvider injectFirst>
+          <App />
+        </StyledEngineProvider>
+      </Provider>
+    </ErrorBoundary>
+  </React.StrictMode>
 )
