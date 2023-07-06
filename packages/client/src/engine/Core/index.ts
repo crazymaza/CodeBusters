@@ -1,4 +1,4 @@
-import { CBEngineOptions } from './types'
+import { CBEngineOptions, CBEngineProcess } from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car'
 
@@ -31,7 +31,7 @@ export default class CBEngine {
   private lastTimestamp = 0
   private boundaryTrackTopOffset = 0
   private speed = CBEngine.startSpeed
-  private process: 'play' | 'stop' | 'pause' = 'stop'
+  private process: CBEngineProcess = CBEngineProcess.STOP
 
   constructor(private options: CBEngineOptions) {
     this.lastTimestamp = performance.now()
@@ -44,11 +44,11 @@ export default class CBEngine {
   }
 
   public run() {
-    if (this.process === 'play') {
+    if (this.process === CBEngineProcess.PLAY) {
       return
     }
 
-    this.process = 'play'
+    this.process = CBEngineProcess.PLAY
 
     this.options.objects.forEach(object => {
       if (object instanceof CarObject) {
@@ -70,11 +70,11 @@ export default class CBEngine {
   }
 
   public stop() {
-    if (this.process === 'stop') {
+    if (this.process === CBEngineProcess.STOP) {
       return
     }
 
-    this.process = 'stop'
+    this.process = CBEngineProcess.STOP
 
     this.speed = CBEngine.startSpeed
 

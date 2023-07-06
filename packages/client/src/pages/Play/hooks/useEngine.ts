@@ -20,11 +20,12 @@ export default function useEngine({
   const [engine, setEngine] = useState<CBEngine | null>(null)
 
   useEffect(() => {
-    if (
+    const isDefineLayers =
       carRef.current instanceof HTMLCanvasElement &&
       trackRef.current instanceof HTMLCanvasElement &&
       containerRef.current instanceof HTMLElement
-    ) {
+
+    if (isDefineLayers) {
       const trackCanvasLayer = canvas(trackRef.current)
       const carCanvasLayer = canvas(carRef.current)
 
