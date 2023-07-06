@@ -1,7 +1,7 @@
 import { MainLayout } from '@/layouts'
-import { useState } from 'react'
 import {
   Avatar,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -16,10 +16,12 @@ import classNames from 'classnames/bind'
 import BronzeCup from 'icons/bronze_cup.png'
 import GoldCup from 'icons/gold_cup.png'
 import SilverCup from 'icons/silver_cup.png'
-import { ILeaderList } from './types'
-import { leaderList, headerCells } from './data'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { headerCells, leaderList } from './data'
 import styles from './styles.module.scss'
-import { Order } from './types'
+import { ILeaderList, Order } from './types'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 
 const cx = classNames.bind(styles)
 
@@ -37,9 +39,23 @@ const renderCupIcon = (rating: string) => {
   const icon = getColorForCup(rating)
 
   if (rating === '1' || rating === '2' || rating === '3') {
-    return <img src={icon} className={cx('icon__img')}></img>
+    return <img src={icon} className={cx('icon__img')} />
   }
   return ''
+}
+
+const renderCloseButton = () => {
+  const navigate = useNavigate()
+  const handleClosePage = () => {
+    navigate('/')
+  }
+  return (
+    <div className={cx('page-content-close')}>
+      <IconButton onClick={handleClosePage}>
+        <HighlightOffIcon />
+      </IconButton>
+    </div>
+  )
 }
 
 interface ITableProps {
@@ -48,7 +64,7 @@ interface ITableProps {
   orderBy: string
 }
 
-function TableHeader(props: ITableProps) {
+const TableHeader = (props: ITableProps) => {
   const { onRequestSort, order, orderBy } = props
   const createSortHandler = (property: keyof ILeaderList) => () => {
     onRequestSort(property)
@@ -123,6 +139,7 @@ const LeaderBoardPage = () => {
           square>
           <div className={cx('leaderboard__page-title')}>
             <Typography variant="h3">Турнирная таблица</Typography>
+            {renderCloseButton()}
           </div>
 
           <div className={cx('table-container')}>

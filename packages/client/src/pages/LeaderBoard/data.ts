@@ -1,8 +1,7 @@
 import Avatar1 from 'images/avatar1.png'
 import Avatar2 from 'images/avatar2.png'
 import Avatar3 from 'images/avatar3.png'
-import { ILeaderList } from './types'
-import { IHeaderCell } from './types'
+import { IHeaderCell, ILeaderList } from './types'
 
 export const leaderList: ILeaderList[] = [
   {
