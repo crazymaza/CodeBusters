@@ -34,6 +34,7 @@ export default createBrowserRouter(
           element={
             <Pages.ErrorPage
               topMessage={'Упс..'}
+              bottomMessage={'Такой страницы не существует'}
             />
           }
         />
