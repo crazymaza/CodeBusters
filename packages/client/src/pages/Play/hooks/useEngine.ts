@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { CBEngine } from '@/engine'
+import { CodeBustersEngine } from '@/engine'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { canvas } from '@/utils'
 import { loadImage } from '@/helpers'
@@ -17,7 +17,7 @@ export default function useEngine({
   trackRef,
   carRef,
 }: UseEngineProps) {
-  const [engine, setEngine] = useState<CBEngine | null>(null)
+  const [engine, setEngine] = useState<CodeBustersEngine | null>(null)
 
   useEffect(() => {
     const isDefineLayers =
@@ -55,7 +55,7 @@ export default function useEngine({
 
         // Создаем экземпляр движка для обработки анимации и управлением процессом игры
         setEngine(
-          new CBEngine({
+          new CodeBustersEngine({
             objects: [trackObject, carObject],
           })
         )

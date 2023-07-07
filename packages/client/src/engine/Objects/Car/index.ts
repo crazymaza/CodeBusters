@@ -1,4 +1,5 @@
-import BaseObject, { BaseObjectSpecs } from './Base'
+import { BaseObject } from '@/engine/Objects'
+import { CarObjectSpecs, CarKeyboadControlEventKey } from './types'
 import { canvas } from '@/utils'
 
 /*
@@ -7,11 +8,6 @@ import { canvas } from '@/utils'
  * Включает в себя описание отрисовки машины и, возможно, других машин на трассе
  *
  */
-
-export interface CarObjectSpecs extends BaseObjectSpecs {
-  image: CanvasImageSource
-}
-
 export default class CarObject extends BaseObject<CarObjectSpecs> {
   static dimensions = {
     with: 60,
@@ -37,8 +33,6 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
     super(canvasApi)
 
     this.onKeyDown = this.onKeyDown.bind(this)
-
-    return this
   }
 
   public drawCar() {
@@ -69,7 +63,7 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
     const prevSpecs = this.specs as CarObjectSpecs
 
     switch (event.key) {
-      case 'ArrowLeft':
+      case CarKeyboadControlEventKey.LEFT:
         this.clear()
 
         this.draw(0, {
@@ -78,7 +72,7 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
         })
         break
 
-      case 'ArrowRight':
+      case CarKeyboadControlEventKey.RIGHT:
         this.clear()
 
         this.draw(0, {

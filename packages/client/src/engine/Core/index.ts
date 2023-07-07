@@ -1,6 +1,6 @@
-import { CBEngineOptions, CBEngineProcess } from './types'
+import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
-import { CarObjectSpecs } from '@/engine/Objects/Car'
+import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -21,7 +21,7 @@ import { CarObjectSpecs } from '@/engine/Objects/Car'
 
 const SECOND = 1000
 
-export default class CBEngine {
+export default class CodeBustersEngine {
   static startSpeed = 5
   static maxSpeed = 30
   static diffSpeed = 2 // На сколько  увеличивается скорость в секунду
@@ -30,13 +30,11 @@ export default class CBEngine {
   private intervalId: NodeJS.Timer | null = null
   private lastTimestamp = 0
   private boundaryTrackTopOffset = 0
-  private speed = CBEngine.startSpeed
-  private process: CBEngineProcess = CBEngineProcess.STOP
+  private speed = CodeBustersEngine.startSpeed
+  private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
 
-  constructor(private options: CBEngineOptions) {
-    this.lastTimestamp = performance.now()
-
-    return this
+  constructor(private options: CodeBustersEngineOptions) {
+    this.lastTimestamp = 0
   }
 
   public getProcess() {
@@ -44,11 +42,11 @@ export default class CBEngine {
   }
 
   public run() {
-    if (this.process === CBEngineProcess.PLAY) {
+    if (this.process === CodeBustersEngineProcess.PLAY) {
       return
     }
 
-    this.process = CBEngineProcess.PLAY
+    this.process = CodeBustersEngineProcess.PLAY
 
     this.options.objects.forEach(object => {
       if (object instanceof CarObject) {
@@ -59,8 +57,8 @@ export default class CBEngine {
 
     this.intervalId = setInterval(() => {
       // Увеличение скорости с интервалом в 1с
-      if (this.speed < CBEngine.maxSpeed) {
-        this.speed += CBEngine.diffSpeed
+      if (this.speed < CodeBustersEngine.maxSpeed) {
+        this.speed += CodeBustersEngine.diffSpeed
       } else {
         clearInterval(this.intervalId as NodeJS.Timer)
       }
@@ -70,13 +68,13 @@ export default class CBEngine {
   }
 
   public stop() {
-    if (this.process === CBEngineProcess.STOP) {
+    if (this.process === CodeBustersEngineProcess.STOP) {
       return
     }
 
-    this.process = CBEngineProcess.STOP
+    this.process = CodeBustersEngineProcess.STOP
 
-    this.speed = CBEngine.startSpeed
+    this.speed = CodeBustersEngine.startSpeed
 
     this.options.objects.forEach(object => {
       // Восстановление первоначального состояние объектов

@@ -1,4 +1,5 @@
-import BaseObject, { BaseObjectSpecs } from './Base'
+import { BaseObject } from '@/engine/Objects'
+import { TrackObjectSpecs, TrackBoundarySide } from './types'
 
 /*
  * @INFO Объект трассы
@@ -7,11 +8,6 @@ import BaseObject, { BaseObjectSpecs } from './Base'
  * для имитации скорости машины
  *
  */
-
-export interface TrackObjectSpecs extends BaseObjectSpecs {
-  boundaryCount?: number
-}
-
 export default class TrackObject extends BaseObject<TrackObjectSpecs> {
   private boundaryTopOffset = 0
 
@@ -42,14 +38,14 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
     }
   }
 
-  private createBoundary(side: 'left' | 'right') {
+  private createBoundary(side: TrackBoundarySide) {
     return Array.from({
       length: (this.specs?.boundaryCount || 0) + this.boundaryTopOffset,
     }).map(() => {
       const boundarySpecs = TrackObject.boundarySpecs
 
       const offset =
-        side === 'left'
+        side === TrackBoundarySide.LEFT
           ? boundarySpecs.leftOffset
           : boundarySpecs.leftOffset -
             (TrackObject.boundarySpecs.width + boundarySpecs.leftOffset * 2) +
@@ -83,8 +79,8 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
       const boundarySpecs = TrackObject.boundarySpecs
 
       const boundaries = [
-        this.createBoundary('left'),
-        this.createBoundary('right'),
+        this.createBoundary(TrackBoundarySide.LEFT),
+        this.createBoundary(TrackBoundarySide.RIGHT),
       ]
 
       const boundaryFullHeight = boundarySpecs.height + boundarySpecs.padding
@@ -92,7 +88,7 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
       const ctx = this.canvasApi.ctx as CanvasRenderingContext2D
       const trackHeight = this.specs?.height || 0
 
-      // Рисование границ трассы слева и справа, а также их смещение на this.boundaryTopOffset
+      // Отрисовка границ трассы слева и справа, а также их смещение на this.boundaryTopOffset
       boundaries.forEach(boundary => {
         let boundaryIndex = 0
 

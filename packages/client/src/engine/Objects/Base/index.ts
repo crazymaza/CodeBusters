@@ -1,4 +1,5 @@
 import { canvas } from '@/utils'
+import { BaseObjectSpecs } from './types'
 
 /*
  * @INFO Базовый объект
@@ -7,21 +8,13 @@ import { canvas } from '@/utils'
  *
  */
 
-export interface BaseObjectSpecs {
-  x: number
-  y: number
-  width: number
-  height: number
-  fill?: string
-  type?: string
-}
-
 export default abstract class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
+  protected canvasApi: ReturnType<typeof canvas>
   protected deltaTime = 0
   protected specs: TObjectSpecs | null = null
 
-  constructor(protected canvasApi: ReturnType<typeof canvas>) {
-    return this
+  constructor(canvasApi: ReturnType<typeof canvas>) {
+    this.canvasApi = canvasApi
   }
 
   protected updateSpecs(

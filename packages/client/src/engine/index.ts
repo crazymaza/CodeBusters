@@ -1,1 +1,1 @@
-export { default as CBEngine } from './Core'
+export { default as CodeBustersEngine } from './Core'
