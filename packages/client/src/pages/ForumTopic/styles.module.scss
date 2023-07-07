@@ -16,6 +16,7 @@
   }
 
   &-container {
+    @include mx.themify('background-color', 'paper-bg');
     display: flex;
     flex-direction: column;
     padding: 5rem;
@@ -23,7 +24,6 @@
     width: 125rem;
     height: 80rem;
     border-radius: 1.5rem;
-    background: rgb(244, 244, 244, 0.8);
     box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
 
   }
@@ -32,8 +32,12 @@
     display: flex;
     flex-direction: column;
 
-    &-textfield textarea {
-      font-size: 1.4rem;
+    &-textfield {
+      @include mx.themify('background-color', 'forum_topic-bg');
+
+      textarea {
+        font-size: 1.4rem;
+      }
     }
 
     .buttons-container {
@@ -103,8 +107,8 @@
       }
 
       &-date {
+        @include mx.themify('color', 'forum_date-color');
         display: flex;
-        color: gray;
         height: 10rem;
         text-align: end;
       }

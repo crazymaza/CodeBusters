@@ -1,3 +1,5 @@
+@use 'themes/mixins' as mx;
+
 .leaderboard {
   &__page {
     display: flex;
@@ -10,6 +12,7 @@
   }
 
   &__page-container {
+    @include mx.themify('background-color', 'paper-bg');
     display: flex;
     padding: 5rem;
     flex-direction: column;
@@ -18,7 +21,6 @@
     max-width: 1000px;
     height: 670px;
     border-radius: 1.5rem;
-    background: rgb(244, 244, 244, 0.8);
     box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
   }
 
@@ -32,7 +34,7 @@
 
 .table {
   &__header-column {
-    background-color: #b9cdf0;
+    @include mx.themify('background-color', 'leaderboard_top-bg');
     font-size: 2rem;
     text-align: center;
     padding: 2rem;
@@ -43,7 +45,7 @@
   }
 
   &-container {
-    background-color: white;
+    @include mx.themify('background-color', 'table-bg');
     width: 100%;
     border-radius: 1.5rem;
   }
@@ -77,14 +79,14 @@
   }
 
   &__column-scores {
+    @include mx.themify('color', 'leaderboard_scores-text');
     text-align: center;
     font-size: 2rem;
-    color: #417be7;
     font-weight: bold;
   }
 
   &__row:hover {
-    background-color: #e3eaf7;
+    @include mx.themify('background-color', 'leaderboard_item_hover');
   }
 }
 

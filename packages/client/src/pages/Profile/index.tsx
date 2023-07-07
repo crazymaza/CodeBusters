@@ -139,8 +139,12 @@ const ProfilePage = () => {
           className={cx('modal-password__content')}
           onSubmit={modalHandleSubmit(onModalSubmit)}>
           {modalFormFields.map(
-            ({ variant = 'standard', type = 'text', name, ...props }) => (
+            (
+              { variant = 'standard', type = 'text', name, ...props },
+              index
+            ) => (
               <TextField
+                key={index}
                 control={modalControl}
                 fieldError={modalErrors[name]}
                 name={name}

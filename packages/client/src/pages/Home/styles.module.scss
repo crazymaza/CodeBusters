@@ -1,3 +1,5 @@
+@use 'themes/mixins' as mx;
+
 .main__page {
   display: flex;
   justify-content: center;
@@ -6,9 +8,9 @@
   height: 100vh;
   background: url(images/background_light_theme.png) no-repeat;
   background-size: cover;
-  background-color: #3276c5;
 
   &_box {
+    @include mx.themify('background-color', 'paper-bg');
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,13 +18,14 @@
     width: 122.6rem;
     height: 67.8rem;
     border-radius: 1.5rem;
-    opacity: 0.8999999761581421;
-    background: #f4f4f4;
     box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
 
+
+
     hr {
+      @include mx.themify('border-color', 'hr_blue-color');
       height: 80%;
-      border: 0.1rem solid #1673e0;
+      border: 0.1rem solid;
       margin: 0;
     }
   }
@@ -52,14 +55,15 @@
         &__item {
           &:first-child {
             .menu__item-link {
-              border-bottom: 0.4rem solid #3276c5;
+              @include mx.themify('border-color', 'menu_item-border-color');
+              border-bottom: 0.4rem solid;
 
               .link {
                 &__button {
                   &-label {
                     span {
+                      @include mx.themify('color', 'form_link-color');
                       font-size: 4rem;
-                      color: #3276c5;
                       font-weight: 700;
                     }
                   }
@@ -74,13 +78,14 @@
             }
           }
 
-          &-link {
+          &_link {
+            @include mx.themify('color', 'main_link-color');
+            @include mx.themify('border-color', 'form_link-color');
             display: flex;
             height: 12rem;
             width: 49.2rem;
-            color: #000;
             text-decoration: none;
-            border-bottom: 0.2rem solid #3276c5;
+            border-bottom: 0.2rem solid;
 
             .link {
               &__button {
@@ -90,7 +95,7 @@
 
                 &-label {
                   span {
-                    color: #000;
+                    @include mx.themify('color', 'main_link-color');
                     font-size: 3.6rem;
                   }
                 }

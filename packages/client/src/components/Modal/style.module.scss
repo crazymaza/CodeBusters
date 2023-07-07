@@ -1,10 +1,12 @@
+@use 'themes/mixins' as mx;
+
 .modal__component {
   display: flex;
   justify-content: center;
   align-items: center;
 
   &_content {
-    background-color: #fff;
+    @include mx.themify('background-color', 'modal-bg');
     border-radius: 15px;
     padding: 25px;
   }
