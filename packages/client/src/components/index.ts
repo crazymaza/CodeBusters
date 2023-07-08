@@ -1,5 +1,7 @@
 export { default as Button } from './Button'
 export { default as Avatar } from './Avatar'
-export { default as Modal } from './Modal'
 export { default as TextField } from './TextField'
 export { default as ErrorBoundary } from './ErrorBoundary'
+export { default as CloseButton } from './CloseButton'
+export { default as Dialog } from './Dialog'
+export { default as MainStage } from './MainStage'

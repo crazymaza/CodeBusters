@@ -1,0 +1,7 @@
+@use 'themes/mixins' as mx;
+
+.dialog__component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

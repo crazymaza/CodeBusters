@@ -1,3 +1,4 @@
+import { MainStage } from '@/components'
 import { MainLayout } from '@/layouts'
 
 import { Paper } from '@mui/material'

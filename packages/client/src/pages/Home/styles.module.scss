@@ -9,18 +9,16 @@
   background: url(images/background_light_theme.png) no-repeat;
   background-size: cover;
 
+  &-wrapper {
+    width: 1220px;
+    height: 670px;
+  }
+
   &_box {
-    @include mx.themify('background-color', 'paper-bg');
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 4.6rem;
-    width: 122.6rem;
-    height: 67.8rem;
-    border-radius: 1.5rem;
-    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
-
-
 
     hr {
       @include mx.themify('border-color', 'hr_blue-color');

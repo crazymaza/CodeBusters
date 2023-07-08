@@ -16,16 +16,16 @@
   }
 
   &-container {
-    @include mx.themify('background-color', 'paper-bg');
+    display: flex;
+    width: 1250px;
+    height: 800px;
+  }
+
+  &-wrapper {
     display: flex;
     flex-direction: column;
     padding: 5rem;
     gap: 1.5rem;
-    width: 125rem;
-    height: 80rem;
-    border-radius: 1.5rem;
-    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
-
   }
 
   &__form {
@@ -112,7 +112,6 @@
         height: 10rem;
         text-align: end;
       }
-
     }
   }
 }

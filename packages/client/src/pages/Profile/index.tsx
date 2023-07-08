@@ -1,17 +1,17 @@
-import classNames from 'classnames/bind'
-import styles from './styles.module.scss'
-import { Avatar, Modal } from '@/components'
-import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
-import { TextField } from '@/components'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-import { Link, useNavigate } from 'react-router-dom'
+import { Avatar, Dialog, TextField } from '@/components'
 import { MainLayout } from '@/layouts'
+import { UserPageService } from '@/services'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
+import classNames from 'classnames/bind'
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import styles from './styles.module.scss'
 
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import { changeUserInfo, logout } from '@/store/slices/userSlice/thunks'
 
-import { schema, modalSchema } from './validation'
+import { UserRequest } from '@/api/User/types'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import {
@@ -69,7 +69,7 @@ const ProfilePage = () => {
     },
   ]
 
-  const modalFormFields: {
+  const dialogFormFields: {
     name: 'oldPassword' | 'newPassword'
     label: string
     variant?: TextFieldVariants | undefined
@@ -87,6 +87,15 @@ const ProfilePage = () => {
   } = useForm({
     defaultValues: defaultValues,
     resolver: yupResolver(schema),
+    mode: 'all',
+  })
+
+  const {
+    control: modalControl,
+    formState: { errors: modalErrors },
+    handleSubmit: dialogHandleSubmit,
+  } = useForm({
+    resolver: yupResolver(modalSchema),
     mode: 'all',
   })
 
@@ -114,7 +123,7 @@ const ProfilePage = () => {
     }
   }
 
-  const onModalSubmit = async (data: {
+  const onDialogSubmit = async (data: {
     oldPassword: string
     newPassword: string
   }) => {
@@ -122,7 +131,7 @@ const ProfilePage = () => {
     setOpen(false)
   }
 
-  const renderModal = () => {
+  const renderDialog = () => {
     const {
       control: modalControl,
       formState: { errors: modalErrors },
@@ -134,11 +143,11 @@ const ProfilePage = () => {
     })
 
     return (
-      <Modal open={open} onClose={handleClose}>
+      <Dialog open={open} title="Смена пароля" onClose={handleClose}>
         <form
-          className={cx('modal-password__content')}
-          onSubmit={modalHandleSubmit(onModalSubmit)}>
-          {modalFormFields.map(
+          className={cx('dialog-password__content')}
+          onSubmit={dialogHandleSubmit(onDialogSubmit)}>
+          {dialogFormFields.map(
             (
               { variant = 'standard', type = 'text', name, ...props },
               index
@@ -158,13 +167,13 @@ const ProfilePage = () => {
             )
           )}
           <Button
-            className={cx('modal-password__content_button')}
+            className={cx('dialog-password__content_button')}
             variant="contained"
             type="submit">
             Сохранить
           </Button>
         </form>
-      </Modal>
+      </Dialog>
     )
   }
 
@@ -241,7 +250,7 @@ const ProfilePage = () => {
           </form>
         </div>
       </div>
-      {renderModal()}
+      {renderDialog()}
     </MainLayout>
   )
 }
