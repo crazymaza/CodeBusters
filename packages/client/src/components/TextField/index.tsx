@@ -3,6 +3,10 @@ import {
   TextField as MUITextField,
   TextFieldProps,
 } from '@mui/material'
+
+import styles from './styles.module.scss'
+import classNames from 'classnames/bind'
+
 import {
   Control,
   Controller,
@@ -16,6 +20,8 @@ type Props<T extends FieldValues> = {
   fieldError: FieldError | undefined
 } & UseControllerProps<T> &
   TextFieldProps
+
+const cx = classNames.bind(styles)
 
 const TextField = <T extends FieldValues>({
   name,
@@ -33,6 +39,7 @@ const TextField = <T extends FieldValues>({
 
       {fieldError && (
         <FormHelperText
+          className={cx('error-message')}
           sx={{ color: 'red' }}
           required
           id={name}

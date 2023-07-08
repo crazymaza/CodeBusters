@@ -5,8 +5,7 @@
 .signin {
   @include mx.themify('border-color', 'authform-border');
   @include mx.themify('background-color', 'authform-bg');
-  min-width: 30%;
-  max-height: 45rem;
+  width: 30%;
   padding: 7rem 8rem 5rem 8rem;
   border: 1px solid;
   border-radius: 0.8rem;
@@ -25,11 +24,17 @@
 
   &__inputs {
     display: flex;
+    justify-self: center;
     flex-direction: column;
     margin-bottom: 5rem;
 
+    &-textfield input, label {
+      font-size: 1.4rem;
+    }
+    
     & > *:not(:last-child) {
       margin-bottom: 1rem;
     }
   }
 }
+
