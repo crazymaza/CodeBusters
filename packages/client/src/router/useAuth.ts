@@ -9,7 +9,8 @@ const useAuth = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const isProtectedRoute = pathname !== '/sign-in' && pathname !== '/sign-up'
+  const isProtectedRoute =
+    pathname !== '/sign-in' && pathname !== '/sign-up' && pathname !== '/'
 
   const getUserAndRedirect = async () => {
     try {
@@ -21,7 +22,11 @@ const useAuth = () => {
         navigate(pathname)
       }
     } catch (error) {
-      navigate('/sign-in')
+      if (!isProtectedRoute) {
+        navigate(pathname)
+      } else {
+        navigate('/')
+      }
     }
   }
 
