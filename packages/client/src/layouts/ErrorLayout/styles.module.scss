@@ -1,0 +1,18 @@
+@use 'themes/mixins' as mx;
+
+.error-layout {
+
+  &,
+  &__content {
+    @include mx.themify('background', 'error-bg');
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  &__header {
+    margin-bottom: 2rem;
+  }
+}
