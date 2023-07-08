@@ -20,7 +20,24 @@ export default createBrowserRouter(
         <Route path="forum/:topicId" element={<Pages.ForumTopicPage />} />
         <Route path="profile" element={<Pages.ProfilePage />} />
         <Route path="end-game" element={<Pages.EndGamePage />} />
-        <Route path="*" element={<Pages.NotFoundPage />} />
+        <Route
+          path="500"
+          element={
+            <Pages.ErrorPage
+              topMessage={'Извините, у нас ремонт'}
+              bottomMessage={'Но совсем скоро мы его закончим'}
+            />
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Pages.ErrorPage
+              topMessage={'Упс..'}
+              bottomMessage={'Такой страницы не существует'}
+            />
+          }
+        />
       </Route>
     </Route>
   )
