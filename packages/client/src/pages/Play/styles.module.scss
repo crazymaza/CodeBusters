@@ -1,103 +1,103 @@
 .play {
-  &__page {
-    position: relative;
-    display: grid;
-    grid-template-columns: minmax(17rem, 23.2rem) 1fr;
-    grid-template-areas:
+    &__page {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(17rem, 23.2rem) 1fr;
+        grid-template-areas:
       'level canvas'
       'buttons canvas';
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    gap: 0 4rem;
-    width: 100%;
-    height: 100vh;
-    background: url(images/background_light_theme.png) no-repeat;
-    background-size: cover;
-    background-color: #3276c5;
-    box-sizing: border-box;
-    padding: 4rem;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        gap: 0 4rem;
+        width: 100%;
+        height: 100vh;
+        background: url(images/background_light_theme.png) no-repeat;
+        background-size: cover;
+        background-color: #3276c5;
+        box-sizing: border-box;
+        padding: 4rem;
 
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: lightgray;
-      opacity: 0.8;
-    }
-  }
-
-  &__level {
-    grid-area: level;
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    align-items: center;
-    z-index: 1;
-
-    .level__number {
-      width: 160px;
-      height: 160px;
-      font-size: 7rem;
-      font-weight: 700;
-      text-align: center;
-      line-height: 8rem;
-      border-radius: 50%;
-      border: 1px solid #1673e0;
-      background: rgba(196, 220, 250, 0.85);
-      box-sizing: border-box;
-      padding: 4rem;
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: lightgray;
+            opacity: 0.8;
+        }
     }
 
-    span:last-child {
-      font-size: 4rem;
+    &__level {
+        grid-area: level;
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
+
+        .level__number {
+            width: 160px;
+            height: 160px;
+            font-size: 7rem;
+            font-weight: 700;
+            text-align: center;
+            line-height: 8rem;
+            border-radius: 50%;
+            border: 1px solid #1673e0;
+            background: rgba(196, 220, 250, 0.85);
+            box-sizing: border-box;
+            padding: 4rem;
+        }
+
+        span:last-child {
+            font-size: 4rem;
+        }
     }
-  }
 
-  &__buttons {
-    grid-area: buttons;
-    display: flex;
-    flex-direction: column;
-    gap: 5.5rem;
-    z-index: 1;
+    &__buttons {
+        grid-area: buttons;
+        display: flex;
+        flex-direction: column;
+        gap: 5.5rem;
+        z-index: 1;
 
-    button {
-      max-width: 232px;
-      max-height: 70px;
-      font-size: 2.4rem;
-      border-radius: 1rem;
-      text-transform: none;
+        button {
+            max-width: 232px;
+            max-height: 70px;
+            font-size: 2.4rem;
+            border-radius: 1rem;
+            text-transform: none;
+        }
     }
-  }
 
-  &__area {
-    grid-area: canvas;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    min-height: 90vh;
-    border: 1px solid #858585;
-    background: green;
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    border-radius: 1.5rem;
-    z-index: 1;
-  }
+    &__area {
+        grid-area: canvas;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        min-height: 90vh;
+        border: 1px solid #858585;
+        background: green;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+        border-radius: 1.5rem;
+        z-index: 1;
+    }
 
-  &__track {
-    position: relative;
-    z-index: 1;
-  }
+    &__track {
+        position: relative;
+        z-index: 1;
+    }
 
-  &__car {
-    position: absolute;
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-    z-index: 2;
-  }
+    &__car {
+        position: absolute;
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%);
+        z-index: 2;
+    }
 }
