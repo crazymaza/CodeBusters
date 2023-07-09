@@ -113,7 +113,6 @@ export default class CodeBustersEngine {
 
   public animation(timestamp: number) {
     let isContinue = true // Флаг для прерывание анимации
-    const deltaTime = timestamp - this.lastTimestamp
 
     this.lastTimestamp = timestamp
 
