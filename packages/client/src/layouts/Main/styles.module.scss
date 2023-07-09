@@ -1,9 +1,15 @@
+@use 'themes/mixins' as mx;
+
 .main-layout {
+
   &,
   &__content {
+    @include mx.themify('background-image', 'bg-image');
     display: flex;
     flex-direction: column;
     height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   &__header {

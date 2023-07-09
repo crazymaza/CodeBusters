@@ -29,6 +29,8 @@ $theme-dark: (
   box_shadow-color: clr.$grey-transparent,
   text-color: clr.$white,
   p-color: clr.$cobaltblue,
+  bg-image: url(images/background_dark_theme.png),
+  error-bg: clr.$cloudgrey
 ) !default;
 
 $theme-light: (
@@ -58,6 +60,8 @@ $theme-light: (
   box_shadow-color: clr.$grey-transparent,
   text-color: clr.$black,
   p-color: clr.$cobaltblue,
+  bg-image: url(images/background_light_theme.png),
+  error-bg: clr.$white
 ) !default;
 
 $themes: (

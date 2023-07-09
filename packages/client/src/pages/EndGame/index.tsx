@@ -56,7 +56,7 @@ const EndGamePage = () => {
                   onClick={routeToPlayHandler}
                   variant="contained"
                   type="button">
-                  Начать снова
+                  Начать заново
                 </Button>
                 <Button
                   onClick={routeToMainMenuHandler}

@@ -5,8 +5,6 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  background: url('images/background_light_theme.png') no-repeat;
-  background-size: cover;
 
   &_content {
     @include mx.themify('background-color', 'paper-bg');
