@@ -1,7 +1,7 @@
 @use 'themes/mixins' as mx;
 
 .mainstage__component {
-    @include mx.themify('background-color', 'paper-bg');
+    @include mx.themify('background-color', 'mainstage-bg');
     display: flex;
     border-radius: 15px;
     width:100%;

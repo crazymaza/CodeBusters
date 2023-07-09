@@ -13,6 +13,10 @@
     top: auto;
   }
 
+  &-title {
+    @include mx.themify('color', 'secondary-text-color');
+  }
+
   &-container {
     display: flex;
     width: 1250px;
@@ -42,9 +46,15 @@
       margin-top: 2rem;
       justify-content: end;
       display: flex;
+
+
+      svg {
+        @include mx.themify('fill', 'forum_backlink-color');
+      }
     }
 
     .link-back {
+      @include mx.themify('color', 'forum_backlink-color');
       text-decoration: none;
     }
 

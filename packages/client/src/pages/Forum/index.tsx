@@ -11,8 +11,8 @@ import {
   Stack,
   Tooltip,
   Typography,
+  TextField,
 } from '@mui/material'
-import TextField from '@/components/TextField'
 import Button from '@/components/Button'
 import Dialog from '@/components/Dialog'
 import classNames from 'classnames/bind'
@@ -22,9 +22,6 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as data from './data'
 import styles from './styles.module.scss'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
-import { dialogSchema } from './validation'
 import MainStage from '@/components/MainStage'
 
 const cx = classNames.bind(styles)
@@ -45,15 +42,6 @@ const ForumPage: React.FC = () => {
     navigate('/')
   }
 
-  const {
-    control: modalControl,
-    formState: { errors: modalErrors },
-    handleSubmit: handleSubmit,
-  } = useForm({
-    resolver: yupResolver(dialogSchema),
-    mode: 'all',
-  })
-
   const renderDialog = () => (
     <Dialog open={open} title="Создание новой темы">
       <form
@@ -61,8 +49,6 @@ const ForumPage: React.FC = () => {
         onSubmit={e => e.preventDefault()}>
         <TextField
           name="topic_name"
-          control={modalControl}
-          fieldError={modalErrors['topic_name']}
           margin="dense"
           id="topic_name"
           label="Название темы"
@@ -72,7 +58,6 @@ const ForumPage: React.FC = () => {
         />
         <TextField
           name="topic_description"
-          // control={''}
           margin="dense"
           id="topic_description"
           label="Описание темы"
@@ -85,7 +70,6 @@ const ForumPage: React.FC = () => {
             type={'submit'}
             variant="contained"
             onClick={e => {
-              handleSubmit
               e.preventDefault()
             }}>
             Создать
@@ -108,7 +92,7 @@ const ForumPage: React.FC = () => {
           <MainStage>
             <div className={cx('forumpage-wrapper')}>
               <div className={cx('block-topics')}>
-                <div className={cx('forumpage_title')}>
+                <div className={cx('forumpage-title')}>
                   <Typography variant="h2">Форум игроков</Typography>
                   <Tooltip
                     title={<h1 style={{ color: 'lightblue' }}>Новый топик</h1>}

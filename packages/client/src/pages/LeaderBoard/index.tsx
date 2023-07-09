@@ -1,8 +1,8 @@
+import { MainStage } from '@/components'
 import CloseButton from '@/components/CloseButton'
 import { MainLayout } from '@/layouts'
 import {
   Avatar,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +21,6 @@ import { useNavigate } from 'react-router-dom'
 import { headerCells, leaderList } from './data'
 import styles from './styles.module.scss'
 import { ILeaderList, Order } from './types'
-import { MainStage } from '@/components'
 
 const cx = classNames.bind(styles)
 

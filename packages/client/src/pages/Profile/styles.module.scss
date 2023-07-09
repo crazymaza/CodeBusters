@@ -51,8 +51,13 @@
         flex-direction: column;
 
         &_theme {
+          @include mx.themify('color', 'profile-switch-color');
           display: flex;
           align-items: center;
+        }
+
+        a {
+          @include mx.themify('color', 'profile-logout-color');
         }
       }
     }
@@ -62,6 +67,14 @@
       flex-direction: column;
       width: 40%;
       padding-top: 20px;
+
+      &>div>label {
+        @include mx.themify('color', 'profile__form-label')
+      }
+
+      input {
+        @include mx.themify('color', 'profile__form-input')
+      }
 
       &_button {
         margin-top: 20px;

@@ -8,9 +8,9 @@
   height: 100vh;
 
   &-title {
+    @include mx.themify('color', 'secondary-text-color');
     display: flex;
     flex-direction: column;
-    row-gap: 3.6rem;
     margin-bottom: 2rem;
   }
 
@@ -33,7 +33,7 @@
     gap: 2rem;
 
     &>hr {
-      @include mx.themify('border-color', 'hr_blue-color');
+      @include mx.themify('border-color', 'hr-blue-color');
       height: 80%;
       border: 0.1rem solid;
       margin: 0;
@@ -69,7 +69,7 @@
             width: 99%;
 
             a {
-              @include mx.themify('color', 'main_link-color');
+              @include mx.themify('color', 'primary_link-color');
               display: flex;
               align-items: center;
               height: 100%;
@@ -138,7 +138,7 @@
         }
 
         &-link {
-          @include mx.themify('color', 'text-color');
+          @include mx.themify('color', 'primary_link-color');
           text-decoration: none;
         }
 

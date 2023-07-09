@@ -23,6 +23,7 @@
   }
 
   &__page-title {
+    @include mx.themify('color', 'secondary-text-color');
     display: flex;
     justify-content: space-between;
     row-gap: 3.6rem;

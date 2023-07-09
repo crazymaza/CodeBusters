@@ -1,11 +1,9 @@
 import { Button, MainStage } from '@/components'
 import { MainLayout } from '@/layouts'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import {
   Avatar,
   Box,
   Divider,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -18,11 +16,11 @@ import classNames from 'classnames/bind'
 import Picker from 'emoji-picker-react'
 import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styles from './styles.module.scss'
 import * as data from './data'
+import styles from './styles.module.scss'
 
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 import CloseButton from '@/components/CloseButton'
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 
 const cx = classNames.bind(styles)
 
@@ -80,7 +78,9 @@ const ForumTopicPage = () => {
               <div className={cx('page-content-close')}>
                 <CloseButton onClick={handleCloseClick} />
               </div>
-              <Typography variant="h3">Технологии</Typography>
+              <Typography variant="h3" className={cx('topicpage-title')}>
+                Технологии
+              </Typography>
               <form
                 className={cx('topicpage__form')}
                 onSubmit={e => {

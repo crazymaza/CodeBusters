@@ -1,8 +1,7 @@
-import { Avatar, Dialog, MainStage, TextField } from '@/components'
+import { Avatar, CloseButton, Dialog, MainStage, TextField } from '@/components'
 import { MainLayout } from '@/layouts'
 import { UserPageService } from '@/services'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
+import { Button, Switch, TextFieldVariants } from '@mui/material'
 import classNames from 'classnames/bind'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -240,9 +239,7 @@ const ProfilePage = () => {
                     </Button>
                   </div>
                   <div className={cx('form__content_close')}>
-                    <IconButton onClick={cancelClick}>
-                      <HighlightOffIcon />
-                    </IconButton>
+                    <CloseButton onClick={cancelClick} />
                   </div>
                 </div>
                 <div className={cx('profile__form_submit')}>

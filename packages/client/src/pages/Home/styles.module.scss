@@ -19,7 +19,7 @@
     gap: 4.6rem;
 
     hr {
-      @include mx.themify('border-color', 'hr_blue-color');
+      @include mx.themify('border-color', 'hr-blue-color');
       height: 80%;
       border: 0.1rem solid;
       margin: 0;
@@ -28,6 +28,7 @@
 
   .box {
     &__about {
+      @include mx.themify('color', 'secondary-text-color');
       height: 80%;
       flex-basis: 42.4rem;
       font-size: 3.6rem;
@@ -51,14 +52,14 @@
         &__item {
           &:first-child {
             .menu__item-link {
-              @include mx.themify('border-color', 'menu_item-border-color');
+              @include mx.themify('border-color', 'border-blue-color');
               border-bottom: 0.4rem solid;
 
               .link {
                 &__button {
                   &-label {
                     span {
-                      @include mx.themify('color', 'form_link-color');
+                      @include mx.themify('color', 'primary-text-color');
                       font-size: 4rem;
                       font-weight: 700;
                     }
@@ -75,8 +76,7 @@
           }
 
           &_link {
-            @include mx.themify('color', 'main_link-color');
-            @include mx.themify('border-color', 'form_link-color');
+            @include mx.themify('border-color', 'primary-text-color');
             display: flex;
             height: 12rem;
             width: 49.2rem;
@@ -91,7 +91,7 @@
 
                 &-label {
                   span {
-                    @include mx.themify('color', 'main_link-color');
+                    @include mx.themify('color', 'secondary-text-color');
                     font-size: 3.6rem;
                   }
                 }

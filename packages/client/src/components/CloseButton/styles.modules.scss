@@ -1,0 +1,7 @@
+@use 'themes/mixins' as mx;
+
+.button-container {
+    svg {
+        @include mx.themify('fill', 'close__btn-color')
+    }
+}
