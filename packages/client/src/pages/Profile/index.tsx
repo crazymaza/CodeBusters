@@ -1,4 +1,4 @@
-import { Avatar, Dialog, TextField } from '@/components'
+import { Avatar, Dialog, MainStage, TextField } from '@/components'
 import { MainLayout } from '@/layouts'
 import { UserPageService } from '@/services'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
@@ -186,68 +186,73 @@ const ProfilePage = () => {
   return (
     <MainLayout>
       <div className={cx('profile__page')}>
-        <div className={cx('profile__page_content')}>
-          <form
-            className={cx('profile__page_form')}
-            onSubmit={handleSubmit(onSubmit)}>
-            <div className={cx('profile__form_content')}>
-              <div className={cx('form__content_settings')}>
-                <Avatar src={user?.avatar} changeAvatar={changeAvatar}></Avatar>
-                <div className={cx('user__settings')}>
-                  <div className={cx('user__settings_theme')}>
-                    <span>Сменить тему</span>
-                    <Switch defaultChecked />
+        <div className={cx('profile__page-wrapper')}>
+          <MainStage>
+            <div className={cx('profile__page_content')}>
+              <form
+                className={cx('profile__page_form')}
+                onSubmit={handleSubmit(onSubmit)}>
+                <div className={cx('profile__form_content')}>
+                  <div className={cx('form__content_settings')}>
+                    <Avatar src={user?.avatar} changeAvatar={changeAvatar}></Avatar>
+                    <div className={cx('user__settings')}>
+                      <div className={cx('user__settings_theme')}>
+                        <span>Сменить тему</span>
+                        <Switch defaultChecked />
+                      </div>
+                      <Link onClick={logoutHandler} to={'/'}>
+                        Выйти из аккаунта
+                      </Link>
+                    </div>
                   </div>
-                  <Link onClick={logoutHandler} to={'/'}>
-                    Выйти из аккаунта
-                  </Link>
-                </div>
-              </div>
-              <div className={cx('form__content_inputlist')}>
-                {formFields.map(
-                  ({
-                    variant = 'standard',
+                  <div className={cx('form__content_inputlist')}>
+                    {formFields.map(
+                      ({
+                        variant = 'standard',
                     type = 'text',
                     value = '',
-                    name,
+                        name,
                     ...props
-                  }) => {
+                      }, index) => {
                     return (
-                      <TextField
-                        control={control}
-                        fieldError={errors[name]}
-                        name={name}
-                        variant={variant}
-                        value={value}
+                          <TextField
+                            key={index}
+                                control={control}
+                            fieldError={errors[name]}
+                            name={name}
+                            variant={variant}
+                            value={value}
                         handleChange={ev => {
                           setValue(name, ev.target.value)
                         }}
                         type={type}
-                        {...props}
-                      />
-                    )
-                  }
+                            {...props}
+                          />
+                        )
+                      }
                 )}
-                <Button
-                  className={cx('form__content_inputlist_button')}
-                  variant="contained"
-                  type="button"
-                  onClick={handleOpen}>
-                  Изменить пароль
-                </Button>
-              </div>
-              <div className={cx('form__content_close')}>
-                <IconButton onClick={cancelClick}>
-                  <HighlightOffIcon />
-                </IconButton>
-              </div>
+                    <Button
+                      className={cx('form__content_inputlist_button')}
+                      variant="contained"
+                      type="button"
+                      onClick={handleOpen}>
+                      Изменить пароль
+                    </Button>
+                  </div>
+                  <div className={cx('form__content_close')}>
+                    <IconButton onClick={cancelClick}>
+                      <HighlightOffIcon />
+                    </IconButton>
+                  </div>
+                </div>
+                <div className={cx('profile__form_submit')}>
+                  <Button variant="contained" type="submit">
+                    Сохранить
+                  </Button>
+                </div>
+              </form>
             </div>
-            <div className={cx('profile__form_submit')}>
-              <Button variant="contained" type="submit">
-                Сохранить
-              </Button>
-            </div>
-          </form>
+          </MainStage>
         </div>
       </div>
       {renderDialog()}
