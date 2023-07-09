@@ -10,21 +10,16 @@
   }
 
   &__page-wrapper {
-    display: flex;
-    width: 1200px;
-  }
-
-  &__page-content {
-    display: flex;
-    padding: 5rem;
-    flex-direction: column;
-    gap: 1.5rem;
     width: 100%;
     max-width: 1000px;
     height: 670px;
-    border-radius: 1.5rem;
-    background: rgb(244, 244, 244, 0.8);
-    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+  }
+
+  &__page-container {
+    padding: 5rem;
+    flex-direction: column;
+    width: 100%;
+    display: flex;
   }
 
   &__page-title {

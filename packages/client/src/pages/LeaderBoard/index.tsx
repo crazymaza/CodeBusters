@@ -123,25 +123,21 @@ const LeaderBoardPage = () => {
   return (
     <MainLayout>
       <div className={cx('leaderboard__page')}>
-        {/* <Paper
-          variant="outlined"
-          className={cx('leaderboard__page-container')}
-          square> */}
         <div className={cx('leaderboard__page-wrapper')}>
           <MainStage>
-            {/* <div className={cx('leaderboard__page-content')}> */}
-            <div className={cx('leaderboard__page-title')}>
-              <Typography variant="h3">Турнирная таблица</Typography>
-              <div className={cx('page-content-close')}>
-                <CloseButton onClick={handleClosePage} />
+            <div className={cx('leaderboard__page-container')}>
+              <div className={cx('leaderboard__page-title')}>
+                <Typography variant="h3">Турнирная таблица</Typography>
+                <div className={cx('page-content-close')}>
+                  <CloseButton onClick={handleClosePage} />
+                </div>
+              </div>
+              <div className={cx('table-container')}>
+                <TableContainer className={cx('table__block-container')}>
+                  <CustomizedTable />
+                </TableContainer>
               </div>
             </div>
-            <div className={cx('table-container')}>
-              <TableContainer className={cx('table__block-container')}>
-                <CustomizedTable />
-              </TableContainer>
-            </div>
-            {/* </div> */}
           </MainStage>
         </div>
       </div>
