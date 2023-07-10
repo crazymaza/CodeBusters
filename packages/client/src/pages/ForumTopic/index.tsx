@@ -76,7 +76,8 @@ const ForumTopicPage = () => {
   const [isPickerVisible, setPickerVisible] = useState(false)
   const [inputStr, setInputStr] = useState('')
 
-  const handleEmojiClick = (emojiObject: any, event: MouseEvent) => {
+  const handleEmojiClick = (emojiObject: any, _event: MouseEvent) => {
+    // @ts-ignore
     const cursor = ref.current.selectionStart
     const text = inputStr.slice(0, cursor) + emojiObject.emoji
     setInputStr(text)

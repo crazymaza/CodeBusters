@@ -16,11 +16,13 @@ const PlayPage = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
+  const barrierRef = useRef<HTMLCanvasElement>(null)
 
   const engine = useEngine({
     containerRef,
     trackRef,
     carRef,
+    barrierRef,
   })
 
   const startGame = () => {
@@ -62,6 +64,12 @@ const PlayPage = () => {
             className={cx('play__car')}
             width={`${TrackObject.width}`}
             height={`${CarObject.dimensions.height}`}
+          />
+          <canvas
+            ref={barrierRef}
+            className={cx('play__barrier')}
+            width={TrackObject.width}
+            height={containerRef?.current?.offsetHeight}
           />
         </div>
       </div>

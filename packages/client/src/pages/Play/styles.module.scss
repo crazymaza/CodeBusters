@@ -100,4 +100,10 @@
     transform: translateX(-50%);
     z-index: 2;
   }
+  &__barrier {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
 }

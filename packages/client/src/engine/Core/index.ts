@@ -1,6 +1,8 @@
 import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
+import BarrierObject from '@/engine/Objects/Barrier'
+import { BarrierObjectSpecs } from '@/engine/Objects/Barrier/types'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -29,16 +31,13 @@ export default class CodeBustersEngine {
   private sessionId = 0
   private intervalId: NodeJS.Timer | null = null
   private lastTimestamp = 0
-  private boundaryTrackTopOffset = 0
+  private boundaryTopOffset = 0
   private speed = CodeBustersEngine.startSpeed
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
+  private barrierTopOffset = 0
 
   constructor(private options: CodeBustersEngineOptions) {
     this.lastTimestamp = 0
-  }
-
-  public getProcess() {
-    return this.process
   }
 
   public run() {
@@ -80,11 +79,11 @@ export default class CodeBustersEngine {
       // Восстановление первоначального состояние объектов
 
       if (object instanceof TrackObject) {
-        this.boundaryTrackTopOffset = 0
+        this.boundaryTopOffset = 0
 
         object.clear()
         object.drawTrack()
-        object.drawBoundary(this.boundaryTrackTopOffset)
+        object.drawBoundary(this.boundaryTopOffset)
       }
 
       if (object instanceof CarObject) {
@@ -101,6 +100,16 @@ export default class CodeBustersEngine {
         // Отключение управления
         object.removeListeners()
       }
+
+      if (object instanceof BarrierObject) {
+        const prevSpecs = object.getSpecs() as BarrierObjectSpecs
+
+        object.clear()
+        object.draw(0, {
+          ...prevSpecs,
+          y: 0,
+        })
+      }
     })
 
     // Сбрасывание счетчиков
@@ -113,17 +122,25 @@ export default class CodeBustersEngine {
 
   public animation(timestamp: number) {
     let isContinue = true // Флаг для прерывание анимации
-    const deltaTime = timestamp - this.lastTimestamp
 
     this.lastTimestamp = timestamp
 
     this.options.objects.forEach(object => {
       if (object instanceof TrackObject) {
-        this.boundaryTrackTopOffset += this.speed
+        this.boundaryTopOffset += this.speed
 
         object.clear()
         object.drawTrack()
-        object.drawBoundary(this.boundaryTrackTopOffset)
+        object.drawBoundary(this.boundaryTopOffset)
+      }
+
+      if (object instanceof BarrierObject) {
+        object.clear()
+        const barrierYCoordinate =
+          this.barrierTopOffset < 715
+            ? (this.barrierTopOffset += this.speed)
+            : (this.barrierTopOffset = 0)
+        object.drawBarrier(barrierYCoordinate)
       }
 
       if (object instanceof CarObject) {
