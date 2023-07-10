@@ -55,14 +55,14 @@ describe('Тест базового класса для объектов игр�
       width: 3,
       height: 3,
     }
-    const cb = jest.fn()
+    const callback = jest.fn()
 
     if (canvas && ctx) {
       const dummyInstance = new DummyClass({ ctx, element: canvas })
       dummyInstance.draw(1, oldArgs)
 
       expect(dummyInstance.getSpecs()?.width).toBe(oldArgs.width)
-      dummyInstance.updateSpecs(newArgs, cb)
+      dummyInstance.updateSpecs(newArgs, callback)
       expect(dummyInstance.getSpecs()?.width).toBe(newArgs.width)
     }
   })
