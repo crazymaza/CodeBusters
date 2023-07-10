@@ -1,40 +1,35 @@
 import CodeBustersEngine from '.'
-import 'jest-canvas-mock'
 import { CarObject, TrackObject } from '../Objects'
+import { fireEvent } from '@testing-library/react'
+import 'jest-canvas-mock'
 
 describe('Тест игрового движка', () => {
-  let canvas: HTMLCanvasElement | null = null
-  let ctx: CanvasRenderingContext2D | null = null
-  let container: HTMLElement | null = null
-
   const createTestEngine = () => {
-    if (canvas && ctx && container) {
-      const Track = new TrackObject({ ctx, element: canvas })
-      const trackSpecs = TrackObject.createBaseTrackSpecs(container)
+    const canvas: HTMLCanvasElement = document.createElement('canvas')
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d')
+    const container: HTMLElement = document.createElement('div')
 
-      const Car = new CarObject({ ctx, element: canvas })
-      const xPositionCar = Car.getCenterOnTrack(500)
-      const carSpecs = CarObject.createBaseCarSpecs('', xPositionCar, 0)
+    const Track = new TrackObject({ ctx, element: canvas })
+    const trackSpecs = TrackObject.createBaseTrackSpecs(container)
 
-      Track.draw(0, trackSpecs)
-      Car.draw(0, carSpecs)
+    const Car = new CarObject({ ctx, element: canvas })
+    const xPositionCar = Car.getCenterOnTrack(500)
+    const carSpecs = CarObject.createBaseCarSpecs('', xPositionCar, 0)
 
-      const engine = new CodeBustersEngine({ objects: [Car, Track] })
+    Track.draw(0, trackSpecs)
+    Car.draw(0, carSpecs)
 
-      return engine
+    const engine = new CodeBustersEngine({ objects: [Car, Track] })
+
+    return {
+      engine: engine,
+      CarObject: Car,
+      TrackObject: Track,
     }
-
-    return null
   }
 
-  beforeEach(function () {
-    canvas = document.createElement('canvas')
-    ctx = canvas.getContext('2d')
-    container = document.createElement('div')
-  })
-
   test('Создается экземпляр движка', () => {
-    const engine = createTestEngine()
+    const { engine } = createTestEngine()
 
     if (engine) {
       const process = engine.getProcess()
@@ -44,40 +39,57 @@ describe('Тест игрового движка', () => {
   })
 
   test('Вызывается анимация при методе RUN', () => {
-    const engine = createTestEngine()
+    const { engine } = createTestEngine()
 
-    if (engine) {
-      const requestAnimationFrameSpy = jest.spyOn(
-        window,
-        'requestAnimationFrame'
-      )
+    const requestAnimationFrameSpy = jest.spyOn(window, 'requestAnimationFrame')
 
-      engine.run()
+    engine.run()
 
-      const process = engine.getProcess()
+    const process = engine.getProcess()
 
-      expect(process).toBe('play')
-      expect(requestAnimationFrameSpy).toBeCalled()
-    }
+    expect(process).toBe('play')
+    expect(requestAnimationFrameSpy).toBeCalled()
   })
 
   test('Прерывается анимация при методе STOP', () => {
-    const engine = createTestEngine()
+    const { engine } = createTestEngine()
 
-    if (engine) {
-      const cancelAnimationFrameSpy = jest.spyOn(window, 'cancelAnimationFrame')
+    const cancelAnimationFrameSpy = jest.spyOn(window, 'cancelAnimationFrame')
 
-      engine.run()
+    engine.run()
 
-      const processAfterStart = engine.getProcess()
-      expect(processAfterStart).toBe('play')
+    const processAfterStart = engine.getProcess()
+    expect(processAfterStart).toBe('play')
 
-      engine.stop()
+    engine.stop()
 
-      const processAfterStop = engine.getProcess()
+    const processAfterStop = engine.getProcess()
 
-      expect(processAfterStop).toBe('stop')
-      expect(cancelAnimationFrameSpy).toBeCalled()
-    }
+    expect(processAfterStop).toBe('stop')
+    expect(cancelAnimationFrameSpy).toBeCalled()
+  })
+
+  test('Перерисовывается объект Car при нажатии стрелки влево', () => {
+    const { engine, CarObject } = createTestEngine()
+
+    engine.run()
+
+    const carDrawSpy = jest.spyOn(CarObject, 'draw')
+
+    fireEvent.keyDown(document, { key: 'ArrowLeft', which: 37, keyCode: 37 })
+
+    expect(carDrawSpy).toBeCalled()
+  })
+
+  test('Перерисовывается объект Car при нажатии стрелки вправо', () => {
+    const { engine, CarObject } = createTestEngine()
+
+    engine.run()
+
+    const carDrawSpy = jest.spyOn(CarObject, 'draw')
+
+    fireEvent.keyDown(document, { key: 'ArrowRight', which: 39, keyCode: 39 })
+
+    expect(carDrawSpy).toBeCalled()
   })
 })
