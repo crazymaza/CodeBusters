@@ -25,13 +25,12 @@
     flex-direction: column;
     margin-bottom: 3rem;
 
-    &-textfield input, label {
-      font-size: 1.4rem;
-    }
-    
-
     & > *:not(:last-child) {
       margin-bottom: 1rem;
     }
+  }
+
+  &__inputs-textfield__input, &__inputs-textfield__label {
+    font-size: 1.4rem;
   }
 }

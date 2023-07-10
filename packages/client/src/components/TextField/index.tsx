@@ -18,6 +18,8 @@ import {
 type Props<T extends FieldValues> = {
   control: Control<T> | undefined
   fieldError: FieldError | undefined
+  labelClassName?: string
+  inputClassName?: string
 } & UseControllerProps<T> &
   TextFieldProps
 
@@ -27,6 +29,8 @@ const TextField = <T extends FieldValues>({
   name,
   control,
   fieldError,
+  labelClassName,
+  inputClassName,
   ...props
 }: Props<T>) => {
   return (
@@ -34,7 +38,18 @@ const TextField = <T extends FieldValues>({
       <Controller
         name={name}
         control={control}
-        render={({ field }) => <MUITextField {...field} {...props} />}
+        render={({ field }) => (
+          <MUITextField
+            InputLabelProps={{
+              className: labelClassName,
+            }}
+            InputProps={{
+              className: inputClassName,
+            }}
+            {...field}
+            {...props}
+          />
+        )}
       />
 
       {fieldError && (
