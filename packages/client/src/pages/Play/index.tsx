@@ -69,7 +69,11 @@ const PlayPage = () => {
             ref={barrierRef}
             className={cx('play__barrier')}
             width={TrackObject.width}
-            height={containerRef?.current?.offsetHeight}
+            height={
+              (containerRef?.current?.offsetHeight &&
+                containerRef?.current?.offsetHeight * 2) ||
+              1420
+            }
           />
         </div>
       </div>

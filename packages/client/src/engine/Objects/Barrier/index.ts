@@ -6,14 +6,15 @@ import { BarrierObjectSpecs } from '@/engine/Objects/Barrier/types'
  * @INFO Объект препятствия
  */
 export default class BarrierObject extends BaseObject<BarrierObjectSpecs> {
-  private barrierTopOffset = 0
+  private barrierTopOffset = -550
 
   static createBaseBarrierSpecs(containerHTML: HTMLElement) {
+    const trackHeight = containerHTML.offsetHeight || 0
     return {
       x: 0,
-      y: 0,
-      width: Math.floor(Math.random() * (TrackObject.width / 3) + 20),
-      height: Math.floor(Math.random() * 10 + 5),
+      y: -550,
+      width: 50,
+      height: trackHeight,
       fill: '#e3bc27',
       barrierCount: Math.floor(TrackObject.boundarySpecs.height / 3) + 1,
     }
@@ -23,18 +24,18 @@ export default class BarrierObject extends BaseObject<BarrierObjectSpecs> {
     return Array.from({
       length: 2,
     }).map(() => {
-      const xAxis = side === TrackBoundarySide.LEFT ? 15 : 360
+      const xAxis = side === TrackBoundarySide.LEFT ? 15 : 240
 
       const yAxis =
         side === TrackBoundarySide.LEFT
           ? this.barrierTopOffset
-          : this.barrierTopOffset + 100
+          : this.barrierTopOffset - 1500
 
       return {
         xAxis,
         yAxis,
-        width: Math.floor(Math.random() * (TrackObject.width / 2)),
-        height: Math.floor(Math.random() * 10 + 5),
+        width: TrackObject.width / 2,
+        height: 10,
       }
     })
   }

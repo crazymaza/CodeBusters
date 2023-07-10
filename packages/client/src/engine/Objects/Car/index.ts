@@ -14,7 +14,7 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
     height: 130,
   }
 
-  static sensitivity = 8
+  static sensitivity = 40
 
   static createBaseCarSpecs(carImageSrc: string, x: number, y: number) {
     const carCanvasImage = new Image()

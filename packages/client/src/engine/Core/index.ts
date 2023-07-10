@@ -1,8 +1,9 @@
 import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
-import { CarObject, TrackObject } from '@/engine/Objects'
+import { BaseObject, CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
 import { BarrierObjectSpecs } from '@/engine/Objects/Barrier/types'
+import { BaseObjectSpecs } from '@/engine/Objects/Base/types'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -137,7 +138,7 @@ export default class CodeBustersEngine {
       if (object instanceof BarrierObject) {
         object.clear()
         const barrierYCoordinate =
-          this.barrierTopOffset < 715
+          this.barrierTopOffset < 2500
             ? (this.barrierTopOffset += this.speed)
             : (this.barrierTopOffset = 0)
         object.drawBarrier(barrierYCoordinate)
@@ -154,9 +155,25 @@ export default class CodeBustersEngine {
             boundarySpecs.leftOffset -
             CarObject.dimensions.with
 
-        if (isOutLeftSideTrack || isOutRightSideTrack) {
-          alert('Вы вылетели с трассы!')
+        const barriers: BarrierObject[] = this.options.objects.filter(
+          item => item instanceof BarrierObject
+        ) as BarrierObject[]
+        const isCarBreak = barriers.some(barrier => {
+          const halfTrackWidth = TrackObject.width
+          const { x: barrierX } = barrier.getSpecs() as BarrierObjectSpecs
+          const { x: carX } = object.getSpecs() as CarObjectSpecs
+          return (
+            (this.barrierTopOffset - document.body.offsetHeight - 200 ===
+              1785 ||
+              this.barrierTopOffset - document.body.offsetHeight - 200 ===
+                289) &&
+            (barrierX + halfTrackWidth >= carX ||
+              barrierX + halfTrackWidth <= carX)
+          )
+        })
 
+        if (isOutLeftSideTrack || isOutRightSideTrack || isCarBreak) {
+          alert('Вы вылетели с трассы!')
           isContinue = false
 
           this.stop()
