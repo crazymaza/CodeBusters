@@ -1,6 +1,5 @@
 import CarObject from '.'
 import 'jest-canvas-mock'
-import { fireEvent } from '@testing-library/react'
 
 describe('Тест объекта Car', () => {
   let canvas: HTMLCanvasElement | null = null
