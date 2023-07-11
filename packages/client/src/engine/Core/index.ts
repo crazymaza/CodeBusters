@@ -1,9 +1,8 @@
 import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
-import { BaseObject, CarObject, TrackObject } from '@/engine/Objects'
+import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
 import { BarrierObjectSpecs } from '@/engine/Objects/Barrier/types'
-import { BaseObjectSpecs } from '@/engine/Objects/Base/types'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
