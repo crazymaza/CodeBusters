@@ -1,7 +1,6 @@
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 import { Avatar, Modal } from '@/components'
-import { UserPageService } from '@/services'
 import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
 import { TextField } from '@/components'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
@@ -16,6 +15,10 @@ import { schema, modalSchema } from './validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { UserRequest } from '@/api/User/types'
+import {
+  changeUserPassword,
+  changeUserAvatar,
+} from '@/store/slices/userSlice/thunks'
 
 const cx = classNames.bind(styles)
 
@@ -76,7 +79,7 @@ const ProfilePage = () => {
 
   const changeAvatar = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const files = ev.target.files ?? null
-    if (files) UserPageService.changeUserAvatar(files)
+    if (files) dispatch(changeUserAvatar(files))
   }
 
   const cancelClick = () => {
@@ -96,7 +99,7 @@ const ProfilePage = () => {
     oldPassword: string
     newPassword: string
   }) => {
-    await UserPageService.changeUserPassword(data.oldPassword, data.newPassword)
+    dispatch(changeUserPassword(data))
     setOpen(false)
   }
 
