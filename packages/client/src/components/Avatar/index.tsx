@@ -25,6 +25,7 @@ const Avatar: AvatarProps = ({ children, changeAvatar, ...props }) => {
         type="file"
         hidden
         onChange={changeAvatar}
+        data-testid="avatar-test-id"
       />
       <label htmlFor="upload-avatar-file">
         <MUIIconButton aria-label="upload picture" component="span">
