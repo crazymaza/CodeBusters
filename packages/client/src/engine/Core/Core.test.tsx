@@ -38,6 +38,22 @@ describe('Тест игрового движка', () => {
     }
   })
 
+  test('Движок не пересоздает объекты отрисовки во время работы', () => {
+    const { engine } = createTestEngine()
+
+    if (engine) {
+      const [beforeRunCarObject, beforeRunTrackObject] =
+        engine.getEngineObjects()
+
+      engine.run()
+
+      const [afterRunCarObject, afterRunTrackObject] = engine.getEngineObjects()
+
+      expect(beforeRunCarObject).toEqual(afterRunCarObject)
+      expect(beforeRunTrackObject).toEqual(afterRunTrackObject)
+    }
+  })
+
   test('Вызывается анимация при методе RUN', () => {
     const { engine } = createTestEngine()
 
