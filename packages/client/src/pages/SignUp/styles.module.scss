@@ -3,8 +3,7 @@
 .signup {
   @include mx.themify('border-color', 'authform-border');
   @include mx.themify('background-color', 'authform-bg');
-  min-width: 30%;
-  max-height: 80rem;
+  width: 30%;
   padding: 7rem 8rem 5rem 8rem;
   border: 1px solid;
   border-radius: 0.8rem;
@@ -29,5 +28,9 @@
     & > *:not(:last-child) {
       margin-bottom: 1rem;
     }
+  }
+
+  &__inputs-textfield-input, &__inputs-textfield-label {
+    font-size: 1.4rem;
   }
 }
