@@ -104,11 +104,11 @@ export default class CodeBustersEngine {
 
       if (object instanceof BarrierObject) {
         const prevSpecs = object.getSpecs() as BarrierObjectSpecs
-
+        this.barrierTopOffset = 0
         object.clear()
         object.draw(0, {
           ...prevSpecs,
-          y: 0,
+          y: -500,
         })
       }
     })
@@ -155,27 +155,24 @@ export default class CodeBustersEngine {
             boundarySpecs.leftOffset -
             CarObject.dimensions.with
 
-        const barriers: BarrierObject[] = this.options.objects.filter(
-          item => item instanceof BarrierObject
-        ) as BarrierObject[]
-        const isCarBreak = barriers.some(barrier => {
-          const halfTrackWidth = TrackObject.width
-          const { x: barrierX } = barrier.getSpecs() as BarrierObjectSpecs
-          const { x: carX } = object.getSpecs() as CarObjectSpecs
-          return (
-            (this.barrierTopOffset - document.body.offsetHeight - 200 ===
-              1785 ||
-              this.barrierTopOffset - document.body.offsetHeight - 200 ===
-                289) &&
-            (barrierX + halfTrackWidth >= carX ||
-              barrierX + halfTrackWidth <= carX)
-          )
-        })
+        const isCarBreakLeft =
+          this.barrierTopOffset >= 890 &&
+          this.barrierTopOffset <= 910 &&
+          xPositionCar <= TrackObject.width / 2
 
-        if (isOutLeftSideTrack || isOutRightSideTrack || isCarBreak) {
-          alert('Вы вылетели с трассы!')
+        const isCarBreakRight =
+          this.barrierTopOffset >= 2390 &&
+          this.barrierTopOffset <= 2400 &&
+          xPositionCar >= TrackObject.width / 2 - 50
+
+        if (
+          isOutLeftSideTrack ||
+          isOutRightSideTrack ||
+          isCarBreakRight ||
+          isCarBreakLeft
+        ) {
+          alert('Столкновение!')
           isContinue = false
-
           this.stop()
         }
       }

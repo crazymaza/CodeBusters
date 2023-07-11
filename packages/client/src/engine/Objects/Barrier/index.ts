@@ -24,7 +24,8 @@ export default class BarrierObject extends BaseObject<BarrierObjectSpecs> {
     return Array.from({
       length: 2,
     }).map(() => {
-      const xAxis = side === TrackBoundarySide.LEFT ? 15 : 240
+      const xAxis =
+        side === TrackBoundarySide.LEFT ? 10 : TrackObject.width / 2 - 10
 
       const yAxis =
         side === TrackBoundarySide.LEFT
