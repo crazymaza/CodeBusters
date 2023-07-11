@@ -39,7 +39,7 @@ async function setCacheValuesOnInstall() {
     cache.addAll(URLS);
     return cache;
   } catch (error) {
-    throw error;
+    console.log(error)
   }
 }
 
