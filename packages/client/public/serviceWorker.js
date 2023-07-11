@@ -21,15 +21,7 @@ const manifestURLs = manifest.map(
 const URLS = [...routeUrls, ...manifestURLs]
 
 self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(STATIC_CACHE)
-    .then(cache => {
-      return cache.addAll(URLS);
-    })
-    .catch(err => { 
-      throw err;
-    })
-  );
+  event.waitUntil(setCacheValuesOnInstall());
 });
 
 self.addEventListener('activate', (event) => {
@@ -41,24 +33,30 @@ self.addEventListener('fetch', async function(event) {
   event.respondWith(fromNetwork(request));
 });
 
+async function setCacheValuesOnInstall() {
+  try {
+    const cache = await caches.open(STATIC_CACHE);
+    cache.addAll(URLS);
+    return cache;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function fromNetwork(request) {
   const fetchRequest = request.clone(); 
-  return fetch(fetchRequest) 
-  .then(response => { 
-    if(!response || response.status !== 200) { 
+  try {
+    const response = await fetch(fetchRequest);
+    if (!response || response.status !== 200) { 
       return response; 
     } 
     const responseToCache = response.clone(); 
-    caches.open(STATIC_CACHE) 
-    .then(cache => { 
-      cache.put(request, responseToCache); 
-    }); 
+    const cache = await caches.open(STATIC_CACHE); 
+    cache.put(request, responseToCache); 
     return response; 
-    }
-  )
-  .catch(() => {
-      return fromCache(request);
-  });
+  } catch (error) {
+    return fromCache(request);
+  }
 }
 
 function fromCache(request) {
