@@ -15,18 +15,11 @@ const useAuth = () => {
   const getUserAndRedirect = async () => {
     try {
       await dispatch(getUserInfo()).unwrap()
-
-      if (!isProtectedRoute) {
-        navigate('/')
-      } else {
-        navigate(pathname)
-      }
+      const currentPathname = !isProtectedRoute ? '/' : pathname
+      navigate(currentPathname)
     } catch (error) {
-      if (!isProtectedRoute) {
-        navigate(pathname)
-      } else {
-        navigate('/')
-      }
+      const currentPathname = isProtectedRoute ? '/' : pathname
+      navigate(currentPathname)
     }
   }
 

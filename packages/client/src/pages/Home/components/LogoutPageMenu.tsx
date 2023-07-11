@@ -21,11 +21,11 @@ const LogoutPageMenu = ({ styles }: { styles: CSSModuleClasses }) => {
       <Typography variant="h1">Добро пожаловать</Typography>
       {logoutMainPageMenu.map(({ label, to }) => (
         <ListItem key={to} className={cx('menu__item')}>
-          <Link to={to} className={cx('menu__item_link')}>
+          <Link to={to} className={cx('menu__item-link')}>
             <ListItemButton className={cx('link__button')}>
               <ListItemText
                 primary={label}
-                className={cx('link__button_label')}
+                className={cx('link__button-label')}
               />
             </ListItemButton>
           </Link>

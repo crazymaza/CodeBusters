@@ -51,12 +51,12 @@
       .menu {
         &__item {
           &:first-child {
-            .menu__item_link {
+            .menu__item-link {
               border-bottom: 0.4rem solid #3276c5;
 
               .link {
                 &__button {
-                  &_label {
+                  &-label {
                     span {
                       font-size: 4rem;
                       color: #3276c5;
@@ -69,12 +69,12 @@
           }
 
           &:last-child {
-            .menu__item_link {
+            .menu__item-link {
               border-bottom: none;
             }
           }
 
-          &_link {
+          &-link {
             display: flex;
             height: 12rem;
             width: 49.2rem;
@@ -88,14 +88,14 @@
                 align-items: center;
                 gap: 1.5rem;
 
-                &_label {
+                &-label {
                   span {
                     color: #000;
                     font-size: 3.6rem;
                   }
                 }
 
-                &_icon {
+                &-icon {
                   max-width: 7rem;
                   height: 5rem;
                 }

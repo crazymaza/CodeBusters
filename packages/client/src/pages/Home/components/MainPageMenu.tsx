@@ -24,13 +24,13 @@ const MainPageMenu = ({ styles }: { styles: CSSModuleClasses }) => {
     <List>
       {mainPageMenu.map(({ label, to, picture }) => (
         <ListItem key={to} className={cx('menu__item')}>
-          <Link to={to} className={cx('menu__item_link')}>
+          <Link to={to} className={cx('menu__item-link')}>
             <ListItemButton className={cx('link__button')}>
               <ListItemText
                 primary={label}
-                className={cx('link__button_label')}
+                className={cx('link__button-label')}
               />
-              <ListItemIcon className={cx('link__button_icon')}>
+              <ListItemIcon className={cx('link__button-icon')}>
                 <img src={picture} alt="иконка пункта меню" />
               </ListItemIcon>
             </ListItemButton>
