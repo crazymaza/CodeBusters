@@ -153,7 +153,7 @@ const ProfilePage = () => {
                     <span>Сменить тему</span>
                     <Switch defaultChecked />
                   </div>
-                  <Link onClick={logoutHandler} to={'/sign-in'}>
+                  <Link onClick={logoutHandler} to={'/'}>
                     Выйти из аккаунта
                   </Link>
                 </div>

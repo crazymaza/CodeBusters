@@ -71,6 +71,8 @@ const SignInPage = () => {
           {formFields.map(
             ({ variant = 'standard', type = 'text', name, ...props }) => (
               <TextField
+                labelClassName={cx('signin__inputs-textfield-label')}
+                inputClassName={cx('signin__inputs-textfield-input')}
                 control={control}
                 fieldError={errors[name]}
                 name={name}
