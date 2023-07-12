@@ -2,7 +2,6 @@ import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
-import { BarrierObjectSpecs } from '@/engine/Objects/Barrier/types'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -102,13 +101,9 @@ export default class CodeBustersEngine {
       }
 
       if (object instanceof BarrierObject) {
-        const prevSpecs = object.getSpecs() as BarrierObjectSpecs
-        this.barrierTopOffset = 0
         object.clear()
-        object.draw(0, {
-          ...prevSpecs,
-          y: -500,
-        })
+        object.setBarrierXAxis(-200)
+        object.drawBarrier()
       }
     })
 
@@ -137,10 +132,14 @@ export default class CodeBustersEngine {
       if (object instanceof BarrierObject) {
         object.clear()
         const barrierYCoordinate =
-          this.barrierTopOffset < 2500
+          this.barrierTopOffset <= document.body.offsetHeight
             ? (this.barrierTopOffset += this.speed)
-            : (this.barrierTopOffset = 0)
-        object.drawBarrier(barrierYCoordinate)
+            : (this.barrierTopOffset = -200)
+        object.setBarrierYAxis(barrierYCoordinate)
+        if (this.barrierTopOffset === -200) {
+          object.setBarrierXAxis(Math.floor(Math.random() * TrackObject.width))
+        }
+        object.drawBarrier()
       }
 
       if (object instanceof CarObject) {
@@ -154,22 +153,16 @@ export default class CodeBustersEngine {
             boundarySpecs.leftOffset -
             CarObject.dimensions.with
 
-        const isCarBreakLeft =
-          this.barrierTopOffset >= 890 &&
-          this.barrierTopOffset <= 910 &&
-          xPositionCar <= TrackObject.width / 2
+        const isCarBreakOfBarrier =
+          xPositionCar >= BarrierObject.currentSpec.x &&
+          xPositionCar <=
+            BarrierObject.currentSpec.x + BarrierObject.currentSpec.width &&
+          BarrierObject.currentSpec.trackHeight -
+            30 -
+            CarObject.dimensions.height <=
+            BarrierObject.currentSpec.y + 170
 
-        const isCarBreakRight =
-          this.barrierTopOffset >= 2390 &&
-          this.barrierTopOffset <= 2400 &&
-          xPositionCar >= TrackObject.width / 2 - 50
-
-        if (
-          isOutLeftSideTrack ||
-          isOutRightSideTrack ||
-          isCarBreakRight ||
-          isCarBreakLeft
-        ) {
+        if (isOutLeftSideTrack || isOutRightSideTrack || isCarBreakOfBarrier) {
           alert('Столкновение!')
           isContinue = false
           this.stop()

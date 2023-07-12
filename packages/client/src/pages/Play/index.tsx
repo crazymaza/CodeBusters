@@ -62,18 +62,14 @@ const PlayPage = () => {
           <canvas
             ref={carRef}
             className={cx('play__car')}
-            width={`${TrackObject.width}`}
-            height={`${CarObject.dimensions.height}`}
+            width={TrackObject.width}
+            height={CarObject.dimensions.height}
           />
           <canvas
             ref={barrierRef}
             className={cx('play__barrier')}
             width={TrackObject.width}
-            height={
-              (containerRef?.current?.offsetHeight &&
-                containerRef?.current?.offsetHeight * 2) ||
-              1420
-            }
+            height={trackRef?.current?.height || 710}
           />
         </div>
       </div>
