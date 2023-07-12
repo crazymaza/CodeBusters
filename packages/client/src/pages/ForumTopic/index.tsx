@@ -72,12 +72,12 @@ const renderCloseButton = () => {
 }
 
 const ForumTopicPage = () => {
-  const ref = useRef(null)
+  const ref = useRef<HTMLInputElement>(null)
   const [isPickerVisible, setPickerVisible] = useState(false)
   const [inputStr, setInputStr] = useState('')
 
   const handleEmojiClick = (emojiObject: any, event: MouseEvent) => {
-    const cursor = ref.current.selectionStart
+    const cursor = ref.current?.selectionStart ?? 0
     const text = inputStr.slice(0, cursor) + emojiObject.emoji
     setInputStr(text)
   }

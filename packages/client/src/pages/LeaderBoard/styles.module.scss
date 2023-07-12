@@ -1,5 +1,93 @@
-.greeting {
-  margin: 1.2rem;
-  font-size: 1.6rem;
-  font-weight: 500;
+.leaderboard {
+  &__page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background: url(images/background_light_theme.png) no-repeat;
+    background-size: cover;
+  }
+
+  &__page-container {
+    display: flex;
+    padding: 5rem;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1000px;
+    height: 670px;
+    border-radius: 1.5rem;
+    background: rgb(244, 244, 244, 0.8);
+    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+  }
+
+  &__page-title {
+    display: flex;
+    justify-content: space-between;
+    row-gap: 3.6rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.table {
+  &__header-column {
+    background-color: #b9cdf0;
+    font-size: 2rem;
+    text-align: center;
+    padding: 2rem;
+
+    &:nth-child(2) {
+      text-align: left;
+    }
+  }
+
+  &-container {
+    background-color: white;
+    width: 100%;
+    border-radius: 1.5rem;
+  }
+
+  &__block-container {
+    height: 100%;
+    max-height: 500px;
+  }
+
+  &__column-raiting {
+    text-align: left;
+    font-size: 2rem;
+    width: 20%;
+
+    &_flex {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__column-login {
+    padding-left: 0rem;
+  }
+
+  &__column-wrapper {
+    margin: 1rem;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  &__column-scores {
+    text-align: center;
+    font-size: 2rem;
+    color: #417be7;
+    font-weight: bold;
+  }
+
+  &__row:hover {
+    background-color: #e3eaf7;
+  }
+}
+
+.icon__img {
+  height: 60px;
 }
