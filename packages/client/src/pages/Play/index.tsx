@@ -53,7 +53,7 @@ const PlayPage = () => {
             Начать игру
           </Button>
           <Button variant="contained" onClick={endGame}>
-            Сбросить игру
+            Завершить игру
           </Button>
           <Button variant="contained" onClick={exitGame}>
             Выйти в меню

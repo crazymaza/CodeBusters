@@ -3,6 +3,7 @@ import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
 import BackgroundObject from '@/engine/Objects/Background'
+import { isFunction } from '@/helpers'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -21,6 +22,7 @@ import BackgroundObject from '@/engine/Objects/Background'
  *
  */
 
+const FPS = 60
 const SECOND = 1000
 
 export default class CodeBustersEngine {
@@ -28,21 +30,37 @@ export default class CodeBustersEngine {
   static maxSpeed = 30
   static diffSpeed = 2 // На сколько  увеличивается скорость в секунду
 
-  private sessionId = 0
   private intervalId: NodeJS.Timer | null = null
+  private sessionId = 0
   private lastTimestamp = 0
   private trackObjectsTopOffset = 0
   private backgroundObjectTopOffset = 0
   private speed = CodeBustersEngine.startSpeed
+  private boundaryTrackTopOffset = 0
+  private distance = 0
+  private playTime = 0 // В секундах
+  private scores = 0
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
   private barrierTopOffset = 0
 
-  constructor(private options: CodeBustersEngineOptions) {
+  constructor(private options: CodeBustersEngineOptions<CodeBustersEngine>) {
     this.lastTimestamp = 0
+  }
+
+  public getScores() {
+    return this.scores
   }
 
   public getProcess() {
     return this.process
+  }
+
+  public getPlayTime() {
+    return this.playTime
+  }
+
+  public getDistance() {
+    return this.distance
   }
 
   public getEngineObjects() {
@@ -55,6 +73,10 @@ export default class CodeBustersEngine {
     }
 
     this.process = CodeBustersEngineProcess.PLAY
+
+    this.speed = CodeBustersEngine.startSpeed
+
+    this.scores = 0
 
     this.options.objects.forEach(object => {
       if (object instanceof CarObject) {
@@ -72,7 +94,11 @@ export default class CodeBustersEngine {
       }
     }, SECOND)
 
-    this.animation(performance.now())
+    this.animation(0)
+
+    if (isFunction(this.options.onRun)) {
+      this.options?.onRun?.(this)
+    }
   }
 
   public stop() {
@@ -82,7 +108,12 @@ export default class CodeBustersEngine {
 
     this.process = CodeBustersEngineProcess.STOP
 
-    this.speed = CodeBustersEngine.startSpeed
+    // Пока что очки считаются как сумма пройденной дистанции и времени
+    this.scores = Math.floor(this.distance + this.playTime)
+
+    this.speed = 0
+    this.distance = 0
+    this.playTime = 0
 
     this.options.objects.forEach(object => {
       // Восстановление первоначального состояние объектов
@@ -124,12 +155,20 @@ export default class CodeBustersEngine {
     }
 
     cancelAnimationFrame(this.sessionId)
+
+    if (isFunction(this.options.onStop)) {
+      this.options?.onStop?.(this)
+    }
   }
 
   public animation(timestamp: number) {
     let isContinue = true // Флаг для прерывание анимации
 
     this.lastTimestamp = timestamp
+
+    this.playTime += 1 / FPS
+
+    this.distance = this.speed * this.playTime
 
     this.options.objects.forEach(object => {
       if (object instanceof BackgroundObject) {

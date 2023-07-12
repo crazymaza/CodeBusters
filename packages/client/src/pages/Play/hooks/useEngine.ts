@@ -1,8 +1,11 @@
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '@/store/typedHooks'
+import { setGameScores } from '@/store/slices/gameSlice'
 import { CodeBustersEngine } from '@/engine'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { loadImage } from '@/helpers'
 import { canvas } from '@/utils'
-import React, { useEffect, useState } from 'react'
 import BackgroundObject from '@/engine/Objects/Background'
 import BarrierObject from '@/engine/Objects/Barrier'
 import backgroundImage from 'sprites/background.png'
@@ -24,6 +27,21 @@ export default function useEngine({
   barrierRef,
 }: UseEngineProps) {
   const [engine, setEngine] = useState<CodeBustersEngine | null>(null)
+
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  const onRunEngine = () => {
+    dispatch(setGameScores(0))
+  }
+
+  const onEngineStop = (engineInstance: CodeBustersEngine) => {
+    const scores = engineInstance?.getScores()
+
+    dispatch(setGameScores(scores))
+
+    navigate('/end-game')
+  }
 
   useEffect(() => {
     const isDefineLayers =
@@ -88,12 +106,14 @@ export default function useEngine({
                 barrierObject,
                 carObject,
               ],
+              onRun: onRunEngine,
+              onStop: onEngineStop,
             })
           )
         }
       )
     }
-  },[]);
-  
+  }, [])
+
   return engine
 }
