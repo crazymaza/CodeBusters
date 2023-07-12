@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
-import { AuthLayout } from '@/layouts'
+
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
 import { signup } from '@/store/slices/authSlice/thunks'
@@ -8,14 +8,14 @@ import { Link } from 'react-router-dom'
 import { Grid, Typography, Button, TextFieldVariants } from '@mui/material'
 import { TextField } from '@/components'
 
-import { schema } from './validation'
+import { signUpSchema } from './validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { SignupData } from '@/api/Auth/types'
 
 const cx = classNames.bind(styles)
 
-const SignUpPage = () => {
+const SignUp = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -44,7 +44,7 @@ const SignUpPage = () => {
     control,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(signUpSchema),
     mode: 'all',
   })
 
@@ -58,40 +58,38 @@ const SignUpPage = () => {
   }
 
   return (
-    <AuthLayout>
-      <Grid
-        component="form"
-        className={cx('signup')}
-        onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="h3" component="h1" className={cx('signup__title')}>
-          Регистрация
-        </Typography>
-        <Grid className={cx('signup__inputs')}>
-          {formFields.map(
-            ({ variant = 'standard', type = 'text', name, ...props }) => (
-              <TextField
-                labelClassName={cx('signup__inputs-textfield__label')}
-                inputClassName={cx('signup__inputs-textfield__input')}
-                control={control}
-                fieldError={errors[name]}
-                name={name}
-                variant={variant}
-                type={type}
-                {...props}
-              />
-            )
-          )}
-        </Grid>
-
-        <Link to={'/sign-in'} className={cx('signup__link')}>
-          Уже есть аккаунт
-        </Link>
-        <Button variant="contained" type="submit">
-          Создать аккаунт
-        </Button>
+    <Grid
+      component="form"
+      className={cx('auth')}
+      onSubmit={handleSubmit(onSubmit)}>
+      <Typography variant="h3" component="h1" className={cx('auth__title')}>
+        Регистрация
+      </Typography>
+      <Grid className={cx('auth__inputs')}>
+        {formFields.map(
+          ({ variant = 'standard', type = 'text', name, ...props }) => (
+            <TextField
+              labelClassName={cx('auth__inputs-textfield-label')}
+              inputClassName={cx('auth__inputs-textfield-input')}
+              control={control}
+              fieldError={errors[name]}
+              name={name}
+              variant={variant}
+              type={type}
+              {...props}
+            />
+          )
+        )}
       </Grid>
-    </AuthLayout>
+
+      <Link to={'/sign-in'} className={cx('auth__link')}>
+        Уже есть аккаунт
+      </Link>
+      <Button variant="contained" type="submit">
+        Создать аккаунт
+      </Button>
+    </Grid>
   )
 }
 
-export default SignUpPage
+export default SignUp
