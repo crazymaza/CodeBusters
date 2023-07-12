@@ -1,5 +1,5 @@
 import { BaseObject } from '@/engine/Objects'
-import { TrackObjectSpecs, TrackBoundarySide } from './types'
+import { TrackObjectSpecs, TrackBoundarySide, TrackLineSide } from './types'
 
 /*
  * @INFO Объект трассы
@@ -9,7 +9,15 @@ import { TrackObjectSpecs, TrackBoundarySide } from './types'
  *
  */
 export default class TrackObject extends BaseObject<TrackObjectSpecs> {
-  private boundaryTopOffset = 0
+  private trackObjectsTopOffset = 0
+
+  static linesSpecs = {
+    leftOffset: 150,
+    width: 10,
+    heigth: 140,
+    padding: 100,
+    fillColor: '#fff',
+  }
 
   static boundarySpecs = {
     leftOffset: 2,
@@ -35,12 +43,13 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
       fill: trackFill,
       boundaryCount:
         Math.round(trackHeight / TrackObject.boundarySpecs.height) + 1,
+      linesCount: Math.round(trackHeight / TrackObject.linesSpecs.heigth) + 1,
     }
   }
 
   private createBoundary(side: TrackBoundarySide) {
     return Array.from({
-      length: (this.specs?.boundaryCount || 0) + this.boundaryTopOffset,
+      length: (this.specs?.boundaryCount || 0) + this.trackObjectsTopOffset,
     }).map(() => {
       const boundarySpecs = TrackObject.boundarySpecs
 
@@ -53,9 +62,37 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
 
       return {
         offset,
-        topOffset: this.boundaryTopOffset,
+        topOffset: this.trackObjectsTopOffset,
         width: boundarySpecs.width,
         height: boundarySpecs.height,
+      }
+    })
+  }
+
+  private createLine(side: TrackLineSide) {
+    return Array.from({
+      length: (this.specs?.linesCount || 0) + this.trackObjectsTopOffset,
+    }).map(() => {
+      const linesSpecs = TrackObject.linesSpecs
+
+      let offset = 0
+
+      if (side === TrackLineSide.LEFT) {
+        offset = linesSpecs.leftOffset
+      }
+
+      if (side === TrackLineSide.RIGHT) {
+        offset =
+          linesSpecs.leftOffset -
+          (TrackObject.linesSpecs.width + linesSpecs.leftOffset * 2) +
+          (this.specs?.width || 0)
+      }
+
+      return {
+        offset,
+        topOffset: this.trackObjectsTopOffset,
+        width: linesSpecs.width,
+        heigth: linesSpecs.heigth,
       }
     })
   }
@@ -72,9 +109,49 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
     }
   }
 
+  public drawLines(offset = 0) {
+    if (this.canvasApi.ctx) {
+      this.trackObjectsTopOffset = offset
+
+      const linesSpecs = TrackObject.linesSpecs
+
+      const lines = [
+        this.createLine(TrackLineSide.LEFT),
+        this.createLine(TrackLineSide.RIGHT),
+      ]
+
+      const lineFullHeight = linesSpecs.heigth + linesSpecs.padding
+
+      const ctx = this.canvasApi.ctx as CanvasRenderingContext2D
+      const trackHeight = this.specs?.height || 0
+
+      lines.forEach(line => {
+        let lineIndex = 0
+
+        while (lineIndex < line.length) {
+          line[lineIndex].topOffset =
+            trackHeight -
+            lineFullHeight * lineIndex +
+            this.trackObjectsTopOffset
+
+          ctx.fillStyle = linesSpecs.fillColor
+
+          ctx.fillRect(
+            line[lineIndex].offset,
+            line[lineIndex].topOffset,
+            line[lineIndex].width,
+            line[lineIndex].heigth
+          )
+
+          lineIndex += 1
+        }
+      })
+    }
+  }
+
   public drawBoundary(topOffset = 0) {
     if (this.canvasApi.ctx) {
-      this.boundaryTopOffset = topOffset
+      this.trackObjectsTopOffset = topOffset
 
       const boundarySpecs = TrackObject.boundarySpecs
 
@@ -96,7 +173,7 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
           boundary[boundaryIndex].topOffset =
             trackHeight -
             boundaryFullHeight * boundaryIndex +
-            this.boundaryTopOffset
+            this.trackObjectsTopOffset
 
           ctx.fillStyle =
             boundaryIndex % 2 === 0
@@ -123,6 +200,7 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
       this.clear()
       this.drawTrack()
       this.drawBoundary()
+      this.drawLines()
     }
   }
 }

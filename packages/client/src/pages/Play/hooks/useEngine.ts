@@ -8,6 +8,7 @@ import sportCarImage from 'images/sport_car.png'
 import BarrierObject from '@/engine/Objects/Barrier'
 
 export type UseEngineProps = {
+  backgroundRef: React.RefObject<HTMLCanvasElement>
   containerRef: React.RefObject<HTMLDivElement>
   trackRef: React.RefObject<HTMLCanvasElement>
   carRef: React.RefObject<HTMLCanvasElement>
@@ -15,6 +16,7 @@ export type UseEngineProps = {
 }
 
 export default function useEngine({
+  backgroundRef,
   containerRef,
   trackRef,
   carRef,
@@ -27,12 +29,14 @@ export default function useEngine({
       carRef.current instanceof HTMLCanvasElement &&
       trackRef.current instanceof HTMLCanvasElement &&
       barrierRef.current instanceof HTMLCanvasElement &&
+      backgroundRef.current instanceof HTMLCanvasElement &&
       containerRef.current instanceof HTMLElement
 
     if (isDefineLayers) {
       const trackCanvasLayer = canvas(trackRef.current)
       const carCanvasLayer = canvas(carRef.current)
       const barrierCanvasLayer = canvas(barrierRef.current)
+      const backgroundLayer = canvas(backgroundRef.current)
 
       // Создаем объект трассы для движка с начальными характеристиками
       const trackObject = new TrackObject(trackCanvasLayer)
