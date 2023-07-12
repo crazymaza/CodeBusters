@@ -1,4 +1,8 @@
-import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
+import {
+  CodeBustersEngineOptions,
+  CodeBustersEngineProcess,
+  RunMethodOptions,
+} from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
@@ -67,16 +71,16 @@ export default class CodeBustersEngine {
     return this.options.objects
   }
 
-  public run() {
+  public run(options?: RunMethodOptions) {
     if (this.process === CodeBustersEngineProcess.PLAY) {
       return
     }
 
     this.process = CodeBustersEngineProcess.PLAY
 
-    this.speed = CodeBustersEngine.startSpeed
-
-    this.scores = 0
+    if (!options?.resume) {
+      this.speed = CodeBustersEngine.startSpeed
+    }
 
     this.options.objects.forEach(object => {
       if (object instanceof CarObject) {
@@ -96,9 +100,31 @@ export default class CodeBustersEngine {
 
     this.animation(0)
 
+    this.onChangeProcess()
+
     if (isFunction(this.options.onRun)) {
-      this.options?.onRun?.(this)
+      this.options.onRun(this)
     }
+  }
+
+  public pause() {
+    if (this.process === CodeBustersEngineProcess.PAUSE) {
+      return
+    }
+
+    this.process = CodeBustersEngineProcess.PAUSE
+
+    // Отключение управления
+    this.options.objects.forEach(object => {
+      if (object instanceof CarObject) {
+        object.removeListeners()
+      }
+    })
+
+    // Сбрасывание счетчиков
+    this.dropCounters()
+
+    this.onChangeProcess()
   }
 
   public stop() {
@@ -108,12 +134,10 @@ export default class CodeBustersEngine {
 
     this.process = CodeBustersEngineProcess.STOP
 
-    // Пока что очки считаются как сумма пройденной дистанции и времени
-    this.scores = Math.floor(this.distance + this.playTime)
-
     this.speed = 0
     this.distance = 0
     this.playTime = 0
+    this.scores = 0
 
     this.options.objects.forEach(object => {
       // Восстановление первоначального состояние объектов
@@ -150,14 +174,12 @@ export default class CodeBustersEngine {
     })
 
     // Сбрасывание счетчиков
-    if (this.intervalId) {
-      clearInterval(this.intervalId)
-    }
+    this.dropCounters()
 
-    cancelAnimationFrame(this.sessionId)
+    this.onChangeProcess()
 
     if (isFunction(this.options.onStop)) {
-      this.options?.onStop?.(this)
+      this.options.onStop(this)
     }
   }
 
@@ -168,7 +190,11 @@ export default class CodeBustersEngine {
 
     this.playTime += 1 / FPS
 
+    // Добавил счетчик дистанции, предположительно для смены уровня и счета очков
     this.distance = this.speed * this.playTime
+
+    // Пока что очки считаются как сумма пройденной дистанции и времени
+    this.scores = Math.floor(this.distance + this.playTime)
 
     this.options.objects.forEach(object => {
       if (object instanceof BackgroundObject) {
@@ -251,6 +277,21 @@ export default class CodeBustersEngine {
 
     if (isContinue) {
       this.sessionId = requestAnimationFrame(this.animation.bind(this))
+
+      if (isFunction(this.options.onAnimate)) {
+        this.options.onAnimate(this)
+      }
+    }
+  }
+
+  private dropCounters() {
+    clearInterval(this.intervalId as NodeJS.Timer)
+    cancelAnimationFrame(this.sessionId)
+  }
+
+  private onChangeProcess() {
+    if (isFunction(this.options.onChangeProcess)) {
+      this.options.onChangeProcess(this)
     }
   }
 }

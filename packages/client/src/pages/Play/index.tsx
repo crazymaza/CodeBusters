@@ -2,8 +2,9 @@ import { useRef, useState } from 'react'
 import { useEngine } from './hooks'
 import { MainLayout } from '@/layouts'
 import { CarObject, TrackObject } from '@/engine/Objects'
-import { Button } from '@mui/material'
+import { RunMethodOptions } from '@/engine/Core/types'
 import { useNavigate } from 'react-router-dom'
+import { PlayerScores, GameControls } from './components'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 
@@ -11,6 +12,7 @@ const cx = classNames.bind(styles)
 
 const PlayPage = () => {
   const [level, setLevel] = useState(1)
+
   const navigate = useNavigate()
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -27,10 +29,14 @@ const PlayPage = () => {
     barrierRef,
   })
 
-  const startGame = () => {
+  const startGame = (options?: RunMethodOptions) => {
     setLevel(1)
 
-    engine?.run()
+    engine?.run(options)
+  }
+
+  const pauseGame = () => {
+    engine?.pause()
   }
 
   const endGame = () => {
@@ -38,6 +44,8 @@ const PlayPage = () => {
   }
 
   const exitGame = () => {
+    endGame()
+
     navigate('/')
   }
 
@@ -47,17 +55,12 @@ const PlayPage = () => {
         <div className={cx('play__level')}>
           <span className={cx('level__number')}>{level}</span>
           <span>уровень</span>
+          <PlayerScores />
         </div>
         <div className={cx('play__buttons')}>
-          <Button variant="contained" onClick={startGame}>
-            Начать игру
-          </Button>
-          <Button variant="contained" onClick={endGame}>
-            Завершить игру
-          </Button>
-          <Button variant="contained" onClick={exitGame}>
-            Выйти в меню
-          </Button>
+          <GameControls
+            controls={{ startGame, pauseGame, endGame, exitGame }}
+          />
         </div>
         <div ref={containerRef} className={cx('play__area')}>
           <canvas

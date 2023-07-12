@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@/store/typedHooks'
-import { setGameScores } from '@/store/slices/gameSlice'
+import { setGameScores, setGameProcess } from '@/store/slices/gameSlice'
 import { CodeBustersEngine } from '@/engine'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { loadImage } from '@/helpers'
@@ -31,15 +31,19 @@ export default function useEngine({
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const onRunEngine = () => {
-    dispatch(setGameScores(0))
+  const onChangeGameProcess = (engineInstance: CodeBustersEngine) => {
+    const gameProcess = engineInstance?.getProcess()
+
+    dispatch(setGameProcess(gameProcess))
   }
 
-  const onEngineStop = (engineInstance: CodeBustersEngine) => {
+  const onAnimateEngine = (engineInstance: CodeBustersEngine) => {
     const scores = engineInstance?.getScores()
 
     dispatch(setGameScores(scores))
+  }
 
+  const onEngineStop = () => {
     navigate('/end-game')
   }
 
@@ -106,12 +110,16 @@ export default function useEngine({
                 barrierObject,
                 carObject,
               ],
-              onRun: onRunEngine,
+              onChangeProcess: onChangeGameProcess,
+              onAnimate: onAnimateEngine,
               onStop: onEngineStop,
             })
           )
         }
       )
+
+      // Сбрасываем очки в сторе
+      dispatch(setGameScores(0))
     }
   }, [])
 
