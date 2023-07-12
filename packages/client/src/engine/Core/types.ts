@@ -1,5 +1,5 @@
 import BaseObject from '@/engine/Objects/Base'
-import { BaseObjectSpecs } from '../Objects/Base/types'
+import { BaseObjectSpecs } from '@/engine/Objects/Base/types'
 
 export type CodeBustersEngineOptions = {
   objects: BaseObject<BaseObjectSpecs>[]
