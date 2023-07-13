@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 
-export const schema = yup.object().shape({
+export const signUpSchema = yup.object().shape({
   first_name: yup
     .string()
     .required('Обязательное поле')
@@ -29,6 +29,23 @@ export const schema = yup.object().shape({
       /^[+-d]?\d{10,15}$/,
       'от 10 до 15 символов, состоит из цифр, может начинаться с плюса'
     ),
+  login: yup
+    .string()
+    .required('Обязательное поле')
+    .matches(
+      /^(?=.*[a-zA-Z])([a-zA-Z0-9-_]){3,20}$/,
+      'от 3 до 20 символов, латиница, может содержать цифры, но не состоять из них, без пробелов, без спецсимволов (допустимы дефис и нижнее подчёркивание)'
+    ),
+  password: yup
+    .string()
+    .required('Обязательное поле')
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d].{8,40}$/,
+      'от 8 до 40 символов, обязательно хотя бы одна заглавная буква и цифра'
+    ),
+})
+
+export const signInSchema = yup.object().shape({
   login: yup
     .string()
     .required('Обязательное поле')

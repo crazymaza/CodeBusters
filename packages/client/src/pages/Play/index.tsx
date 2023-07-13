@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { useEngine } from './hooks'
 import { MainLayout } from '@/layouts'
 import { CarObject, TrackObject } from '@/engine/Objects'
@@ -6,7 +6,6 @@ import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
-import { makeContainerFullscreen } from '@/utils/fullscreen'
 
 const cx = classNames.bind(styles)
 
@@ -24,15 +23,9 @@ const PlayPage = () => {
     carRef,
   })
 
-  useEffect(() => {
-    const fullScreen = (event: KeyboardEvent) =>
-      makeContainerFullscreen<HTMLDivElement>(event.key, containerRef)
-    document.body.addEventListener('keyup', fullScreen)
-    return () => document.body.removeEventListener('keyup', fullScreen)
-  }, [])
-
   const startGame = () => {
     setLevel(1)
+
     engine?.run()
   }
 
