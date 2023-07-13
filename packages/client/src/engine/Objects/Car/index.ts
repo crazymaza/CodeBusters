@@ -8,7 +8,7 @@ function getCarPosition() {
     x: 0,
     y: 0,
     w: 64,
-    h: 120,
+    h: 128,
   }
 }
 

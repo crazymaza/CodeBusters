@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react'
 import { CodeBustersEngine } from '@/engine'
 import { CarObject, TrackObject } from '@/engine/Objects'
-import { canvas } from '@/utils'
 import { loadImage } from '@/helpers'
-
-import sportCarImage from 'images/sport_car.png'
-import backgroundImage from 'sprites/sand.png'
-import spriteImages from 'sprites/sprites.png'
-import BarrierObject from '@/engine/Objects/Barrier'
+import { canvas } from '@/utils'
+import React, { useEffect, useState } from 'react'
 import BackgroundObject from '@/engine/Objects/Background'
+import BarrierObject from '@/engine/Objects/Barrier'
+import backgroundImage from 'sprites/background.png'
+import spriteImages from 'sprites/sprites.png'
 
 export type UseEngineProps = {
   backgroundRef: React.RefObject<HTMLCanvasElement>
@@ -42,10 +40,8 @@ export default function useEngine({
       const backgroundLayer = canvas(backgroundRef.current)
 
       const backgroundObject = new BackgroundObject(backgroundLayer)
-      const baseBackgroundSpecs = BackgroundObject.createBasekBackgroundSpecs(
-        containerRef.current,
-        backgroundImage
-      )
+      const baseBackgroundSpecs =
+        BackgroundObject.createBaseBackgroundSpecs(backgroundImage)
 
       // Создаем объект трассы для движка с начальными характеристиками
       const trackObject = new TrackObject(trackCanvasLayer)
@@ -66,7 +62,8 @@ export default function useEngine({
 
       // Создаём объект припятствий для движка с начальными характеристиками
       const barrierObject = new BarrierObject(barrierCanvasLayer)
-      BarrierObject.createBaseBarrierSpecs(trackRef.current)
+      BarrierObject.createBaseBarrierSpecs(trackRef.current,
+        spriteImages)
 
       // Ждем пока загрузиться изображение машины
       Promise.all([loadImage(spriteImages), loadImage(backgroundImage)]).then(
@@ -89,8 +86,8 @@ export default function useEngine({
               objects: [
                 backgroundObject,
                 trackObject,
-                carObject,
                 barrierObject,
+                carObject,
               ],
             })
           )

@@ -136,6 +136,14 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
 
           ctx.fillStyle = linesSpecs.fillColor
 
+          ctx.strokeStyle = 'black'
+
+          ctx.strokeRect(
+            line[lineIndex].offset,
+            line[lineIndex].topOffset,
+            line[lineIndex].width,
+            line[lineIndex].heigth
+          )
           ctx.fillRect(
             line[lineIndex].offset,
             line[lineIndex].topOffset,
@@ -180,6 +188,12 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
               ? boundarySpecs.fillEvent
               : boundarySpecs.fillOdd
 
+          ctx.strokeRect(
+            boundary[boundaryIndex].offset,
+            boundary[boundaryIndex].topOffset,
+            boundary[boundaryIndex].width,
+            boundary[boundaryIndex].height
+          )
           ctx.fillRect(
             boundary[boundaryIndex].offset,
             boundary[boundaryIndex].topOffset,

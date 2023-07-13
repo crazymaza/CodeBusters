@@ -60,7 +60,12 @@ const PlayPage = () => {
           </Button>
         </div>
         <div ref={containerRef} className={cx('play__area')}>
-          <canvas ref={backgroundRef} className={cx('play__background')} />
+          <canvas
+            ref={backgroundRef}
+            className={cx('play__background')}
+            width={1000}
+            height={800}
+          />
           <canvas ref={trackRef} className={cx('play__track')} />
           <canvas
             ref={carRef}

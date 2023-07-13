@@ -2,26 +2,20 @@ import BaseObject from '../Base'
 import { BackgroundObjectSpecs } from './types'
 
 export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> {
-  private xPosition = 0
   static dimensions = {
     width: 450,
     height: 500,
   }
 
-  static createBasekBackgroundSpecs(
-    containerHTML: HTMLElement,
-    bgImageSrc: string
-  ) {
+  static createBaseBackgroundSpecs(bgImageSrc: string) {
     const bgImage = new Image()
     bgImage.src = bgImageSrc
 
-    // alert(containerHTML.offsetWidth)
-
     return {
       x: 0,
-      y: 0,
-      width: 1400,
-      height: 700,
+      y: -1000,
+      width: 700,
+      height: 1400,
       image: bgImage,
     }
   }
@@ -33,14 +27,14 @@ export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> 
       this.canvasApi.ctx.drawImage(
         this.specs.image,
         this.specs.x,
-        this.specs.y
-
-        // this.specs.width,
-        // this.specs.height
+        this.specs.y,
+        this.specs.width * 2,
+        this.specs.height * 2
       )
-      this.specs.y++
-      if (this.specs.y >= 989) {
-        this.specs.y = 100
+      this.specs.y += 5
+
+      if (this.specs.y > 1) {
+        this.specs.y = -this.specs.image.height
       }
     }
   }
