@@ -5,7 +5,10 @@ import { canvas } from '@/utils'
 import { loadImage } from '@/helpers'
 
 import sportCarImage from 'images/sport_car.png'
+import backgroundImage from 'sprites/sand.png'
+import spriteImages from 'sprites/sprites.png'
 import BarrierObject from '@/engine/Objects/Barrier'
+import BackgroundObject from '@/engine/Objects/Background'
 
 export type UseEngineProps = {
   backgroundRef: React.RefObject<HTMLCanvasElement>
@@ -38,6 +41,12 @@ export default function useEngine({
       const barrierCanvasLayer = canvas(barrierRef.current)
       const backgroundLayer = canvas(backgroundRef.current)
 
+      const backgroundObject = new BackgroundObject(backgroundLayer)
+      const baseBackgroundSpecs = BackgroundObject.createBasekBackgroundSpecs(
+        containerRef.current,
+        backgroundImage
+      )
+
       // Создаем объект трассы для движка с начальными характеристиками
       const trackObject = new TrackObject(trackCanvasLayer)
       const baseTrackSpecs = TrackObject.createBaseTrackSpecs(
@@ -49,7 +58,7 @@ export default function useEngine({
       const xPositionCar = carObject.getCenterOnTrack(TrackObject.width)
 
       const baseCarSpecs = CarObject.createBaseCarSpecs(
-        sportCarImage,
+        spriteImages,
         xPositionCar,
         0,
         trackRef.current.offsetHeight
@@ -60,23 +69,33 @@ export default function useEngine({
       BarrierObject.createBaseBarrierSpecs(trackRef.current)
 
       // Ждем пока загрузиться изображение машины
-      loadImage(sportCarImage).then(() => {
-        // Рисуем трассу для начального отображения
-        trackObject.draw(0, baseTrackSpecs)
+      Promise.all([loadImage(spriteImages), loadImage(backgroundImage)]).then(
+        () => {
+          // Рисуем фон
+          backgroundObject.draw(0, baseBackgroundSpecs)
 
-        // Рисуем машину
-        carObject.draw(0, baseCarSpecs)
+          // Рисуем трассу для начального отображения
+          trackObject.draw(0, baseTrackSpecs)
 
-        // Рисуем припятствия
-        barrierObject.draw(0)
+          // Рисуем машину
+          carObject.draw(0, baseCarSpecs)
 
-        // Создаем экземпляр движка для обработки анимации и управлением процессом игры
-        setEngine(
-          new CodeBustersEngine({
-            objects: [trackObject, carObject, barrierObject],
-          })
-        )
-      })
+          // Рисуем припятствия
+          barrierObject.draw(0, baseBarrierSpec)
+
+          // Создаем экземпляр движка для обработки анимации и управлением процессом игры
+          setEngine(
+            new CodeBustersEngine({
+              objects: [
+                backgroundObject,
+                trackObject,
+                carObject,
+                barrierObject,
+              ],
+            })
+          )
+        }
+      )
     }
   }, [])
 

@@ -2,6 +2,16 @@ import { BaseObject } from '@/engine/Objects'
 import { CarObjectSpecs, CarKeyboadControlEventKey } from './types'
 import { canvas } from '@/utils'
 
+// Получаем координаты машинки
+function getCarPosition() {
+  return {
+    x: 0,
+    y: 0,
+    w: 64,
+    h: 120,
+  }
+}
+
 /*
  * @INFO Объект машины
  *
@@ -10,8 +20,8 @@ import { canvas } from '@/utils'
  */
 export default class CarObject extends BaseObject<CarObjectSpecs> {
   static dimensions = {
-    width: 60,
-    height: 130,
+    widdth: 70,
+    height: 140,
     yAxisPosition: 0,
     bottomMargin: 30,
   }
@@ -50,8 +60,14 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
     if (this.canvasApi.ctx && this.specs) {
       this.clear()
 
+      const car_position = getCarPosition()
+
       this.canvasApi.ctx.drawImage(
         this.specs.image,
+        car_position.x,
+        car_position.y,
+        car_position.w,
+        car_position.h,
         this.specs.x,
         this.specs.y,
         this.specs.width,
