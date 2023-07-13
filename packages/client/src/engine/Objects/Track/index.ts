@@ -24,8 +24,10 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
     width: 10,
     height: 80,
     padding: 8,
-    fillOdd: '#fff',
-    fillEven: '#d33939',
+    fill: {
+      even: '#d33939',
+      odd: '#fff',
+    },
   }
 
   static width = 500
@@ -185,8 +187,8 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
 
           ctx.fillStyle =
             boundaryIndex % 2 === 0
-              ? boundarySpecs.fillEven
-              : boundarySpecs.fillOdd
+              ? boundarySpecs.fill.even
+              : boundarySpecs.fill.odd
 
           ctx.strokeRect(
             boundary[boundaryIndex].offset,

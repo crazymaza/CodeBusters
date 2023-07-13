@@ -29,6 +29,13 @@ import { isFunction } from '@/helpers'
 const FPS = 60
 const SECOND = 1000
 
+const initPlayerProgress = {
+  speed: 0,
+  distance: 0,
+  playTime: 0, // В секундах
+  scores: 0,
+}
+
 export default class CodeBustersEngine {
   static startSpeed = 5
   static maxSpeed = 30
@@ -41,30 +48,21 @@ export default class CodeBustersEngine {
   private backgroundObjectTopOffset = 0
   private speed = CodeBustersEngine.startSpeed
   private boundaryTrackTopOffset = 0
-  private distance = 0
-  private playTime = 0 // В секундах
-  private scores = 0
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
   private barrierTopOffset = 0
+
+  private playerProgress = initPlayerProgress
 
   constructor(private options: CodeBustersEngineOptions<CodeBustersEngine>) {
     this.lastTimestamp = 0
   }
 
-  public getScores() {
-    return this.scores
+  public getPlayerProgress() {
+    return this.playerProgress
   }
 
   public getProcess() {
     return this.process
-  }
-
-  public getPlayTime() {
-    return this.playTime
-  }
-
-  public getDistance() {
-    return this.distance
   }
 
   public getEngineObjects() {
@@ -79,7 +77,7 @@ export default class CodeBustersEngine {
     this.process = CodeBustersEngineProcess.PLAY
 
     if (!options?.resume) {
-      this.speed = CodeBustersEngine.startSpeed
+      this.playerProgress.speed = CodeBustersEngine.startSpeed
     }
 
     this.options.objects.forEach(object => {
@@ -91,8 +89,8 @@ export default class CodeBustersEngine {
 
     this.intervalId = setInterval(() => {
       // Увеличение скорости с интервалом в 1с
-      if (this.speed < CodeBustersEngine.maxSpeed) {
-        this.speed += CodeBustersEngine.diffSpeed
+      if (this.playerProgress.speed < CodeBustersEngine.maxSpeed) {
+        this.playerProgress.speed += CodeBustersEngine.diffSpeed
       } else {
         clearInterval(this.intervalId as NodeJS.Timer)
       }
@@ -134,14 +132,10 @@ export default class CodeBustersEngine {
 
     this.process = CodeBustersEngineProcess.STOP
 
-    this.speed = 0
-    this.distance = 0
-    this.playTime = 0
-    this.scores = 0
+    this.dropPlayerProgress()
 
     this.options.objects.forEach(object => {
       // Восстановление первоначального состояние объектов
-
       if (object instanceof TrackObject) {
         this.trackObjectsTopOffset = 0
 
@@ -188,13 +182,16 @@ export default class CodeBustersEngine {
 
     this.lastTimestamp = timestamp
 
-    this.playTime += 1 / FPS
+    this.playerProgress.playTime += 1 / FPS
 
     // Добавил счетчик дистанции, предположительно для смены уровня и счета очков
-    this.distance = this.speed * this.playTime
+    this.playerProgress.distance =
+      this.playerProgress.speed * this.playerProgress.playTime
 
     // Пока что очки считаются как сумма пройденной дистанции и времени
-    this.scores = Math.floor(this.distance + this.playTime)
+    this.playerProgress.scores = Math.floor(
+      this.playerProgress.distance + this.playerProgress.playTime
+    )
 
     this.options.objects.forEach(object => {
       if (object instanceof BackgroundObject) {
@@ -205,7 +202,8 @@ export default class CodeBustersEngine {
       }
 
       if (object instanceof TrackObject) {
-        this.trackObjectsTopOffset += this.speed
+        this.trackObjectsTopOffset += this.playerProgress.speed
+        this.boundaryTrackTopOffset += this.playerProgress.speed
 
         object.clear()
         object.drawTrack()
@@ -282,6 +280,10 @@ export default class CodeBustersEngine {
         this.options.onAnimate(this)
       }
     }
+  }
+
+  private dropPlayerProgress() {
+    this.playerProgress = initPlayerProgress
   }
 
   private dropCounters() {

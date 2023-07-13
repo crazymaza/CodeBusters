@@ -38,7 +38,7 @@ export default function useEngine({
   }
 
   const onAnimateEngine = (engineInstance: CodeBustersEngine) => {
-    const scores = engineInstance?.getScores()
+    const scores = engineInstance?.getPlayerProgress().scores
 
     dispatch(setGameScores(scores))
   }
