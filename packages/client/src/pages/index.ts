@@ -1,7 +1,6 @@
 export { default as RootContainer } from './Root'
 export { default as HomePage } from './Home'
-export { default as SignInPage } from './SignIn'
-export { default as SignUpPage } from './SignUp'
+export { default as AuthPage } from './AuthPage'
 export { default as PlayPage } from './Play'
 export { default as LeaderBoardPage } from './LeaderBoard'
 export { default as ProfilePage } from './Profile'
