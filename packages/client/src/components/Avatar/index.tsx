@@ -17,7 +17,6 @@ type AvatarProps = FC<Props>
 const cx = classNames.bind(styles)
 
 const Avatar: AvatarProps = ({ children, changeAvatar, ...props }) => {
-  console.log(props)
   return (
     <>
       <input
