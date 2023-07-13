@@ -39,6 +39,10 @@ export default class CodeBustersEngine {
     this.lastTimestamp = 0
   }
 
+  public getProcess() {
+    return this.process
+  }
+
   public run() {
     if (this.process === CodeBustersEngineProcess.PLAY) {
       return

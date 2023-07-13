@@ -11,8 +11,8 @@ export default createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthWrapper />}>
       <Route path="/" element={<Pages.RootContainer />}>
-        <Route path="sign-in" element={<Pages.SignInPage />} />
-        <Route path="sign-up" element={<Pages.SignUpPage />} />
+        <Route path="sign-in" element={<Pages.AuthPage />} />
+        <Route path="sign-up" element={<Pages.AuthPage />} />
         <Route index element={<Pages.HomePage />} />
         <Route path="play" element={<Pages.PlayPage />} />
         <Route path="leader-board" element={<Pages.LeaderBoardPage />} />
