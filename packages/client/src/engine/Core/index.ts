@@ -43,6 +43,10 @@ export default class CodeBustersEngine {
     return this.process
   }
 
+  public getEngineObjects() {
+    return this.options.objects
+  }
+
   public run() {
     if (this.process === CodeBustersEngineProcess.PLAY) {
       return

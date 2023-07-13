@@ -3,6 +3,10 @@ import { CarObject, TrackObject } from '../Objects'
 import { fireEvent } from '@testing-library/react'
 import 'jest-canvas-mock'
 
+jest
+  .spyOn(window, 'alert')
+  .mockImplementation(() => console.log('alert called'))
+
 describe('Тест игрового движка', () => {
   const createTestEngine = () => {
     const canvas: HTMLCanvasElement = document.createElement('canvas')
