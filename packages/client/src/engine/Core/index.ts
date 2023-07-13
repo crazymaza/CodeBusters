@@ -153,14 +153,37 @@ export default class CodeBustersEngine {
             boundarySpecs.leftOffset -
             CarObject.dimensions.with
 
-        const isCarBreakOfBarrier =
-          xPositionCar >= BarrierObject.currentSpec.x &&
-          xPositionCar <=
-            BarrierObject.currentSpec.x + BarrierObject.currentSpec.width &&
+        const xRangePositionCar = [
+          xPositionCar,
+          xPositionCar + CarObject.dimensions.with,
+        ]
+
+        const yRangePositionCar = [
           BarrierObject.currentSpec.trackHeight -
-            30 -
-            CarObject.dimensions.height <=
-            BarrierObject.currentSpec.y + 170
+            CarObject.dimensions.height -
+            30,
+          BarrierObject.currentSpec.trackHeight,
+        ]
+
+        const xRangePositionBarrier = [
+          BarrierObject.currentSpec.x,
+          BarrierObject.currentSpec.x + BarrierObject.currentSpec.width,
+        ]
+
+        const yRangePositionBarrier = [
+          BarrierObject.currentSpec.y,
+          BarrierObject.currentSpec.y + BarrierObject.currentSpec.height,
+        ]
+
+        const isIntersectionByX =
+          xRangePositionCar[0] < xRangePositionBarrier[1] &&
+          xRangePositionBarrier[0] < xRangePositionCar[1]
+
+        const isIntersectionByY =
+          yRangePositionBarrier[0] < yRangePositionCar[1] &&
+          yRangePositionCar[0] < yRangePositionBarrier[1]
+
+        const isCarBreakOfBarrier = isIntersectionByX && isIntersectionByY
 
         if (isOutLeftSideTrack || isOutRightSideTrack || isCarBreakOfBarrier) {
           alert('Столкновение!')

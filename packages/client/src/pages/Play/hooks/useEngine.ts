@@ -53,7 +53,7 @@ export default function useEngine({
       // Создаём объект припятствий для движка с начальными характеристиками
       const barrierObject = new BarrierObject(barrierCanvasLayer)
       const baseBarrierSpec = BarrierObject.createBaseBarrierSpecs(
-        barrierRef.current
+        trackRef.current
       )
 
       // Ждем пока загрузиться изображение машины
