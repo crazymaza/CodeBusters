@@ -17,6 +17,7 @@ type AvatarProps = FC<Props>
 const cx = classNames.bind(styles)
 
 const Avatar: AvatarProps = ({ children, changeAvatar, ...props }) => {
+  console.log(props)
   return (
     <>
       <input
@@ -30,8 +31,8 @@ const Avatar: AvatarProps = ({ children, changeAvatar, ...props }) => {
       <label htmlFor="upload-avatar-file">
         <MUIIconButton aria-label="upload picture" component="span">
           <MUIAvatar
-            src={AvatarIcon}
             {...props}
+            src={props.src !== null ? props.src : AvatarIcon}
             className={cx('avatar__component')}>
             {children}
           </MUIAvatar>

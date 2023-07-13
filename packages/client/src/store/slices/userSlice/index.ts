@@ -64,7 +64,9 @@ const authSlice = createSlice({
     })
     builder.addCase(getUserInfo.fulfilled, (state, action) => {
       state.userInfo = action.payload
-      state.userInfo.avatar = AVATAR_SOURCE_URL + action.payload.avatar
+      if (action.payload.avatar) {
+        state.userInfo.avatar = AVATAR_SOURCE_URL + action.payload.avatar
+      }
       state.loading = false
     })
     builder.addCase(getUserInfo.rejected, state => {
@@ -86,7 +88,9 @@ const authSlice = createSlice({
     })
     builder.addCase(changeUserAvatar.fulfilled, (state, action) => {
       state.userInfo = action.payload.data
-      state.userInfo.avatar = AVATAR_SOURCE_URL + action.payload.data.avatar
+      if (action.payload.data.avatar) {
+        state.userInfo.avatar = AVATAR_SOURCE_URL + action.payload.data.avatar
+      }
       state.loading = false
     })
     builder.addCase(changeUserAvatar.rejected, state => {
