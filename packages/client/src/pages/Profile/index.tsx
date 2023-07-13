@@ -8,21 +8,32 @@ import { Link, useNavigate } from 'react-router-dom'
 import { MainLayout } from '@/layouts'
 import { useState } from 'react'
 
-import { useAppDispatch } from '@/store/typedHooks'
-import { logout } from '@/store/slices/authSlice/thunks'
+import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
+import { changeUserInfo, logout } from '@/store/slices/userSlice/thunks'
 
 import { schema, modalSchema } from './validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { UserRequest } from '@/api/User/types'
 import {
   changeUserPassword,
   changeUserAvatar,
 } from '@/store/slices/userSlice/thunks'
+import { UserUpdateModel, UserInfo } from '@/api/User/types'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
 
 const cx = classNames.bind(styles)
 
 const ProfilePage = () => {
+  const user = useAppSelector(selectUserInfo)
+
+  const defaultValues = {
+    first_name: user?.first_name ?? '',
+    second_name: user?.second_name ?? '',
+    display_name: user?.display_name ?? '',
+    login: user?.login ?? '',
+    email: user?.email ?? '',
+    phone: user?.phone ?? '',
+  }
   const formFields: {
     name:
       | 'login'
@@ -34,13 +45,28 @@ const ProfilePage = () => {
     label: string
     variant?: TextFieldVariants | undefined
     type?: string
+    value?: string | number
   }[] = [
-    { label: 'Логин', name: 'login' },
-    { label: 'Имя', name: 'first_name' },
-    { label: 'Фамилия', name: 'second_name' },
-    { label: 'Полное имя', name: 'display_name' },
-    { label: 'Email', type: 'email', name: 'email' },
-    { label: 'Телефон', type: 'phone', name: 'phone' },
+    { label: 'Логин', name: 'login', value: defaultValues.login },
+    { label: 'Имя', name: 'first_name', value: defaultValues.first_name },
+    { label: 'Фамилия', name: 'second_name', value: defaultValues.second_name },
+    {
+      label: 'Полное имя',
+      name: 'display_name',
+      value: defaultValues.display_name,
+    },
+    {
+      label: 'Email',
+      type: 'email',
+      name: 'email',
+      value: defaultValues.email,
+    },
+    {
+      label: 'Телефон',
+      type: 'phone',
+      name: 'phone',
+      value: defaultValues.phone,
+    },
   ]
 
   const modalFormFields: {
@@ -57,7 +83,9 @@ const ProfilePage = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
   } = useForm({
+    defaultValues: defaultValues,
     resolver: yupResolver(schema),
     mode: 'all',
   })
@@ -68,7 +96,7 @@ const ProfilePage = () => {
     handleSubmit: modalHandleSubmit,
   } = useForm({
     resolver: yupResolver(modalSchema),
-    mode: 'all',
+    mode: 'onSubmit',
   })
 
   const navigate = useNavigate()
@@ -83,12 +111,12 @@ const ProfilePage = () => {
   }
 
   const cancelClick = () => {
-    navigate(-1)
+    navigate('/')
   }
 
-  const onSubmit = async (data: UserRequest) => {
+  const onSubmit = async (data: UserUpdateModel) => {
     try {
-      // TODO: определиться - через редакс или что-то еще
+      await dispatch(changeUserInfo(data)).unwrap()
       navigate('/')
     } catch (error) {
       console.log(error)
@@ -147,7 +175,7 @@ const ProfilePage = () => {
             onSubmit={handleSubmit(onSubmit)}>
             <div className={cx('profile__form_content')}>
               <div className={cx('form__content_settings')}>
-                <Avatar changeAvatar={changeAvatar}></Avatar>
+                <Avatar src={user?.avatar} changeAvatar={changeAvatar}></Avatar>
                 <div className={cx('user__settings')}>
                   <div className={cx('user__settings_theme')}>
                     <span>Сменить тему</span>
@@ -160,16 +188,30 @@ const ProfilePage = () => {
               </div>
               <div className={cx('form__content_inputlist')}>
                 {formFields.map(
-                  ({ variant = 'standard', type = 'text', name, ...props }) => (
-                    <TextField
-                      control={control}
-                      fieldError={errors[name]}
-                      name={name}
-                      variant={variant}
-                      type={type}
-                      {...props}
-                    />
-                  )
+                  ({
+                    variant = 'standard',
+                    type = 'text',
+                    value = '',
+                    name,
+                    ...props
+                  }) => {
+                    const [inputValue, setInputValue] = useState(value)
+                    return (
+                      <TextField
+                        control={control}
+                        fieldError={errors[name]}
+                        name={name}
+                        variant={variant}
+                        value={inputValue}
+                        onChange={ev => {
+                          setInputValue(ev.target.value)
+                          setValue(name, ev.target.value)
+                        }}
+                        type={type}
+                        {...props}
+                      />
+                    )
+                  }
                 )}
                 <Button
                   className={cx('form__content_inputlist_button')}

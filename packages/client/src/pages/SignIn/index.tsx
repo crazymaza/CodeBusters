@@ -8,13 +8,13 @@ import { TextField } from '@/components'
 import { AuthLayout } from '@/layouts'
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
-import { getUserInfo, signin } from '@/store/slices/authSlice/thunks'
+import { getUserInfo, signin } from '@/store/slices/userSlice/thunks'
 import { isAxiosError } from 'axios'
 
 import { schema } from './validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { SigninData } from '@/api/Auth/types'
+import { SigninData } from '@/api/User/types'
 
 const cx = classNames.bind(styles)
 

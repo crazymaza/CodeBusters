@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 import { AuthLayout } from '@/layouts'
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
-import { signup } from '@/store/slices/authSlice/thunks'
+import { signup } from '@/store/slices/userSlice/thunks'
 import { Link } from 'react-router-dom'
 import { Grid, Typography, Button, TextFieldVariants } from '@mui/material'
 import { TextField } from '@/components'
@@ -11,7 +11,7 @@ import { TextField } from '@/components'
 import { schema } from './validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { SignupData } from '@/api/Auth/types'
+import { SignupData } from '@/api/User/types'
 
 const cx = classNames.bind(styles)
 
