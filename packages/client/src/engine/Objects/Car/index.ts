@@ -20,7 +20,7 @@ function getCarPosition() {
  */
 export default class CarObject extends BaseObject<CarObjectSpecs> {
   static dimensions = {
-    widdth: 70,
+    width: 70,
     height: 140,
     yAxisPosition: 0,
     bottomMargin: 30,

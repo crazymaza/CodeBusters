@@ -42,7 +42,7 @@ export default class BarrierObject extends BaseObject<BarrierObjectSpecs> {
   }
 
   public drawBarrier() {
-    if (this.canvasApi.ctx && this.specs) {
+    if (this.canvasApi.ctx && this.specs && this.specs.image) {
       const ctx = this.canvasApi.ctx as CanvasRenderingContext2D
 
       const barrier_position = getPositionBarrier()
@@ -75,7 +75,7 @@ export default class BarrierObject extends BaseObject<BarrierObjectSpecs> {
 
   public draw(
     delta: number,
-    specs: BaseObjectSpecs = BarrierObject.currentSpec
+    specs: BarrierObjectSpecs = BarrierObject.currentSpec
   ) {
     this.specs = specs
 

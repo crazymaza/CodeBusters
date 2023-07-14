@@ -62,8 +62,10 @@ export default function useEngine({
 
       // Создаём объект припятствий для движка с начальными характеристиками
       const barrierObject = new BarrierObject(barrierCanvasLayer)
-      BarrierObject.createBaseBarrierSpecs(trackRef.current,
-        spriteImages)
+      const baseBarrierSpecs = BarrierObject.createBaseBarrierSpecs(
+        trackRef.current,
+        spriteImages
+      )
 
       // Ждем пока загрузиться изображение машины
       Promise.all([loadImage(spriteImages), loadImage(backgroundImage)]).then(
@@ -78,7 +80,7 @@ export default function useEngine({
           carObject.draw(0, baseCarSpecs)
 
           // Рисуем припятствия
-          barrierObject.draw(0, baseBarrierSpec)
+          barrierObject.draw(0, baseBarrierSpecs)
 
           // Создаем экземпляр движка для обработки анимации и управлением процессом игры
           setEngine(
