@@ -42,6 +42,7 @@ const SignUp = () => {
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(signUpSchema),
@@ -74,6 +75,9 @@ const SignUp = () => {
               control={control}
               fieldError={errors[name]}
               name={name}
+              handleChange={ev => {
+                setValue(name, ev.target.value)
+              }}
               variant={variant}
               type={type}
               {...props}

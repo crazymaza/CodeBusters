@@ -42,7 +42,7 @@ class UserApi extends BaseApi {
   }
 
   changeUserInfo(data: UserUpdateModel) {
-    return this.request.put('/user/profile', data)
+    return this.request.put<UserInfo>('/user/profile', data)
   }
 }
 

@@ -27,12 +27,12 @@ const ProfilePage = () => {
   const user = useAppSelector(selectUserInfo)
 
   const defaultValues = {
-    first_name: user?.first_name ?? '',
-    second_name: user?.second_name ?? '',
-    display_name: user?.display_name ?? '',
-    login: user?.login ?? '',
-    email: user?.email ?? '',
-    phone: user?.phone ?? '',
+    first_name: user?.first_name || '',
+    second_name: user?.second_name || '',
+    display_name: user?.display_name || '',
+    login: user?.login || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
   }
   const formFields: {
     name:
@@ -90,15 +90,6 @@ const ProfilePage = () => {
     mode: 'all',
   })
 
-  const {
-    control: modalControl,
-    formState: { errors: modalErrors },
-    handleSubmit: modalHandleSubmit,
-  } = useForm({
-    resolver: yupResolver(modalSchema),
-    mode: 'onSubmit',
-  })
-
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
@@ -132,6 +123,16 @@ const ProfilePage = () => {
   }
 
   const renderModal = () => {
+    const {
+      control: modalControl,
+      formState: { errors: modalErrors },
+      handleSubmit: modalHandleSubmit,
+      setValue,
+    } = useForm({
+      resolver: yupResolver(modalSchema),
+      mode: 'onSubmit',
+    })
+
     return (
       <Modal open={open} onClose={handleClose}>
         <form
@@ -145,6 +146,9 @@ const ProfilePage = () => {
                 name={name}
                 variant={variant}
                 type={type}
+                handleChange={ev => {
+                  setValue(name, ev.target.value)
+                }}
                 {...props}
               />
             )
@@ -195,16 +199,14 @@ const ProfilePage = () => {
                     name,
                     ...props
                   }) => {
-                    const [inputValue, setInputValue] = useState(value)
                     return (
                       <TextField
                         control={control}
                         fieldError={errors[name]}
                         name={name}
                         variant={variant}
-                        value={inputValue}
-                        onChange={ev => {
-                          setInputValue(ev.target.value)
+                        value={value}
+                        handleChange={ev => {
                           setValue(name, ev.target.value)
                         }}
                         type={type}

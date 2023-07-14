@@ -14,12 +14,16 @@ import {
   FieldValues,
   UseControllerProps,
 } from 'react-hook-form'
+import { useState } from 'react'
 
 type Props<T extends FieldValues> = {
   control: Control<T> | undefined
   fieldError: FieldError | undefined
   labelClassName?: string
   inputClassName?: string
+  handleChange?: (
+    ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
 } & UseControllerProps<T> &
   TextFieldProps
 
@@ -31,8 +35,12 @@ const TextField = <T extends FieldValues>({
   fieldError,
   labelClassName,
   inputClassName,
+  handleChange,
+  value,
   ...props
 }: Props<T>) => {
+  const [inputValue, setInputValue] = useState(value)
+
   return (
     <>
       <Controller
@@ -48,6 +56,11 @@ const TextField = <T extends FieldValues>({
             }}
             {...field}
             {...props}
+            onChange={ev => {
+              setInputValue(ev.target.value)
+              handleChange && handleChange(ev)
+            }}
+            value={inputValue}
           />
         )}
       />

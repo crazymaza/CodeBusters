@@ -82,8 +82,8 @@ export const changeUserInfo = createAsyncThunk(
   'user/changeUserInfo',
   async (userData: UserUpdateModel, thunkApi) => {
     try {
-      await UserApi.changeUserInfo(userData)
-      return userData
+      const userInfo = await UserApi.changeUserInfo(userData)
+      return userInfo
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }

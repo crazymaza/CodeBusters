@@ -101,18 +101,9 @@ const authSlice = createSlice({
       state.loading = true
     })
     builder.addCase(changeUserInfo.fulfilled, (state, action) => {
-      if (state.userInfo) {
-        const result = Object.assign(
-          {},
-          state.userInfo,
-          ...Object.keys(state.userInfo).map(
-            k =>
-              k in action.payload && {
-                [k]: action.payload[k as keyof UserUpdateModel],
-              }
-          )
-        )
-        state.userInfo = result
+      state.userInfo = action.payload.data
+      if (action.payload.data.avatar) {
+        state.userInfo.avatar = AVATAR_SOURCE_URL + action.payload.data.avatar
       }
       state.loading = false
     })

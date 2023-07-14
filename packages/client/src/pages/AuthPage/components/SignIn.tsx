@@ -32,6 +32,7 @@ const SignIn = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
   } = useForm<SigninData>({
     resolver: yupResolver(signInSchema),
     mode: 'all',
@@ -74,6 +75,9 @@ const SignIn = () => {
               control={control}
               fieldError={errors[name]}
               name={name}
+              handleChange={ev => {
+                setValue(name, ev.target.value)
+              }}
               variant={variant}
               type={type}
               {...props}
