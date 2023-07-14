@@ -21,8 +21,12 @@ describe('Тест игрового движка', () => {
     const xPositionCar = Car.getCenterOnTrack(500)
     const carSpecs = CarObject.createBaseCarSpecs('', xPositionCar, 0, 10)
 
+    const barrierImage = ''
     const Barrier = new BarrierObject({ ctx, element: canvas })
-    const barrierSpec = BarrierObject.createBaseBarrierSpecs(container)
+    const barrierSpec = BarrierObject.createBaseBarrierSpecs(
+      container,
+      barrierImage
+    )
 
     Track.draw(0, trackSpecs)
     Car.draw(0, carSpecs)
