@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { useEngine } from './hooks'
+import { useEngine, useMakeFullscreen } from './hooks'
 import { MainLayout } from '@/layouts'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { Button } from '@mui/material'
@@ -16,6 +16,8 @@ const PlayPage = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
+
+  useMakeFullscreen()
 
   const engine = useEngine({
     containerRef,
@@ -34,6 +36,7 @@ const PlayPage = () => {
   }
 
   const exitGame = () => {
+    document.exitFullscreen()
     navigate('/')
   }
 
