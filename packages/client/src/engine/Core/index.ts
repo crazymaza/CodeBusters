@@ -159,17 +159,15 @@ export default class CodeBustersEngine {
           xPositionCar >=
           TrackObject.width -
             boundarySpecs.leftOffset -
-            CarObject.dimensions.with
+            CarObject.dimensions.width
 
         const xRangePositionCar = [
           xPositionCar,
-          xPositionCar + CarObject.dimensions.with,
+          xPositionCar + CarObject.dimensions.width,
         ]
 
         const yRangePositionCar = [
-          BarrierObject.currentSpec.trackHeight -
-            CarObject.dimensions.height -
-            30,
+          CarObject.dimensions.yAxisPosition,
           BarrierObject.currentSpec.trackHeight,
         ]
 

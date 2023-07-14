@@ -53,7 +53,10 @@ export default class BarrierObject extends BaseObject<BaseObjectSpecs> {
     }
   }
 
-  public draw(delta: number, specs: BaseObjectSpecs) {
+  public draw(
+    delta: number,
+    specs: BaseObjectSpecs = BarrierObject.currentSpec
+  ) {
     this.specs = specs
 
     if (this.canvasApi.ctx) {

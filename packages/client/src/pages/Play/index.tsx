@@ -64,6 +64,7 @@ const PlayPage = () => {
             className={cx('play__car')}
             width={TrackObject.width}
             height={CarObject.dimensions.height}
+            style={{ bottom: CarObject.dimensions.bottomMargin }}
           />
           <canvas
             ref={barrierRef}

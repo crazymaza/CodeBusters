@@ -10,21 +10,32 @@ import { canvas } from '@/utils'
  */
 export default class CarObject extends BaseObject<CarObjectSpecs> {
   static dimensions = {
-    with: 60,
+    width: 60,
     height: 130,
+    yAxisPosition: 0,
+    bottomMargin: 30,
   }
 
   static sensitivity = 40
 
-  static createBaseCarSpecs(carImageSrc: string, x: number, y: number) {
+  static createBaseCarSpecs(
+    carImageSrc: string,
+    x: number,
+    y: number,
+    trackHeight: number
+  ) {
     const carCanvasImage = new Image()
     carCanvasImage.src = carImageSrc
+    CarObject.dimensions.yAxisPosition =
+      trackHeight -
+      CarObject.dimensions.height -
+      CarObject.dimensions.bottomMargin
 
     return {
       image: carCanvasImage,
       x,
       y,
-      width: CarObject.dimensions.with,
+      width: CarObject.dimensions.width,
       height: CarObject.dimensions.height,
     }
   }
@@ -56,7 +67,7 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
   }
 
   public getCenterOnTrack(trackWidth: number) {
-    return trackWidth / 2 - CarObject.dimensions.with / 2
+    return trackWidth / 2 - CarObject.dimensions.width / 2
   }
 
   private onKeyDown(event: KeyboardEvent) {
