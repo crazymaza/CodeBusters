@@ -1,11 +1,10 @@
 import React from 'react'
-import { CarObject, TrackObject } from '@/engine/Objects'
-import sportCarImage from 'images/sport_car.png'
+
 const checkKey = (key: string): boolean => {
   return key.toLowerCase() === 'f' || key.toLowerCase() === 'а'
 }
 
-export const makeContainerFullscreen = <T extends HTMLElement>(
+const makeContainerFullscreen = <T extends HTMLElement>(
   key: string,
   container: React.RefObject<T> | HTMLElement
 ) => {
@@ -24,3 +23,5 @@ export const makeContainerFullscreen = <T extends HTMLElement>(
     document.exitFullscreen()
   }
 }
+
+export default makeContainerFullscreen
