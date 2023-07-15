@@ -1,6 +1,7 @@
 import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
+import BarrierObject from '@/engine/Objects/Barrier'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -29,9 +30,10 @@ export default class CodeBustersEngine {
   private sessionId = 0
   private intervalId: NodeJS.Timer | null = null
   private lastTimestamp = 0
-  private boundaryTrackTopOffset = 0
+  private boundaryTopOffset = 0
   private speed = CodeBustersEngine.startSpeed
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
+  private barrierTopOffset = 0
 
   constructor(private options: CodeBustersEngineOptions) {
     this.lastTimestamp = 0
@@ -84,11 +86,11 @@ export default class CodeBustersEngine {
       // Восстановление первоначального состояние объектов
 
       if (object instanceof TrackObject) {
-        this.boundaryTrackTopOffset = 0
+        this.boundaryTopOffset = 0
 
         object.clear()
         object.drawTrack()
-        object.drawBoundary(this.boundaryTrackTopOffset)
+        object.drawBoundary(this.boundaryTopOffset)
       }
 
       if (object instanceof CarObject) {
@@ -105,6 +107,12 @@ export default class CodeBustersEngine {
         // Отключение управления
         object.removeListeners()
       }
+
+      if (object instanceof BarrierObject) {
+        object.clear()
+        object.setBarrierXAxis(-200)
+        object.drawBarrier()
+      }
     })
 
     // Сбрасывание счетчиков
@@ -117,17 +125,29 @@ export default class CodeBustersEngine {
 
   public animation(timestamp: number) {
     let isContinue = true // Флаг для прерывание анимации
-    const deltaTime = timestamp - this.lastTimestamp
 
     this.lastTimestamp = timestamp
 
     this.options.objects.forEach(object => {
       if (object instanceof TrackObject) {
-        this.boundaryTrackTopOffset += this.speed
+        this.boundaryTopOffset += this.speed
 
         object.clear()
         object.drawTrack()
-        object.drawBoundary(this.boundaryTrackTopOffset)
+        object.drawBoundary(this.boundaryTopOffset)
+      }
+
+      if (object instanceof BarrierObject) {
+        object.clear()
+        const barrierYCoordinate =
+          this.barrierTopOffset <= document.body.offsetHeight
+            ? (this.barrierTopOffset += this.speed)
+            : (this.barrierTopOffset = -200)
+        object.setBarrierYAxis(barrierYCoordinate)
+        if (this.barrierTopOffset === -200) {
+          object.setBarrierXAxis(Math.floor(Math.random() * TrackObject.width))
+        }
+        object.drawBarrier()
       }
 
       if (object instanceof CarObject) {
@@ -139,13 +159,41 @@ export default class CodeBustersEngine {
           xPositionCar >=
           TrackObject.width -
             boundarySpecs.leftOffset -
-            CarObject.dimensions.with
+            CarObject.dimensions.width
 
-        if (isOutLeftSideTrack || isOutRightSideTrack) {
-          alert('Вы вылетели с трассы!')
+        const xRangePositionCar = [
+          xPositionCar,
+          xPositionCar + CarObject.dimensions.width,
+        ]
 
+        const yRangePositionCar = [
+          CarObject.dimensions.yAxisPosition,
+          BarrierObject.currentSpec.trackHeight,
+        ]
+
+        const xRangePositionBarrier = [
+          BarrierObject.currentSpec.x,
+          BarrierObject.currentSpec.x + BarrierObject.currentSpec.width,
+        ]
+
+        const yRangePositionBarrier = [
+          BarrierObject.currentSpec.y,
+          BarrierObject.currentSpec.y + BarrierObject.currentSpec.height,
+        ]
+
+        const isIntersectionByX =
+          xRangePositionCar[0] < xRangePositionBarrier[1] &&
+          xRangePositionBarrier[0] < xRangePositionCar[1]
+
+        const isIntersectionByY =
+          yRangePositionBarrier[0] < yRangePositionCar[1] &&
+          yRangePositionCar[0] < yRangePositionBarrier[1]
+
+        const isCarBreakOfBarrier = isIntersectionByX && isIntersectionByY
+
+        if (isOutLeftSideTrack || isOutRightSideTrack || isCarBreakOfBarrier) {
+          alert('Столкновение!')
           isContinue = false
-
           this.stop()
         }
       }
