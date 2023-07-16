@@ -2,7 +2,7 @@ import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
-import BackgroundObject from '../Objects/Background'
+import BackgroundObject from '@/engine/Objects/Background'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)

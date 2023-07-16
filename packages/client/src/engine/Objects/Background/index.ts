@@ -1,4 +1,4 @@
-import BaseObject from '../Base'
+import BaseObject from '@/engine/Objects/Base'
 import { BackgroundObjectSpecs } from './types'
 
 export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> {

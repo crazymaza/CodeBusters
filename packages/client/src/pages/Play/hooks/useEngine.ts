@@ -68,32 +68,29 @@ export default function useEngine({
       )
 
       // Ждем пока загрузиться изображение машины
-      Promise.all([loadImage(spriteImages), loadImage(backgroundImage)]).then(
-        () => {
-          // Рисуем фон
-          backgroundObject.draw(0, baseBackgroundSpecs)
+      try {
+        loadImage(spriteImages)
+        loadImage(backgroundImage)
+      } catch (e) {
+        console.log('Ошибка загрузки изображений')
+      }
+      // Рисуем фон
+      backgroundObject.draw(0, baseBackgroundSpecs)
 
-          // Рисуем трассу для начального отображения
-          trackObject.draw(0, baseTrackSpecs)
+      // Рисуем трассу для начального отображения
+      trackObject.draw(0, baseTrackSpecs)
 
-          // Рисуем машину
-          carObject.draw(0, baseCarSpecs)
+      // Рисуем машину
+      carObject.draw(0, baseCarSpecs)
 
-          // Рисуем припятствия
-          barrierObject.draw(0, baseBarrierSpecs)
+      // Рисуем припятствия
+      barrierObject.draw(0, baseBarrierSpecs)
 
-          // Создаем экземпляр движка для обработки анимации и управлением процессом игры
-          setEngine(
-            new CodeBustersEngine({
-              objects: [
-                backgroundObject,
-                trackObject,
-                barrierObject,
-                carObject,
-              ],
-            })
-          )
-        }
+      // Создаем экземпляр движка для обработки анимации и управлением процессом игры
+      setEngine(
+        new CodeBustersEngine({
+          objects: [backgroundObject, trackObject, barrierObject, carObject],
+        })
       )
     }
   }, [])

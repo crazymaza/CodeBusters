@@ -1,5 +1,5 @@
-export default function loadImage(src: string) {
-  return new Promise(resolve => {
+export default async function loadImage(src: string) {
+  await new Promise(resolve => {
     const image = new Image()
 
     image.addEventListener('load', () => {

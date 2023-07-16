@@ -60,14 +60,14 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
     if (this.canvasApi.ctx && this.specs) {
       this.clear()
 
-      const car_position = getCarPosition()
+      const carPosition = getCarPosition()
 
       this.canvasApi.ctx.drawImage(
         this.specs.image,
-        car_position.x,
-        car_position.y,
-        car_position.w,
-        car_position.h,
+        carPosition.x,
+        carPosition.y,
+        carPosition.w,
+        carPosition.h,
         this.specs.x,
         this.specs.y,
         this.specs.width,
