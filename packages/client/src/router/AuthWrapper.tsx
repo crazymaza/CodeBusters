@@ -1,7 +1,7 @@
 import useAuth from './useAuth'
 import { Outlet } from 'react-router-dom'
 import { useAppSelector } from '@/store/typedHooks'
-import { selectAuthLoading } from '@/store/slices/authSlice/selectors'
+import { selectAuthLoading } from '@/store/slices/userSlice/selectors'
 import { Backdrop, CircularProgress } from '@mui/material'
 
 const AuthWrapper = () => {

@@ -3,7 +3,7 @@ import { MainLayout } from '@/layouts'
 import { Paper } from '@mui/material'
 
 import { useAppSelector } from '@/store/typedHooks'
-import { selectUserInfo } from '@/store/slices/authSlice/selectors'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
 
 import styles from './styles.module.scss'
 import classNames from 'classnames/bind'

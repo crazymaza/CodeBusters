@@ -1,24 +1,48 @@
-import BaseApi from '../Base'
-import { ChangePasswordRequest, UserRequest } from './types'
+import { BaseApi } from '@/api'
+import {
+  ChangePasswordRequest,
+  SigninData,
+  SignupData,
+  UserInfo,
+  UserUpdateModel,
+} from './types'
 
 class UserApi extends BaseApi {
   constructor() {
     super({
-      baseURL: 'https://ya-praktikum.tech/api/v2/user',
+      baseURL: 'https://ya-praktikum.tech/api/v2',
       withCredentials: true,
     })
   }
 
-  public changeUserAvatar(data: FormData) {
-    return this.request.put('/profile/avatar', data)
+  signin(data: SigninData) {
+    return this.request.post('/auth/signin', data)
   }
 
-  public changeUserPassword(data: ChangePasswordRequest) {
-    return this.request.put('/password', data)
+  signup(data: SignupData) {
+    return this.request.post('/auth/signup', data)
   }
 
-  public changeUserInfo(data: UserRequest) {
-    return this.request.put('/profile', data)
+  logout() {
+    return this.request.post('/auth/logout')
+  }
+
+  getUserInfo() {
+    return this.request
+      .get<UserInfo>('/auth/user')
+      .then(response => response.data)
+  }
+
+  changeUserAvatar(data: FormData) {
+    return this.request.put<UserInfo>('/user/profile/avatar', data)
+  }
+
+  changeUserPassword(data: ChangePasswordRequest) {
+    return this.request.put('/user/password', data)
+  }
+
+  changeUserInfo(data: UserUpdateModel) {
+    return this.request.put<UserInfo>('/user/profile', data)
   }
 }
 
