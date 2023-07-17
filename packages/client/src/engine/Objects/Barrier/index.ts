@@ -45,15 +45,15 @@ export default class BarrierObject extends BaseObject<BarrierObjectSpecs> {
     if (this.canvasApi.ctx && this.specs && this.specs.image) {
       const ctx = this.canvasApi.ctx as CanvasRenderingContext2D
 
-      const barrier_position = getPositionBarrier()
+      const barrierPosition = getPositionBarrier()
 
       // Отрисовка барьера
       ctx.drawImage(
         this.specs?.image,
-        barrier_position.x,
-        barrier_position.y,
-        barrier_position.w,
-        barrier_position.h,
+        barrierPosition.x,
+        barrierPosition.y,
+        barrierPosition.w,
+        barrierPosition.h,
         BarrierObject.currentSpec.x,
         BarrierObject.currentSpec.y,
         BarrierObject.currentSpec.width,
