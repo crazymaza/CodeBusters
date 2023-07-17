@@ -1,39 +1,59 @@
 import { BaseObject, TrackObject } from '@/engine/Objects'
-import { BaseObjectSpecs } from '@/engine/Objects/Base/types'
+import { BarrierObjectSpecs } from './types'
+
+function getPositionBarrier() {
+  return {
+    x: 0,
+    y: 128,
+    w: 70,
+    h: 64,
+  }
+}
 
 /*
  * @INFO Объект препятствия
  * Все характеристики собраны в статическом объекте currentSpec
  * В остальном коде нужно изменять именно эти данные
  */
-export default class BarrierObject extends BaseObject<BaseObjectSpecs> {
+export default class BarrierObject extends BaseObject<BarrierObjectSpecs> {
   static currentSpec = {
     x: Math.floor(Math.random() * TrackObject.width),
     y: -200,
-    width: Math.floor(TrackObject.width / 3),
-    height: 150,
-    fill: '#e3bc27',
+    width: Math.floor(TrackObject.width / 4),
+    height: 100,
     trackHeight: 0,
   }
 
-  static createBaseBarrierSpecs(containerHTML: HTMLElement) {
+  static createBaseBarrierSpecs(
+    containerHTML: HTMLElement,
+    barrierImageSrc: string
+  ) {
+    const barrierImage = new Image()
+    barrierImage.src = barrierImageSrc
+
     BarrierObject.currentSpec.trackHeight = containerHTML.offsetHeight || 0
     return {
+      image: barrierImage,
       x: BarrierObject.currentSpec.x,
       y: BarrierObject.currentSpec.y,
       width: BarrierObject.currentSpec.width,
       height: BarrierObject.currentSpec.height,
-      fill: BarrierObject.currentSpec.fill,
     }
   }
 
   public drawBarrier() {
-    if (this.canvasApi.ctx) {
+    if (this.canvasApi.ctx && this.specs && this.specs.image) {
       const ctx = this.canvasApi.ctx as CanvasRenderingContext2D
 
+      const barrier_position = getPositionBarrier()
+
       // Отрисовка барьера
-      ctx.fillStyle = BarrierObject.currentSpec.fill
-      ctx.fillRect(
+      ctx.drawImage(
+        this.specs?.image,
+        barrier_position.x,
+        barrier_position.y,
+        barrier_position.w,
+        barrier_position.h,
         BarrierObject.currentSpec.x,
         BarrierObject.currentSpec.y,
         BarrierObject.currentSpec.width,
@@ -55,7 +75,7 @@ export default class BarrierObject extends BaseObject<BaseObjectSpecs> {
 
   public draw(
     delta: number,
-    specs: BaseObjectSpecs = BarrierObject.currentSpec
+    specs: BarrierObjectSpecs = BarrierObject.currentSpec
   ) {
     this.specs = specs
 

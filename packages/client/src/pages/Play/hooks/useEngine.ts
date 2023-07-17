@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react'
 import { CodeBustersEngine } from '@/engine'
 import { CarObject, TrackObject } from '@/engine/Objects'
-import { canvas } from '@/utils'
 import { loadImage } from '@/helpers'
-
-import sportCarImage from 'images/sport_car.png'
+import { canvas } from '@/utils'
+import React, { useEffect, useState } from 'react'
+import BackgroundObject from '@/engine/Objects/Background'
 import BarrierObject from '@/engine/Objects/Barrier'
+import backgroundImage from 'sprites/background.png'
+import spriteImages from 'sprites/sprites.png'
 
 export type UseEngineProps = {
+  backgroundRef: React.RefObject<HTMLCanvasElement>
   containerRef: React.RefObject<HTMLDivElement>
   trackRef: React.RefObject<HTMLCanvasElement>
   carRef: React.RefObject<HTMLCanvasElement>
@@ -15,6 +17,7 @@ export type UseEngineProps = {
 }
 
 export default function useEngine({
+  backgroundRef,
   containerRef,
   trackRef,
   carRef,
@@ -27,12 +30,18 @@ export default function useEngine({
       carRef.current instanceof HTMLCanvasElement &&
       trackRef.current instanceof HTMLCanvasElement &&
       barrierRef.current instanceof HTMLCanvasElement &&
+      backgroundRef.current instanceof HTMLCanvasElement &&
       containerRef.current instanceof HTMLElement
 
     if (isDefineLayers) {
       const trackCanvasLayer = canvas(trackRef.current)
       const carCanvasLayer = canvas(carRef.current)
       const barrierCanvasLayer = canvas(barrierRef.current)
+      const backgroundLayer = canvas(backgroundRef.current)
+
+      const backgroundObject = new BackgroundObject(backgroundLayer)
+      const baseBackgroundSpecs =
+        BackgroundObject.createBaseBackgroundSpecs(backgroundImage)
 
       // Создаем объект трассы для движка с начальными характеристиками
       const trackObject = new TrackObject(trackCanvasLayer)
@@ -45,7 +54,7 @@ export default function useEngine({
       const xPositionCar = carObject.getCenterOnTrack(TrackObject.width)
 
       const baseCarSpecs = CarObject.createBaseCarSpecs(
-        sportCarImage,
+        spriteImages,
         xPositionCar,
         0,
         trackRef.current.offsetHeight
@@ -53,26 +62,36 @@ export default function useEngine({
 
       // Создаём объект припятствий для движка с начальными характеристиками
       const barrierObject = new BarrierObject(barrierCanvasLayer)
-      BarrierObject.createBaseBarrierSpecs(trackRef.current)
+      const baseBarrierSpecs = BarrierObject.createBaseBarrierSpecs(
+        trackRef.current,
+        spriteImages
+      )
 
       // Ждем пока загрузиться изображение машины
-      loadImage(sportCarImage).then(() => {
-        // Рисуем трассу для начального отображения
-        trackObject.draw(0, baseTrackSpecs)
+      try {
+        loadImage(spriteImages)
+        loadImage(backgroundImage)
+      } catch (e) {
+        console.log('Ошибка загрузки изображений')
+      }
+      // Рисуем фон
+      backgroundObject.draw(0, baseBackgroundSpecs)
 
-        // Рисуем машину
-        carObject.draw(0, baseCarSpecs)
+      // Рисуем трассу для начального отображения
+      trackObject.draw(0, baseTrackSpecs)
 
-        // Рисуем припятствия
-        barrierObject.draw(0)
+      // Рисуем машину
+      carObject.draw(0, baseCarSpecs)
 
-        // Создаем экземпляр движка для обработки анимации и управлением процессом игры
-        setEngine(
-          new CodeBustersEngine({
-            objects: [trackObject, carObject, barrierObject],
-          })
-        )
-      })
+      // Рисуем припятствия
+      barrierObject.draw(0, baseBarrierSpecs)
+
+      // Создаем экземпляр движка для обработки анимации и управлением процессом игры
+      setEngine(
+        new CodeBustersEngine({
+          objects: [backgroundObject, trackObject, barrierObject, carObject],
+        })
+      )
     }
   }, [])
 

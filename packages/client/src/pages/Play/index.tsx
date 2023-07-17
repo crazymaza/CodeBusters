@@ -14,11 +14,13 @@ const PlayPage = () => {
   const navigate = useNavigate()
 
   const containerRef = useRef<HTMLDivElement>(null)
+  const backgroundRef = useRef<HTMLCanvasElement>(null)
   const trackRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
   const barrierRef = useRef<HTMLCanvasElement>(null)
 
   const engine = useEngine({
+    backgroundRef,
     containerRef,
     trackRef,
     carRef,
@@ -58,6 +60,12 @@ const PlayPage = () => {
           </Button>
         </div>
         <div ref={containerRef} className={cx('play__area')}>
+          <canvas
+            ref={backgroundRef}
+            className={cx('play__background')}
+            width={1000}
+            height={800}
+          />
           <canvas ref={trackRef} className={cx('play__track')} />
           <canvas
             ref={carRef}

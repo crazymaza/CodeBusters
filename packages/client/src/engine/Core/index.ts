@@ -2,6 +2,7 @@ import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
+import BackgroundObject from '@/engine/Objects/Background'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -30,7 +31,8 @@ export default class CodeBustersEngine {
   private sessionId = 0
   private intervalId: NodeJS.Timer | null = null
   private lastTimestamp = 0
-  private boundaryTopOffset = 0
+  private trackObjectsTopOffset = 0
+  private backgroundObjectTopOffset = 0
   private speed = CodeBustersEngine.startSpeed
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
   private barrierTopOffset = 0
@@ -86,11 +88,12 @@ export default class CodeBustersEngine {
       // Восстановление первоначального состояние объектов
 
       if (object instanceof TrackObject) {
-        this.boundaryTopOffset = 0
+        this.trackObjectsTopOffset = 0
 
         object.clear()
         object.drawTrack()
-        object.drawBoundary(this.boundaryTopOffset)
+        object.drawBoundary(this.trackObjectsTopOffset)
+        object.drawLines(this.trackObjectsTopOffset)
       }
 
       if (object instanceof CarObject) {
@@ -129,12 +132,20 @@ export default class CodeBustersEngine {
     this.lastTimestamp = timestamp
 
     this.options.objects.forEach(object => {
+      if (object instanceof BackgroundObject) {
+        this.backgroundObjectTopOffset++
+
+        object.clear()
+        object.drawBackground(this.backgroundObjectTopOffset)
+      }
+
       if (object instanceof TrackObject) {
-        this.boundaryTopOffset += this.speed
+        this.trackObjectsTopOffset += this.speed
 
         object.clear()
         object.drawTrack()
-        object.drawBoundary(this.boundaryTopOffset)
+        object.drawBoundary(this.trackObjectsTopOffset)
+        object.drawLines(this.trackObjectsTopOffset)
       }
 
       if (object instanceof BarrierObject) {
