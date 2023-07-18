@@ -14,7 +14,11 @@ type PaperProps = React.FC<Props>
 
 const MainStage: PaperProps = ({ children, ...props }) => {
   return (
-    <MUIPaper variant="outlined" square className={cx('mainstage__component')}>
+    <MUIPaper
+      {...props}
+      variant="outlined"
+      square
+      className={cx('mainstage-component')}>
       {children}
     </MUIPaper>
   )

@@ -28,7 +28,7 @@
       justify-content: center;
       align-items: center;
 
-      &>button {
+      &>.MuiButton-root {
         @include mx.themify('color', 'end-game-button');
       }
     }

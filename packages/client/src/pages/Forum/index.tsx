@@ -42,6 +42,10 @@ const ForumPage: React.FC = () => {
     navigate('/')
   }
 
+  const handleSubmit = (e: React.MouseEvent) => {
+    e.preventDefault()
+  }
+
   const renderDialog = () => (
     <Dialog open={open} title="Создание новой темы">
       <form
@@ -66,12 +70,7 @@ const ForumPage: React.FC = () => {
           className={cx('dialog__form-textfield')}
         />
         <div className={cx('buttons-container')}>
-          <Button
-            type={'submit'}
-            variant="contained"
-            onClick={e => {
-              e.preventDefault()
-            }}>
+          <Button type={'submit'} variant="contained" onClick={handleSubmit}>
             Создать
           </Button>
           <Button
@@ -88,10 +87,10 @@ const ForumPage: React.FC = () => {
   return (
     <MainLayout>
       <div className={cx('forumpage')}>
-        <div className={cx('forumpage-container')}>
+        <div className={cx('forumpage__container')}>
           <MainStage>
-            <div className={cx('forumpage-wrapper')}>
-              <div className={cx('block-topics')}>
+            <div className={cx('forumpage__wrapper')}>
+              <div className={cx('blocktopics')}>
                 <div className={cx('forumpage-title')}>
                   <Typography variant="h2">Форум игроков</Typography>
                   <Tooltip
@@ -106,7 +105,7 @@ const ForumPage: React.FC = () => {
                     </Fab>
                   </Tooltip>
                 </div>
-                <div className={cx('block-topics-wrapper')}>
+                <div className={cx('blocktopics__wrapper')}>
                   <Stack
                     direction={'column'}
                     spacing={1}
@@ -137,13 +136,13 @@ const ForumPage: React.FC = () => {
               </div>
 
               <hr />
-              <div className={cx('block-topics-popular')}>
-                <div className={cx('page-content-close')}>
+              <div className={cx('blocktopics-popular')}>
+                <div className={cx('pagecontent-close')}>
                   <CloseButton onClick={handleClosePage} />
                 </div>
                 <Paper
                   variant="outlined"
-                  className={cx('block-topics-popular-wrapper')}
+                  className={cx('blocktopics-popular__wrapper')}
                   square>
                   <Typography variant="h3">Топ-5 тем</Typography>
                   <List>
