@@ -1,4 +1,5 @@
 import CloseButton from '@/components/CloseButton'
+import MainStage from '@/components/MainStage'
 import { MainLayout } from '@/layouts'
 import {
   Badge,
@@ -11,18 +12,15 @@ import {
   Stack,
   Tooltip,
   Typography,
-  TextField,
 } from '@mui/material'
-import Button from '@/components/Button'
-import Dialog from '@/components/Dialog'
 import classNames from 'classnames/bind'
 import Forum from 'icons/forum_light_theme.png'
 import Zvezda from 'icons/zvezda.png'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import DialogComponent from './components/DialogComponent'
 import * as data from './data'
 import styles from './styles.module.scss'
-import MainStage from '@/components/MainStage'
 
 const cx = classNames.bind(styles)
 
@@ -44,45 +42,8 @@ const ForumPage: React.FC = () => {
 
   const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault()
+    console.log(e)
   }
-
-  const renderDialog = () => (
-    <Dialog open={open} title="Создание новой темы">
-      <form
-        className={cx('dialog__form-container')}
-        onSubmit={e => e.preventDefault()}>
-        <TextField
-          name="topic_name"
-          margin="dense"
-          id="topic_name"
-          label="Название темы"
-          fullWidth
-          variant="standard"
-          className={cx('dialog__form-textfield')}
-        />
-        <TextField
-          name="topic_description"
-          margin="dense"
-          id="topic_description"
-          label="Описание темы"
-          fullWidth
-          variant="standard"
-          className={cx('dialog__form-textfield')}
-        />
-        <div className={cx('buttons-container')}>
-          <Button type={'submit'} variant="contained" onClick={handleSubmit}>
-            Создать
-          </Button>
-          <Button
-            type={'button'}
-            variant="contained"
-            onClick={handleCloseDialog}>
-            Отмена
-          </Button>
-        </div>
-      </form>
-    </Dialog>
-  )
 
   return (
     <MainLayout>
@@ -168,7 +129,13 @@ const ForumPage: React.FC = () => {
           </MainStage>
         </div>
       </div>
-      <div className="forum__dialog-new-post">{renderDialog()}</div>
+      <div className="forum__dialog-new-post">
+        <DialogComponent
+          open={open}
+          handleCloseDialog={handleCloseDialog}
+          handleSubmit={handleSubmit}
+        />
+      </div>
     </MainLayout>
   )
 }
