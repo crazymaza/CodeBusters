@@ -5,10 +5,13 @@ import { Button, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@/store/typedHooks'
 import { logout } from '@/store/slices/userSlice/thunks'
+import { selectGameScores } from '@/store/slices/gameSlice/selectrors'
+import { useAppSelector } from '@/store/typedHooks'
 
 const cx = classNames.bind(styles)
 
 const EndGamePage = () => {
+  const scores = useAppSelector(selectGameScores)
   const navigate = useNavigate()
 
   const routeToMainMenuHandler = () => {
@@ -37,7 +40,7 @@ const EndGamePage = () => {
             variant="h1"
             component="h1"
             className={cx('endgame__content_result')}>
-            100
+            {scores}
           </Typography>
           <div className={cx('endgame__content-buttons')}>
             <Button
