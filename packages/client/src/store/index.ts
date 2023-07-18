@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import { authSlice, userSlice, gameSlice } from '@/store/slices'
+import { userSlice, gameSlice } from '@/store/slices'
 
 const reducers = combineReducers({
   user: userSlice,
