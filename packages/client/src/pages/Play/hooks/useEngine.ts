@@ -93,7 +93,7 @@ export default function useEngine({
         }
       )
     }
-  });
+  },[]);
   
   return engine
 }
