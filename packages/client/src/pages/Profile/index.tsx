@@ -1,4 +1,4 @@
-import { Avatar, Dialog, MainStage, TextField } from '@/components'
+import { Avatar, CloseButton, Dialog, MainStage, TextField } from '@/components'
 import { MainLayout } from '@/layouts'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
@@ -227,9 +227,7 @@ const ProfilePage = () => {
                     </Button>
                   </div>
                   <div className={cx('form__content_close')}>
-                    <IconButton onClick={cancelClick}>
-                      <HighlightOffIcon />
-                    </IconButton>
+                    <CloseButton onClick={cancelClick} />
                   </div>
                 </div>
                 <div className={cx('profile__form_submit')}>
