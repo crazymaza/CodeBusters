@@ -14,12 +14,6 @@
     margin-bottom: 2rem;
   }
 
-  .button__icon {
-    font-size: 3rem;
-    align-items: center;
-    margin: 2rem 0 2rem;
-  }
-
   &__container {
     display: flex;
     width: 100%;
@@ -49,104 +43,15 @@
       &-popular {
         flex-direction: column;
       }
-
-      &__wrapper {
-        display: flex;
-        height: 41rem;
-      }
-
-      .topics {
-        &__list {
-          display: block;
-          overflow-y: scroll;
-          width: 100%;
-          padding-top: 1rem;
-
-          &-item {
-            @include mx.themify('color', 'hr-border');
-            @include mx.themify('background-color', 'forum_item-bg');
-            height: 6rem;
-            border-radius: 1.5rem;
-            width: 99%;
-
-            a {
-              @include mx.themify('color', 'primary_link-color');
-              display: flex;
-              align-items: center;
-              height: 100%;
-              width: 100%;
-              text-decoration: none;
-            }
-
-            span {
-              font-size: 2.0rem;
-            }
-
-            p {
-              font-size: 1.5rem;
-            }
-          }
-
-          .link__badge {
-            span {
-              font-size: 1.0rem;
-            }
-
-            img {
-              height: 3rem;
-            }
-          }
-
-        }
-      }
     }
+  }
 
-    .blocktopics-popular {
-      display: flex;
-      height: 100%;
-      flex: 0 30rem;
-      justify-content: center;
-      align-items: end;
 
-      &__wrapper {
-        @include mx.themify('color', 'hr-border');
-        @include mx.themify('background-color', 'forum_popular-bg');
-        @include mx.themify('color', 'forum-popular-text');
-        display: flex;
-        flex-direction: column;
-        height: 52rem;
-        width: 100%;
-        border-radius: 1.5rem;
-        padding: 1.3rem;
-        align-items: center;
-        row-gap: 2rem;
-        box-shadow: 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
-      }
-
-      .pagecontent-close {
-        position: relative;
-        top: -5rem;
-      }
-
-      .popular__list {
-        &-icon {
-          min-width: 4rem;
-
-          &>img {
-            width: 2rem;
-            height: 2rem;
-          }
-        }
-
-        &-link {
-          @include mx.themify('color', 'primary_link-color');
-          text-decoration: none;
-        }
-
-        &-text>span {
-          font-size: 2rem;
-        }
-      }
-    }
+  .pagecontent-close {
+    display: flex;
+    justify-content: end;
+    position: relative;
+    top: -3rem;
+    margin: 2rem;
   }
 }
