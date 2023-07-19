@@ -1,24 +1,24 @@
-import { Avatar, CloseButton, Dialog, MainStage, TextField } from '@/components'
+import { Avatar, Dialog, MainStage, TextField } from '@/components'
 import { MainLayout } from '@/layouts'
-import { UserPageService } from '@/services'
-import { Button, Switch, TextFieldVariants } from '@mui/material'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
 import classNames from 'classnames/bind'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import { changeUserInfo, logout } from '@/store/slices/userSlice/thunks'
+import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 
-import { UserRequest } from '@/api/User/types'
+import { UserUpdateModel } from '@/api/User/types'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import {
+  changeUserAvatar,
+  changeUserPassword,
+} from '@/store/slices/userSlice/thunks'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import {
-  changeUserPassword,
-  changeUserAvatar,
-} from '@/store/slices/userSlice/thunks'
-import { UserUpdateModel, UserInfo } from '@/api/User/types'
-import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { modalSchema, schema } from './validation'
 
 const cx = classNames.bind(styles)
 
@@ -89,15 +89,6 @@ const ProfilePage = () => {
     mode: 'all',
   })
 
-  const {
-    control: modalControl,
-    formState: { errors: modalErrors },
-    handleSubmit: dialogHandleSubmit,
-  } = useForm({
-    resolver: yupResolver(modalSchema),
-    mode: 'all',
-  })
-
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
@@ -134,7 +125,7 @@ const ProfilePage = () => {
     const {
       control: modalControl,
       formState: { errors: modalErrors },
-      handleSubmit: modalHandleSubmit,
+      handleSubmit: dialogHandleSubmit,
       setValue,
     } = useForm({
       resolver: yupResolver(modalSchema),
@@ -142,17 +133,13 @@ const ProfilePage = () => {
     })
 
     return (
-      <Dialog open={open} title="Смена пароля" onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose}>
         <form
-          className={cx('dialog-password__content')}
+          className={cx('modal-password__content')}
           onSubmit={dialogHandleSubmit(onDialogSubmit)}>
           {dialogFormFields.map(
-            (
-              { variant = 'standard', type = 'text', name, ...props },
-              index
-            ) => (
+            ({ variant = 'standard', type = 'text', name, ...props }) => (
               <TextField
-                key={index}
                 control={modalControl}
                 fieldError={modalErrors[name]}
                 name={name}
@@ -166,7 +153,7 @@ const ProfilePage = () => {
             )
           )}
           <Button
-            className={cx('dialog-password__content_button')}
+            className={cx('modal-password__content_button')}
             variant="contained"
             type="submit">
             Сохранить
@@ -186,14 +173,16 @@ const ProfilePage = () => {
     <MainLayout>
       <div className={cx('profile__page')}>
         <div className={cx('profile__page-wrapper')}>
-          <MainStage>
-            <div className={cx('profile__page_content')}>
+          <div>
+            <MainStage>
               <form
                 className={cx('profile__page_form')}
                 onSubmit={handleSubmit(onSubmit)}>
                 <div className={cx('profile__form_content')}>
                   <div className={cx('form__content_settings')}>
-                    <Avatar src={user?.avatar} changeAvatar={changeAvatar}></Avatar>
+                    <Avatar
+                      src={user?.avatar}
+                      changeAvatar={changeAvatar}></Avatar>
                     <div className={cx('user__settings')}>
                       <div className={cx('user__settings_theme')}>
                         <span>Сменить тему</span>
@@ -208,28 +197,27 @@ const ProfilePage = () => {
                     {formFields.map(
                       ({
                         variant = 'standard',
-                    type = 'text',
-                    value = '',
+                        type = 'text',
+                        value = '',
                         name,
-                    ...props
-                      }, index) => {
-                    return (
+                        ...props
+                      }) => {
+                        return (
                           <TextField
-                            key={index}
-                                control={control}
+                            control={control}
                             fieldError={errors[name]}
                             name={name}
                             variant={variant}
                             value={value}
-                        handleChange={ev => {
-                          setValue(name, ev.target.value)
-                        }}
-                        type={type}
+                            handleChange={ev => {
+                              setValue(name, ev.target.value)
+                            }}
+                            type={type}
                             {...props}
                           />
                         )
                       }
-                )}
+                    )}
                     <Button
                       className={cx('form__content_inputlist_button')}
                       variant="contained"
@@ -239,7 +227,9 @@ const ProfilePage = () => {
                     </Button>
                   </div>
                   <div className={cx('form__content_close')}>
-                    <CloseButton onClick={cancelClick} />
+                    <IconButton onClick={cancelClick}>
+                      <HighlightOffIcon />
+                    </IconButton>
                   </div>
                 </div>
                 <div className={cx('profile__form_submit')}>
@@ -248,8 +238,8 @@ const ProfilePage = () => {
                   </Button>
                 </div>
               </form>
-            </div>
-          </MainStage>
+            </MainStage>
+          </div>
         </div>
       </div>
       {renderDialog()}
