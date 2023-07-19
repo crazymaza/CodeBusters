@@ -5,7 +5,11 @@ import EndGameButtons from './EndGameButtons'
 
 const cx = classNames.bind(styles)
 
-const EndGameContent = () => {
+type EndGameContentProps = {
+  scores: number
+}
+
+const EndGameContent = (props: EndGameContentProps) => {
   return (
     <div className={cx('endgame__content')}>
       <Typography variant="h3" component="h3">
@@ -18,7 +22,7 @@ const EndGameContent = () => {
         variant="h1"
         component="h1"
         className={cx('endgame__content_result')}>
-        100
+        {props.scores}
       </Typography>
       <EndGameButtons />
     </div>

@@ -12,26 +12,13 @@ const cx = classNames.bind(styles)
 
 const EndGamePage = () => {
   const scores = useAppSelector(selectGameScores)
-  const navigate = useNavigate()
-
-  const routeToMainMenuHandler = () => {
-    navigate('/')
-  }
-
-  const routeToPlayHandler = () => {
-    navigate('/play')
-  }
-
-  const routeToLeaderBoardHandler = () => {
-    navigate('/leader-board')
-  }
 
   return (
     <MainLayout>
       <div className={cx('endgame')}>
         <div>
           <MainStage>
-            <EndGameContent />
+            <EndGameContent scores={scores} />
           </MainStage>
         </div>
       </div>
