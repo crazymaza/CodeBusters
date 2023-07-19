@@ -1,5 +1,12 @@
 @use 'themes/mixins' as mx;
 
+.forumpage-title {
+  @include mx.themify('color', 'secondary-text-color');
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
 .dialog__form {
   &-container {
     width: 100%;

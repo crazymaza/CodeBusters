@@ -2,7 +2,7 @@
 
 .auth {
   @include mx.themify('border-color', 'authform-border');
-  @include mx.themify('background-color', 'authform-bg');
+  @include mx.themify('background-color', 'mainstage-bg');
   width: 30%;
   padding: 7rem 8rem 5rem 8rem;
   border: 1px solid;
@@ -13,17 +13,26 @@
   gap: 2rem;
 
   &__title {
+    @include mx.themify('color', 'secondary-text-color');
     margin-bottom: 2rem;
   }
 
   .auth__link {
-    @include mx.themify('color', 'authform-link');
+    @include mx.themify('color', 'form_link-color');
   }
 
   &__inputs {
     display: flex;
     flex-direction: column;
     margin-bottom: 3rem;
+
+    &>div>label {
+      @include mx.themify('color', 'profile__form-label')
+    }
+
+    input {
+      @include mx.themify('color', 'profile__form-input')
+    }
 
     & > *:not(:last-child) {
       margin-bottom: 1rem;

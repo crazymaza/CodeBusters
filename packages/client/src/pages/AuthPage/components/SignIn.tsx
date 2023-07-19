@@ -86,7 +86,9 @@ const SignIn = () => {
         )}
       </Grid>
 
-      <Link to={'/sign-up'}>Создать аккаунт</Link>
+      <Link to={'/sign-up'} className={cx('auth__link')}>
+        Создать аккаунт
+      </Link>
       <Button variant="contained" type="submit">
         Авторизоваться
       </Button>

@@ -18,7 +18,9 @@ const LogoutPageMenu = ({ styles }: { styles: CSSModuleClasses }) => {
   const cx = classNames.bind(styles)
   return (
     <List>
-      <Typography variant="h1">Добро пожаловать</Typography>
+      <Typography variant="h1" className={cx('menu__title')}>
+        Добро пожаловать
+      </Typography>
       {logoutMainPageMenu.map(({ label, to }) => (
         <ListItem key={to} className={cx('menu__item')}>
           <Link to={to} className={cx('menu__item-link')}>
