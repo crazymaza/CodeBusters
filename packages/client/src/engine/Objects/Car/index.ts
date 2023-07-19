@@ -2,6 +2,16 @@ import { BaseObject } from '@/engine/Objects'
 import { CarObjectSpecs, CarKeyboadControlEventKey } from './types'
 import { canvas } from '@/utils'
 
+// Получаем координаты машинки
+function getCarPosition() {
+  return {
+    x: 0,
+    y: 0,
+    w: 64,
+    h: 128,
+  }
+}
+
 /*
  * @INFO Объект машины
  *
@@ -10,21 +20,32 @@ import { canvas } from '@/utils'
  */
 export default class CarObject extends BaseObject<CarObjectSpecs> {
   static dimensions = {
-    with: 60,
-    height: 130,
+    width: 70,
+    height: 140,
+    yAxisPosition: 0,
+    bottomMargin: 30,
   }
 
-  static sensitivity = 8
+  static sensitivity = 40
 
-  static createBaseCarSpecs(carImageSrc: string, x: number, y: number) {
+  static createBaseCarSpecs(
+    carImageSrc: string,
+    x: number,
+    y: number,
+    trackHeight: number
+  ) {
     const carCanvasImage = new Image()
     carCanvasImage.src = carImageSrc
+    CarObject.dimensions.yAxisPosition =
+      trackHeight -
+      CarObject.dimensions.height -
+      CarObject.dimensions.bottomMargin
 
     return {
       image: carCanvasImage,
       x,
       y,
-      width: CarObject.dimensions.with,
+      width: CarObject.dimensions.width,
       height: CarObject.dimensions.height,
     }
   }
@@ -39,8 +60,14 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
     if (this.canvasApi.ctx && this.specs) {
       this.clear()
 
+      const carPosition = getCarPosition()
+
       this.canvasApi.ctx.drawImage(
         this.specs.image,
+        carPosition.x,
+        carPosition.y,
+        carPosition.w,
+        carPosition.h,
         this.specs.x,
         this.specs.y,
         this.specs.width,
@@ -56,7 +83,7 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
   }
 
   public getCenterOnTrack(trackWidth: number) {
-    return trackWidth / 2 - CarObject.dimensions.with / 2
+    return trackWidth / 2 - CarObject.dimensions.width / 2
   }
 
   private onKeyDown(event: KeyboardEvent) {

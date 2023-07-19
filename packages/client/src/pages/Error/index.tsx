@@ -16,7 +16,9 @@ const ErrorPage: React.FC<{ topMessage: string; bottomMessage?: string }> = ({
         <img src={ErrorCar} alt="Ошибка" width={'50%'} height={'70%'} />
         <p>{topMessage}</p>
         <p>{bottomMessage}</p>
-        <Link to="/" className={cx('error__button')}>Вернуться на главную</Link>
+        <Link to="/" className={cx('error__button')}>
+          Вернуться на главную
+        </Link>
       </div>
     </MainLayout>
   )

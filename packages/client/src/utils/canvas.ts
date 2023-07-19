@@ -7,7 +7,7 @@ const canvas = (
 
     return { ctx, element: canvasElement }
   } else {
-    throw new TypeError('Canvas не поддреживается вашим браузером.')
+    throw new TypeError('Canvas не поддерживается вашим браузером.')
   }
 }
 

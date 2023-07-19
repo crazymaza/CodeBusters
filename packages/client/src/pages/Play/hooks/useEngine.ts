@@ -1,33 +1,69 @@
-import { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '@/store/typedHooks'
+import { setGameScores, setGameProcess } from '@/store/slices/gameSlice'
 import { CodeBustersEngine } from '@/engine'
 import { CarObject, TrackObject } from '@/engine/Objects'
-import { canvas } from '@/utils'
 import { loadImage } from '@/helpers'
-
-import sportCarImage from 'images/sport_car.png'
+import { canvas } from '@/utils'
+import BackgroundObject from '@/engine/Objects/Background'
+import BarrierObject from '@/engine/Objects/Barrier'
+import backgroundImage from 'sprites/background.png'
+import spriteImages from 'sprites/sprites.png'
 
 export type UseEngineProps = {
+  backgroundRef: React.RefObject<HTMLCanvasElement>
   containerRef: React.RefObject<HTMLDivElement>
   trackRef: React.RefObject<HTMLCanvasElement>
   carRef: React.RefObject<HTMLCanvasElement>
+  barrierRef: React.RefObject<HTMLCanvasElement>
 }
 
 export default function useEngine({
+  backgroundRef,
   containerRef,
   trackRef,
   carRef,
+  barrierRef,
 }: UseEngineProps) {
   const [engine, setEngine] = useState<CodeBustersEngine | null>(null)
+
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  const onChangeGameProcess = (engineInstance: CodeBustersEngine) => {
+    const gameProcess = engineInstance?.getProcess()
+
+    dispatch(setGameProcess(gameProcess))
+  }
+
+  const onAnimateEngine = (engineInstance: CodeBustersEngine) => {
+    const scores = engineInstance?.getPlayerProgress().scores
+
+    dispatch(setGameScores(scores))
+  }
+
+  const onEngineStop = () => {
+    navigate('/end-game')
+  }
 
   useEffect(() => {
     const isDefineLayers =
       carRef.current instanceof HTMLCanvasElement &&
       trackRef.current instanceof HTMLCanvasElement &&
+      barrierRef.current instanceof HTMLCanvasElement &&
+      backgroundRef.current instanceof HTMLCanvasElement &&
       containerRef.current instanceof HTMLElement
 
     if (isDefineLayers) {
       const trackCanvasLayer = canvas(trackRef.current)
       const carCanvasLayer = canvas(carRef.current)
+      const barrierCanvasLayer = canvas(barrierRef.current)
+      const backgroundLayer = canvas(backgroundRef.current)
+
+      const backgroundObject = new BackgroundObject(backgroundLayer)
+      const baseBackgroundSpecs =
+        BackgroundObject.createBaseBackgroundSpecs(backgroundImage)
 
       // Создаем объект трассы для движка с начальными характеристиками
       const trackObject = new TrackObject(trackCanvasLayer)
@@ -38,28 +74,52 @@ export default function useEngine({
       // Создаем объект машины для движка с начальными характеристиками
       const carObject = new CarObject(carCanvasLayer)
       const xPositionCar = carObject.getCenterOnTrack(TrackObject.width)
-
       const baseCarSpecs = CarObject.createBaseCarSpecs(
-        sportCarImage,
+        spriteImages,
         xPositionCar,
-        0
+        0,
+        trackRef.current.offsetHeight
       )
 
-      // Ждем пока загрузиться изображение машины
-      loadImage(sportCarImage).then(() => {
-        // Рисуем трассу для начального отображения
-        trackObject.draw(0, baseTrackSpecs)
+      // Создаём объект припятствий для движка с начальными характеристиками
+      const barrierObject = new BarrierObject(barrierCanvasLayer)
+      const baseBarrierSpecs = BarrierObject.createBaseBarrierSpecs(
+        trackRef.current,
+        spriteImages
+      )
 
-        // Рисуем машину
-        carObject.draw(0, baseCarSpecs)
+      Promise.all([loadImage(spriteImages), loadImage(backgroundImage)]).then(
+        () => {
+          // Рисуем фон
+          backgroundObject.draw(0, baseBackgroundSpecs)
+          // Рисуем трассу для начального отображения
+          trackObject.draw(0, baseTrackSpecs)
 
-        // Создаем экземпляр движка для обработки анимации и управлением процессом игры
-        setEngine(
-          new CodeBustersEngine({
-            objects: [trackObject, carObject],
-          })
-        )
-      })
+          // Рисуем машину
+          carObject.draw(0, baseCarSpecs)
+
+          // Рисуем припятствия
+          barrierObject.draw(0, baseBarrierSpecs)
+
+          // Создаем экземпляр движка для обработки анимации и управлением процессом игры
+          setEngine(
+            new CodeBustersEngine({
+              objects: [
+                backgroundObject,
+                trackObject,
+                barrierObject,
+                carObject,
+              ],
+              onChangeProcess: onChangeGameProcess,
+              onAnimate: onAnimateEngine,
+              onStop: onEngineStop,
+            })
+          )
+        }
+      )
+
+      // Сбрасываем очки в сторе
+      dispatch(setGameScores(0))
     }
   }, [])
 

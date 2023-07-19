@@ -2,6 +2,11 @@ import CodeBustersEngine from '.'
 import { CarObject, TrackObject } from '../Objects'
 import { fireEvent } from '@testing-library/react'
 import 'jest-canvas-mock'
+import BarrierObject from '../Objects/Barrier'
+
+jest
+  .spyOn(window, 'alert')
+  .mockImplementation(() => console.log('alert called'))
 
 describe('Тест игрового движка', () => {
   const createTestEngine = () => {
@@ -14,12 +19,20 @@ describe('Тест игрового движка', () => {
 
     const Car = new CarObject({ ctx, element: canvas })
     const xPositionCar = Car.getCenterOnTrack(500)
-    const carSpecs = CarObject.createBaseCarSpecs('', xPositionCar, 0)
+    const carSpecs = CarObject.createBaseCarSpecs('', xPositionCar, 0, 10)
+
+    const barrierImage = ''
+    const Barrier = new BarrierObject({ ctx, element: canvas })
+    const barrierSpec = BarrierObject.createBaseBarrierSpecs(
+      container,
+      barrierImage
+    )
 
     Track.draw(0, trackSpecs)
     Car.draw(0, carSpecs)
+    Barrier.draw(0, barrierSpec)
 
-    const engine = new CodeBustersEngine({ objects: [Car, Track] })
+    const engine = new CodeBustersEngine({ objects: [Car, Track, Barrier] })
 
     return {
       engine: engine,

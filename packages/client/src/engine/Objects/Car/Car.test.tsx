@@ -9,7 +9,7 @@ describe('Тест объекта Car', () => {
     if (canvas && ctx) {
       const Car = new CarObject({ ctx, element: canvas })
       const xPositionCar = Car.getCenterOnTrack(500)
-      const specs = CarObject.createBaseCarSpecs('', xPositionCar, 0)
+      const specs = CarObject.createBaseCarSpecs('', xPositionCar, 0, 10)
       Car.draw(0, specs)
 
       return Car

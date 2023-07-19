@@ -1,6 +1,13 @@
-import { CodeBustersEngineOptions, CodeBustersEngineProcess } from './types'
+import {
+  CodeBustersEngineOptions,
+  CodeBustersEngineProcess,
+  RunMethodOptions,
+} from './types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
+import BarrierObject from '@/engine/Objects/Barrier'
+import BackgroundObject from '@/engine/Objects/Background'
+import { isFunction } from '@/helpers'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -19,22 +26,39 @@ import { CarObjectSpecs } from '@/engine/Objects/Car/types'
  *
  */
 
+const FPS = 60
 const SECOND = 1000
+
+const initPlayerProgress = {
+  speed: 0,
+  distance: 0,
+  playTime: 0, // В секундах
+  scores: 0,
+}
 
 export default class CodeBustersEngine {
   static startSpeed = 5
   static maxSpeed = 30
   static diffSpeed = 2 // На сколько  увеличивается скорость в секунду
 
-  private sessionId = 0
   private intervalId: NodeJS.Timer | null = null
+  private sessionId = 0
   private lastTimestamp = 0
-  private boundaryTrackTopOffset = 0
+  private trackObjectsTopOffset = 0
+  private backgroundObjectTopOffset = 0
   private speed = CodeBustersEngine.startSpeed
+  private boundaryTrackTopOffset = 0
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
+  private barrierTopOffset = 0
 
-  constructor(private options: CodeBustersEngineOptions) {
+  private playerProgress = initPlayerProgress
+
+  constructor(private options: CodeBustersEngineOptions<CodeBustersEngine>) {
     this.lastTimestamp = 0
+  }
+
+  public getPlayerProgress() {
+    return this.playerProgress
   }
 
   public getProcess() {
@@ -45,12 +69,16 @@ export default class CodeBustersEngine {
     return this.options.objects
   }
 
-  public run() {
+  public run(options?: RunMethodOptions) {
     if (this.process === CodeBustersEngineProcess.PLAY) {
       return
     }
 
     this.process = CodeBustersEngineProcess.PLAY
+
+    if (!options?.resume) {
+      this.playerProgress.speed = CodeBustersEngine.startSpeed
+    }
 
     this.options.objects.forEach(object => {
       if (object instanceof CarObject) {
@@ -61,14 +89,40 @@ export default class CodeBustersEngine {
 
     this.intervalId = setInterval(() => {
       // Увеличение скорости с интервалом в 1с
-      if (this.speed < CodeBustersEngine.maxSpeed) {
-        this.speed += CodeBustersEngine.diffSpeed
+      if (this.playerProgress.speed < CodeBustersEngine.maxSpeed) {
+        this.playerProgress.speed += CodeBustersEngine.diffSpeed
       } else {
         clearInterval(this.intervalId as NodeJS.Timer)
       }
     }, SECOND)
 
-    this.animation(performance.now())
+    this.animation(0)
+
+    this.onChangeProcess()
+
+    if (isFunction(this.options.onRun)) {
+      this.options.onRun(this)
+    }
+  }
+
+  public pause() {
+    if (this.process === CodeBustersEngineProcess.PAUSE) {
+      return
+    }
+
+    this.process = CodeBustersEngineProcess.PAUSE
+
+    // Отключение управления
+    this.options.objects.forEach(object => {
+      if (object instanceof CarObject) {
+        object.removeListeners()
+      }
+    })
+
+    // Сбрасывание счетчиков
+    this.dropCounters()
+
+    this.onChangeProcess()
   }
 
   public stop() {
@@ -78,17 +132,17 @@ export default class CodeBustersEngine {
 
     this.process = CodeBustersEngineProcess.STOP
 
-    this.speed = CodeBustersEngine.startSpeed
+    this.dropPlayerProgress()
 
     this.options.objects.forEach(object => {
       // Восстановление первоначального состояние объектов
-
       if (object instanceof TrackObject) {
-        this.boundaryTrackTopOffset = 0
+        this.trackObjectsTopOffset = 0
 
         object.clear()
         object.drawTrack()
-        object.drawBoundary(this.boundaryTrackTopOffset)
+        object.drawBoundary(this.trackObjectsTopOffset)
+        object.drawLines(this.trackObjectsTopOffset)
       }
 
       if (object instanceof CarObject) {
@@ -105,14 +159,22 @@ export default class CodeBustersEngine {
         // Отключение управления
         object.removeListeners()
       }
+
+      if (object instanceof BarrierObject) {
+        object.clear()
+        object.setBarrierXAxis(-200)
+        object.drawBarrier()
+      }
     })
 
     // Сбрасывание счетчиков
-    if (this.intervalId) {
-      clearInterval(this.intervalId)
-    }
+    this.dropCounters()
 
-    cancelAnimationFrame(this.sessionId)
+    this.onChangeProcess()
+
+    if (isFunction(this.options.onStop)) {
+      this.options.onStop(this)
+    }
   }
 
   public animation(timestamp: number) {
@@ -120,13 +182,46 @@ export default class CodeBustersEngine {
 
     this.lastTimestamp = timestamp
 
+    this.playerProgress.playTime += 1 / FPS
+
+    // Добавил счетчик дистанции, предположительно для смены уровня и счета очков
+    this.playerProgress.distance =
+      this.playerProgress.speed * this.playerProgress.playTime
+
+    // Пока что очки считаются как сумма пройденной дистанции и времени
+    this.playerProgress.scores = Math.floor(
+      this.playerProgress.distance + this.playerProgress.playTime
+    )
+
     this.options.objects.forEach(object => {
+      if (object instanceof BackgroundObject) {
+        this.backgroundObjectTopOffset++
+
+        object.clear()
+        object.drawBackground(this.backgroundObjectTopOffset)
+      }
+
       if (object instanceof TrackObject) {
-        this.boundaryTrackTopOffset += this.speed
+        this.trackObjectsTopOffset += this.playerProgress.speed
+        this.boundaryTrackTopOffset += this.playerProgress.speed
 
         object.clear()
         object.drawTrack()
-        object.drawBoundary(this.boundaryTrackTopOffset)
+        object.drawBoundary(this.trackObjectsTopOffset)
+        object.drawLines(this.trackObjectsTopOffset)
+      }
+
+      if (object instanceof BarrierObject) {
+        object.clear()
+        const barrierYCoordinate =
+          this.barrierTopOffset <= document.body.offsetHeight
+            ? (this.barrierTopOffset += this.speed)
+            : (this.barrierTopOffset = -200)
+        object.setBarrierYAxis(barrierYCoordinate)
+        if (this.barrierTopOffset === -200) {
+          object.setBarrierXAxis(Math.floor(Math.random() * TrackObject.width))
+        }
+        object.drawBarrier()
       }
 
       if (object instanceof CarObject) {
@@ -138,13 +233,41 @@ export default class CodeBustersEngine {
           xPositionCar >=
           TrackObject.width -
             boundarySpecs.leftOffset -
-            CarObject.dimensions.with
+            CarObject.dimensions.width
 
-        if (isOutLeftSideTrack || isOutRightSideTrack) {
-          alert('Вы вылетели с трассы!')
+        const xRangePositionCar = [
+          xPositionCar,
+          xPositionCar + CarObject.dimensions.width,
+        ]
 
+        const yRangePositionCar = [
+          CarObject.dimensions.yAxisPosition,
+          BarrierObject.currentSpec.trackHeight,
+        ]
+
+        const xRangePositionBarrier = [
+          BarrierObject.currentSpec.x,
+          BarrierObject.currentSpec.x + BarrierObject.currentSpec.width,
+        ]
+
+        const yRangePositionBarrier = [
+          BarrierObject.currentSpec.y,
+          BarrierObject.currentSpec.y + BarrierObject.currentSpec.height,
+        ]
+
+        const isIntersectionByX =
+          xRangePositionCar[0] < xRangePositionBarrier[1] &&
+          xRangePositionBarrier[0] < xRangePositionCar[1]
+
+        const isIntersectionByY =
+          yRangePositionBarrier[0] < yRangePositionCar[1] &&
+          yRangePositionCar[0] < yRangePositionBarrier[1]
+
+        const isCarBreakOfBarrier = isIntersectionByX && isIntersectionByY
+
+        if (isOutLeftSideTrack || isOutRightSideTrack || isCarBreakOfBarrier) {
+          alert('Столкновение!')
           isContinue = false
-
           this.stop()
         }
       }
@@ -152,6 +275,25 @@ export default class CodeBustersEngine {
 
     if (isContinue) {
       this.sessionId = requestAnimationFrame(this.animation.bind(this))
+
+      if (isFunction(this.options.onAnimate)) {
+        this.options.onAnimate(this)
+      }
+    }
+  }
+
+  private dropPlayerProgress() {
+    this.playerProgress = initPlayerProgress
+  }
+
+  private dropCounters() {
+    clearInterval(this.intervalId as NodeJS.Timer)
+    cancelAnimationFrame(this.sessionId)
+  }
+
+  private onChangeProcess() {
+    if (isFunction(this.options.onChangeProcess)) {
+      this.options.onChangeProcess(this)
     }
   }
 }

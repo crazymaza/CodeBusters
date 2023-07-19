@@ -1,2 +1,2 @@
-export { default as authSlice } from './authSlice'
 export { default as userSlice } from './userSlice'
+export { default as gameSlice } from './gameSlice'

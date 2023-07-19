@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
-import { selectUserInfo } from '@/store/slices/authSlice/selectors'
-import { getUserInfo } from '@/store/slices/authSlice/thunks'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { getUserInfo } from '@/store/slices/userSlice/thunks'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 

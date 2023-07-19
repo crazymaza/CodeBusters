@@ -7,13 +7,13 @@ import { TextField } from '@/components'
 
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
-import { getUserInfo, signin } from '@/store/slices/authSlice/thunks'
+import { getUserInfo, signin } from '@/store/slices/userSlice/thunks'
 import { isAxiosError } from 'axios'
 
 import { signInSchema } from './validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { SigninData } from '@/api/Auth/types'
+import { SigninData } from '@/api/User/types'
 
 const cx = classNames.bind(styles)
 
@@ -32,6 +32,7 @@ const SignIn = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
   } = useForm<SigninData>({
     resolver: yupResolver(signInSchema),
     mode: 'all',
@@ -74,6 +75,9 @@ const SignIn = () => {
               control={control}
               fieldError={errors[name]}
               name={name}
+              handleChange={ev => {
+                setValue(name, ev.target.value)
+              }}
               variant={variant}
               type={type}
               {...props}
