@@ -92,7 +92,7 @@ export default function useEngine({
         spriteImages
       )
 
-      const loadGame = async () => {
+      const loadEngine = async () => {
         await loadImage(spriteImages)
         await loadImage(backgroundImage)
 
@@ -119,9 +119,9 @@ export default function useEngine({
         )
       }
 
-      loadGame()
-
       dispatch(setGameScores(0))
+
+      loadEngine()
     }
   }, [])
 
