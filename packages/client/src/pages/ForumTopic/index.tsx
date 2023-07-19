@@ -1,59 +1,16 @@
-import { Button, MainStage } from '@/components'
+import { MainStage } from '@/components'
 import { MainLayout } from '@/layouts'
-import {
-  Avatar,
-  Box,
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Typography } from '@mui/material'
 import classNames from 'classnames/bind'
-import Picker from 'emoji-picker-react'
-import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import * as data from './data'
 import styles from './styles.module.scss'
 
 import CloseButton from '@/components/CloseButton'
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
+import ForumAddCommentForm from './components/ForumAddCommentForm'
+import ForumCommentsBlock from './components/ForumCommentsBlock'
 
 const cx = classNames.bind(styles)
-
-const renderCommentsBlock = () => (
-  <Box className={cx('comments-container')}>
-    <List component={Paper} className={cx('comments__list')}>
-      {data.comments.map(({ avatar, text, date, user_name }, index) => [
-        <div key={index}>
-          <ListItem className={cx('comments-item')}>
-            <ListItemIcon>
-              <Avatar
-                src={avatar}
-                className={cx('comments-item-icon')}></Avatar>
-            </ListItemIcon>
-            <ListItemText
-              primary={text}
-              secondary={user_name}
-              className={cx('comments-item-text')}
-            />
-            <ListItemText className={cx('comments-item-date')}>
-              {date.toLocaleDateString()}
-            </ListItemText>
-          </ListItem>
-          <Divider variant="fullWidth" />
-        </div>,
-      ])}
-    </List>
-  </Box>
-)
-
-const renderStub = () => (
-  <Typography variant="h3">Ещё никто не оставил свой комментарий</Typography>
-)
 
 const ForumTopicPage = () => {
   const ref = useRef<HTMLInputElement>(null)
@@ -81,43 +38,11 @@ const ForumTopicPage = () => {
               <Typography variant="h3" className={cx('topicpage-title')}>
                 Технологии
               </Typography>
-              <form
-                className={cx('topicpage__form')}
-                onSubmit={e => {
-                  e.preventDefault()
-                }}>
-                <TextField
-                  className={cx('topicpage__form-textfield')}
-                  ref={ref}
-                  multiline={true}
-                  minRows={3}
-                  maxRows={3}
-                  placeholder="Введите ваш комментарий"
-                  value={inputStr}
-                  onChange={e => setInputStr(e.target.value)}
-                />
-                <div className={cx('buttons-container')}>
-                  <Button onClick={() => setPickerVisible(!isPickerVisible)}>
-                    <SentimentSatisfiedAltIcon />
-                  </Button>
-                  <Button type="submit" variant="contained">
-                    Оставить комментарий
-                  </Button>
-                </div>
-                <Link className={cx('link-back')} to="/forum">
-                  &lt;К списку форумов
-                </Link>
-              </form>
-              <div className={cx('emoji-picker')}>
-                <div className={cx('emoji-picker-container')}>
-                  {isPickerVisible ? (
-                    <Picker onEmojiClick={handleEmojiClick}></Picker>
-                  ) : null}
-                </div>
-              </div>
-              {data.comments.length === 0
-                ? renderStub()
-                : renderCommentsBlock()}
+              <ForumAddCommentForm />
+              <Link className={cx('link-back')} to="/forum">
+                &lt;К списку форумов
+              </Link>
+              <ForumCommentsBlock data={data.comments} />
             </div>
           </MainStage>
         </div>
