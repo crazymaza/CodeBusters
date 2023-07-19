@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { useEngine } from './hooks'
+import { useEngine, useMakeFullscreen } from './hooks'
 import { MainLayout } from '@/layouts'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { RunMethodOptions } from '@/engine/Core/types'
@@ -29,6 +29,8 @@ const PlayPage = () => {
     barrierRef,
   })
 
+  useMakeFullscreen()
+
   const startGame = (options?: RunMethodOptions) => {
     setLevel(1)
 
@@ -47,6 +49,7 @@ const PlayPage = () => {
     endGame()
 
     navigate('/')
+    document.exitFullscreen()
   }
 
   return (
