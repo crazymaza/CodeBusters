@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material'
 import classNames from 'classnames/bind'
-import Zvezda from 'icons/zvezda.png'
+import * as icons from './icons'
 import { Link } from 'react-router-dom'
 import styles from './styles.module.scss'
 
@@ -29,7 +29,7 @@ const ForumBlockPopular = (props: ForumBlockPopularProps) => {
           {props.data.map((topic, index) => (
             <ListItem key={index}>
               <ListItemIcon className={cx('popular__list-icon')}>
-                <img src={Zvezda}></img>
+                <img src={icons.Zvezda}></img>
               </ListItemIcon>
               <Link to={`/forum/${index}`} className={cx('popular__list-link')}>
                 <ListItemText

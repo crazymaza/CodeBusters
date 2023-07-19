@@ -13,18 +13,9 @@ import ForumCommentsBlock from './components/ForumCommentsBlock'
 const cx = classNames.bind(styles)
 
 const ForumTopicPage = () => {
-  const ref = useRef<HTMLInputElement>(null)
-  const [isPickerVisible, setPickerVisible] = useState(false)
-  const [inputStr, setInputStr] = useState('')
   const navigate = useNavigate()
 
   const handleCloseClick = () => navigate('/')
-
-  const handleEmojiClick = (emojiObject: any, event: MouseEvent) => {
-    const cursor = (ref?.current && ref.current.selectionStart) ?? 0
-    const text = inputStr.slice(0, cursor) + emojiObject.emoji
-    setInputStr(text)
-  }
 
   return (
     <MainLayout>
