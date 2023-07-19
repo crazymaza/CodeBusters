@@ -43,6 +43,10 @@ export default function useEngine({
     dispatch(setGameScores(scores))
   }
 
+  const onEngineRun = () => {
+    dispatch(setGameScores(0))
+  }
+
   const onEngineStop = () => {
     navigate('/end-game')
   }
@@ -88,37 +92,35 @@ export default function useEngine({
         spriteImages
       )
 
-      Promise.all([loadImage(spriteImages), loadImage(backgroundImage)]).then(
-        () => {
-          // Рисуем фон
-          backgroundObject.draw(0, baseBackgroundSpecs)
-          // Рисуем трассу для начального отображения
-          trackObject.draw(0, baseTrackSpecs)
+      const loadGame = async () => {
+        await loadImage(spriteImages)
+        await loadImage(backgroundImage)
 
-          // Рисуем машину
-          carObject.draw(0, baseCarSpecs)
+        // Рисуем фон
+        backgroundObject.draw(0, baseBackgroundSpecs)
+        // Рисуем трассу для начального отображения
+        trackObject.draw(0, baseTrackSpecs)
 
-          // Рисуем припятствия
-          barrierObject.draw(0, baseBarrierSpecs)
+        // Рисуем машину
+        carObject.draw(0, baseCarSpecs)
 
-          // Создаем экземпляр движка для обработки анимации и управлением процессом игры
-          setEngine(
-            new CodeBustersEngine({
-              objects: [
-                backgroundObject,
-                trackObject,
-                barrierObject,
-                carObject,
-              ],
-              onChangeProcess: onChangeGameProcess,
-              onAnimate: onAnimateEngine,
-              onStop: onEngineStop,
-            })
-          )
-        }
-      )
+        // Рисуем припятствия
+        barrierObject.draw(0, baseBarrierSpecs)
 
-      // Сбрасываем очки в сторе
+        // Создаем экземпляр движка для обработки анимации и управлением процессом игры
+        setEngine(
+          new CodeBustersEngine({
+            objects: [backgroundObject, trackObject, barrierObject, carObject],
+            onChangeProcess: onChangeGameProcess,
+            onAnimate: onAnimateEngine,
+            onRun: onEngineRun,
+            onStop: onEngineStop,
+          })
+        )
+      }
+
+      loadGame()
+
       dispatch(setGameScores(0))
     }
   }, [])

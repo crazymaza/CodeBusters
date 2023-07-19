@@ -76,7 +76,7 @@ export default class CodeBustersEngine {
 
     this.process = CodeBustersEngineProcess.PLAY
 
-    if (!options?.resume) {
+    if (!options?.isResume) {
       this.playerProgress.speed = CodeBustersEngine.startSpeed
     }
 
@@ -96,7 +96,7 @@ export default class CodeBustersEngine {
       }
     }, SECOND)
 
-    this.animation(0)
+    this.animation(options?.isResume ? this.lastTimestamp : 0)
 
     this.onChangeProcess()
 
@@ -131,8 +131,6 @@ export default class CodeBustersEngine {
     }
 
     this.process = CodeBustersEngineProcess.STOP
-
-    this.dropPlayerProgress()
 
     this.options.objects.forEach(object => {
       // Восстановление первоначального состояние объектов
@@ -180,6 +178,11 @@ export default class CodeBustersEngine {
   public animation(timestamp: number) {
     let isContinue = true // Флаг для прерывание анимации
 
+    // Сбрасываем процесс игры, если timestamp = 0
+    if (timestamp === 0) {
+      this.dropPlayerProgress()
+    }
+
     this.lastTimestamp = timestamp
 
     this.playerProgress.playTime += 1 / FPS
@@ -217,10 +220,13 @@ export default class CodeBustersEngine {
           this.barrierTopOffset <= document.body.offsetHeight
             ? (this.barrierTopOffset += this.speed)
             : (this.barrierTopOffset = -200)
+
         object.setBarrierYAxis(barrierYCoordinate)
+
         if (this.barrierTopOffset === -200) {
           object.setBarrierXAxis(Math.floor(Math.random() * TrackObject.width))
         }
+
         object.drawBarrier()
       }
 
@@ -283,7 +289,8 @@ export default class CodeBustersEngine {
   }
 
   private dropPlayerProgress() {
-    this.playerProgress = initPlayerProgress
+    // Создаем новую ссылку на объект прогрессв игрока, для сброса кеша в requestAnimationFrame
+    this.playerProgress = { ...initPlayerProgress }
   }
 
   private dropCounters() {

@@ -18,5 +18,5 @@ export enum CodeBustersEngineProcess {
 }
 
 export type RunMethodOptions = {
-  resume?: boolean
+  isResume?: boolean
 }
