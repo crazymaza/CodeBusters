@@ -46,15 +46,17 @@ export default class CodeBustersEngine {
   private lastTimestamp = 0
   private trackObjectsTopOffset = 0
   private backgroundObjectTopOffset = 0
-  private speed = CodeBustersEngine.startSpeed
   private boundaryTrackTopOffset = 0
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
-  private barrierTopOffset = 0
 
   private playerProgress = initPlayerProgress
 
   constructor(private options: CodeBustersEngineOptions<CodeBustersEngine>) {
+    this.onKeyboardEvent = this.onKeyboardEvent.bind(this)
+
     this.lastTimestamp = 0
+
+    this.addKeyboardListeners()
   }
 
   public getPlayerProgress() {
@@ -227,7 +229,14 @@ export default class CodeBustersEngine {
         object.setBarrierYAxis(barrierYCoordinate)
 
         if (barrierYCoordinate >= 0 && barrierYCoordinate <= 10) {
-          object.setBarrierXAxis(Math.floor(Math.random() * TrackObject.width))
+          object.setBarrierXAxis(
+            Math.floor(
+              Math.random() *
+                (TrackObject.width -
+                  TrackObject.boundarySpecs.width * 2 -
+                  BarrierObject.currentSpec.width)
+            )
+          )
         }
 
         object.drawBarrier()
@@ -305,5 +314,19 @@ export default class CodeBustersEngine {
     if (isFunction(this.options.onChangeProcess)) {
       this.options.onChangeProcess(this)
     }
+  }
+
+  private onKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Space') {
+      this.process === CodeBustersEngineProcess.PLAY ? this.pause() : this.run()
+    }
+  }
+
+  private addKeyboardListeners() {
+    document.addEventListener('keydown', this.onKeyboardEvent)
+  }
+
+  private removeKeyboardListeners() {
+    document.removeEventListener('keydown', this.onKeyboardEvent)
   }
 }
