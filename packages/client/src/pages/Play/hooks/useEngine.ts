@@ -123,6 +123,10 @@ export default function useEngine({
 
       loadEngine()
     }
+
+    return () => {
+      engine?.destroy()
+    }
   }, [])
 
   return engine

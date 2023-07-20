@@ -300,6 +300,11 @@ export default class CodeBustersEngine {
     }
   }
 
+  public destroy() {
+    this.stop()
+    this.removeKeyboardListeners()
+  }
+
   private dropPlayerProgress() {
     // Создаем новую ссылку на объект прогрессв игрока, для сброса кеша в requestAnimationFrame
     this.playerProgress = { ...initPlayerProgress }
