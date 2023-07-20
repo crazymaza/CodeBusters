@@ -46,15 +46,17 @@ export default class CodeBustersEngine {
   private lastTimestamp = 0
   private trackObjectsTopOffset = 0
   private backgroundObjectTopOffset = 0
-  private speed = CodeBustersEngine.startSpeed
   private boundaryTrackTopOffset = 0
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
-  private barrierTopOffset = 0
 
   private playerProgress = initPlayerProgress
 
   constructor(private options: CodeBustersEngineOptions<CodeBustersEngine>) {
+    this.onKeyboardEvent = this.onKeyboardEvent.bind(this)
+
     this.lastTimestamp = 0
+
+    this.addKeyboardListeners()
   }
 
   public getPlayerProgress() {
@@ -76,7 +78,7 @@ export default class CodeBustersEngine {
 
     this.process = CodeBustersEngineProcess.PLAY
 
-    if (!options?.resume) {
+    if (!options?.isResume) {
       this.playerProgress.speed = CodeBustersEngine.startSpeed
     }
 
@@ -96,7 +98,7 @@ export default class CodeBustersEngine {
       }
     }, SECOND)
 
-    this.animation(0)
+    this.animation(options?.isResume ? this.lastTimestamp : 0)
 
     this.onChangeProcess()
 
@@ -131,8 +133,6 @@ export default class CodeBustersEngine {
     }
 
     this.process = CodeBustersEngineProcess.STOP
-
-    this.dropPlayerProgress()
 
     this.options.objects.forEach(object => {
       // Восстановление первоначального состояние объектов
@@ -180,6 +180,15 @@ export default class CodeBustersEngine {
   public animation(timestamp: number) {
     let isContinue = true // Флаг для прерывание анимации
 
+    // Сбрасываем процесс игры, если timestamp = 0
+    if (timestamp === 0) {
+      this.dropPlayerProgress()
+    }
+
+    const delta = timestamp - this.lastTimestamp
+
+    const deltaFrame = Math.round(SECOND / FPS - delta)
+
     this.lastTimestamp = timestamp
 
     this.playerProgress.playTime += 1 / FPS
@@ -195,7 +204,7 @@ export default class CodeBustersEngine {
 
     this.options.objects.forEach(object => {
       if (object instanceof BackgroundObject) {
-        this.backgroundObjectTopOffset++
+        this.backgroundObjectTopOffset += this.playerProgress.speed
 
         object.clear()
         object.drawBackground(this.backgroundObjectTopOffset)
@@ -213,14 +222,23 @@ export default class CodeBustersEngine {
 
       if (object instanceof BarrierObject) {
         object.clear()
+
         const barrierYCoordinate =
-          this.barrierTopOffset <= document.body.offsetHeight
-            ? (this.barrierTopOffset += this.speed)
-            : (this.barrierTopOffset = -200)
+          this.trackObjectsTopOffset % BarrierObject.currentSpec.trackHeight
+
         object.setBarrierYAxis(barrierYCoordinate)
-        if (this.barrierTopOffset === -200) {
-          object.setBarrierXAxis(Math.floor(Math.random() * TrackObject.width))
+
+        if (barrierYCoordinate >= 0 && barrierYCoordinate <= 10) {
+          object.setBarrierXAxis(
+            Math.floor(
+              Math.random() *
+                (TrackObject.width -
+                  TrackObject.boundarySpecs.width * 2 -
+                  BarrierObject.currentSpec.width)
+            )
+          )
         }
+
         object.drawBarrier()
       }
 
@@ -282,8 +300,14 @@ export default class CodeBustersEngine {
     }
   }
 
+  public destroy() {
+    this.stop()
+    this.removeKeyboardListeners()
+  }
+
   private dropPlayerProgress() {
-    this.playerProgress = initPlayerProgress
+    // Создаем новую ссылку на объект прогрессв игрока, для сброса кеша в requestAnimationFrame
+    this.playerProgress = { ...initPlayerProgress }
   }
 
   private dropCounters() {
@@ -295,5 +319,19 @@ export default class CodeBustersEngine {
     if (isFunction(this.options.onChangeProcess)) {
       this.options.onChangeProcess(this)
     }
+  }
+
+  private onKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Space') {
+      this.process === CodeBustersEngineProcess.PLAY ? this.pause() : this.run()
+    }
+  }
+
+  private addKeyboardListeners() {
+    document.addEventListener('keydown', this.onKeyboardEvent)
+  }
+
+  private removeKeyboardListeners() {
+    document.removeEventListener('keydown', this.onKeyboardEvent)
   }
 }

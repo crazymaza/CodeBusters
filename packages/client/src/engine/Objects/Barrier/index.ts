@@ -47,6 +47,8 @@ export default class BarrierObject extends BaseObject<BarrierObjectSpecs> {
 
       const barrierPosition = getPositionBarrier()
 
+      ctx.beginPath()
+
       // Отрисовка барьера
       ctx.drawImage(
         this.specs?.image,

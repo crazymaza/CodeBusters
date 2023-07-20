@@ -24,6 +24,8 @@ export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> 
     if (this.canvasApi.ctx && this.specs) {
       this.clear()
 
+      this.canvasApi.ctx.beginPath()
+
       this.canvasApi.ctx.drawImage(
         this.specs.image,
         this.specs.x,

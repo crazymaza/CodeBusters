@@ -23,11 +23,11 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
   const startButtonName = getStartButtonName(gameProcess)
 
   const onStart = () => {
+    const isResume = prevGameProcces === CodeBustersEngineProcess.PLAY
+
     gameProcess == CodeBustersEngineProcess.PLAY
       ? controls.pauseGame()
-      : controls.startGame({
-          resume: prevGameProcces === CodeBustersEngineProcess.PLAY,
-        })
+      : controls.startGame({ isResume })
 
     setPrevGameProcess(gameProcess)
   }

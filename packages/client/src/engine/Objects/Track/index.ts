@@ -106,6 +106,8 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
       this.canvasApi.element.width = specs.width
       this.canvasApi.element.height = specs.height
 
+      this.canvasApi.ctx.beginPath()
+
       this.canvasApi.ctx.fillStyle = specs.fill as string
       this.canvasApi.ctx.fillRect(specs.x, specs.y, specs.width, specs.height)
     }
@@ -131,6 +133,8 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
         let lineIndex = 0
 
         while (lineIndex < line.length) {
+          ctx.beginPath()
+
           line[lineIndex].topOffset =
             trackHeight -
             lineFullHeight * lineIndex +
@@ -180,6 +184,8 @@ export default class TrackObject extends BaseObject<TrackObjectSpecs> {
         let boundaryIndex = 0
 
         while (boundaryIndex < boundary.length) {
+          ctx.beginPath()
+
           boundary[boundaryIndex].topOffset =
             trackHeight -
             boundaryFullHeight * boundaryIndex +
