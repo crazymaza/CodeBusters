@@ -62,6 +62,8 @@ export default class CarObject extends BaseObject<CarObjectSpecs> {
 
       const carPosition = getCarPosition()
 
+      this.canvasApi.ctx.beginPath()
+
       this.canvasApi.ctx.drawImage(
         this.specs.image,
         carPosition.x,

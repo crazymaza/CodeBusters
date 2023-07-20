@@ -183,6 +183,10 @@ export default class CodeBustersEngine {
       this.dropPlayerProgress()
     }
 
+    const delta = timestamp - this.lastTimestamp
+
+    const deltaFrame = Math.round(SECOND / FPS - delta)
+
     this.lastTimestamp = timestamp
 
     this.playerProgress.playTime += 1 / FPS
@@ -198,7 +202,7 @@ export default class CodeBustersEngine {
 
     this.options.objects.forEach(object => {
       if (object instanceof BackgroundObject) {
-        this.backgroundObjectTopOffset++
+        this.backgroundObjectTopOffset += this.playerProgress.speed
 
         object.clear()
         object.drawBackground(this.backgroundObjectTopOffset)
@@ -216,14 +220,13 @@ export default class CodeBustersEngine {
 
       if (object instanceof BarrierObject) {
         object.clear()
+
         const barrierYCoordinate =
-          this.barrierTopOffset <= document.body.offsetHeight
-            ? (this.barrierTopOffset += this.speed)
-            : (this.barrierTopOffset = -200)
+          this.trackObjectsTopOffset % BarrierObject.currentSpec.trackHeight
 
         object.setBarrierYAxis(barrierYCoordinate)
 
-        if (this.barrierTopOffset === -200) {
+        if (barrierYCoordinate >= 0 && barrierYCoordinate <= 10) {
           object.setBarrierXAxis(Math.floor(Math.random() * TrackObject.width))
         }
 
