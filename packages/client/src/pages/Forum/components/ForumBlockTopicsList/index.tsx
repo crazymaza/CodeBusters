@@ -23,7 +23,11 @@ const ForumBlockTopicsList = (props: ForumBlockTopicsListProps) => {
         {props.data.map(({ title, description, count_messages }, index) => (
           <ListItem key={index} className={cx('topics__list-item')}>
             <Link to={`/forum/${index}`}>
-              <ListItemText primary={title} secondary={description} />
+              <ListItemText
+                primary={title}
+                secondary={description}
+                className={cx('item-text')}
+              />
               <Badge
                 badgeContent={count_messages}
                 color="primary"

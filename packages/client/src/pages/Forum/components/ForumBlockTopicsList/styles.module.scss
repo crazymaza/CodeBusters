@@ -1,0 +1,53 @@
+@use 'themes/mixins' as mx;
+
+
+.blocktopics__wrapper {
+  display: flex;
+  height: 41rem;
+}
+
+.topics {
+  &__list {
+    display: block;
+    overflow-y: scroll;
+    width: 100%;
+    padding-top: 1rem;
+
+    &-item {
+      @include mx.themify('color', 'hr-border');
+      @include mx.themify('background-color', 'forum_item-bg');
+      height: 6rem;
+      border-radius: 1.5rem;
+      width: 99%;
+
+      a {
+        @include mx.themify('color', 'primary_link-color');
+        display: flex;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        text-decoration: none;
+
+        .item-text>span {
+          font-size: 2.0rem;
+        }
+
+
+        .item-text>p {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    .link__badge {
+      span {
+        font-size: 1.0rem;
+      }
+
+      img {
+        height: 3rem;
+      }
+    }
+
+  }
+}

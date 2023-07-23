@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material'
 import classNames from 'classnames/bind'
-import * as icons from './icons'
+import * as icons from '../icons'
 import { Link } from 'react-router-dom'
 import styles from './styles.module.scss'
 
@@ -19,10 +19,10 @@ type ForumBlockPopularProps = {
 
 const ForumBlockPopular = (props: ForumBlockPopularProps) => {
   return (
-    <div className={cx('topics-popular')}>
+    <div className={cx('topfive-block-popular')}>
       <Paper
         variant="outlined"
-        className={cx('topics-popular__wrapper')}
+        className={cx('topfive-block-popular__wrapper')}
         square>
         <Typography variant="h3">Топ-5 тем</Typography>
         <List>
