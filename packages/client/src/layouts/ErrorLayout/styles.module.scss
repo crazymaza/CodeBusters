@@ -1,10 +1,10 @@
 @use 'themes/mixins' as mx;
 
-.main-layout {
+.error-layout {
 
   &,
   &__content {
-    @include mx.themify('background-image', 'bg-image');
+    @include mx.themify('background', 'error-bg');
     display: flex;
     flex-direction: column;
     height: 100%;

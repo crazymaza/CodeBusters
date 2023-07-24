@@ -1,25 +1,24 @@
-import classNames from 'classnames/bind'
-import styles from './styles.module.scss'
-import { Avatar, Modal } from '@/components'
-import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
-import { TextField } from '@/components'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-import { Link, useNavigate } from 'react-router-dom'
+import { Avatar, CloseButton, Dialog, MainStage, TextField } from '@/components'
 import { MainLayout } from '@/layouts'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
+import classNames from 'classnames/bind'
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import styles from './styles.module.scss'
 
-import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import { changeUserInfo, logout } from '@/store/slices/userSlice/thunks'
+import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 
-import { schema, modalSchema } from './validation'
+import { UserUpdateModel } from '@/api/User/types'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import {
+  changeUserAvatar,
+  changeUserPassword,
+} from '@/store/slices/userSlice/thunks'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import {
-  changeUserPassword,
-  changeUserAvatar,
-} from '@/store/slices/userSlice/thunks'
-import { UserUpdateModel, UserInfo } from '@/api/User/types'
-import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { modalSchema, schema } from './validation'
 
 const cx = classNames.bind(styles)
 
@@ -69,7 +68,7 @@ const ProfilePage = () => {
     },
   ]
 
-  const modalFormFields: {
+  const dialogFormFields: {
     name: 'oldPassword' | 'newPassword'
     label: string
     variant?: TextFieldVariants | undefined
@@ -114,7 +113,7 @@ const ProfilePage = () => {
     }
   }
 
-  const onModalSubmit = async (data: {
+  const onDialogSubmit = async (data: {
     oldPassword: string
     newPassword: string
   }) => {
@@ -122,11 +121,11 @@ const ProfilePage = () => {
     setOpen(false)
   }
 
-  const renderModal = () => {
+  const renderDialog = () => {
     const {
       control: modalControl,
       formState: { errors: modalErrors },
-      handleSubmit: modalHandleSubmit,
+      handleSubmit: dialogHandleSubmit,
       setValue,
     } = useForm({
       resolver: yupResolver(modalSchema),
@@ -134,11 +133,11 @@ const ProfilePage = () => {
     })
 
     return (
-      <Modal open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose}>
         <form
           className={cx('modal-password__content')}
-          onSubmit={modalHandleSubmit(onModalSubmit)}>
-          {modalFormFields.map(
+          onSubmit={dialogHandleSubmit(onDialogSubmit)}>
+          {dialogFormFields.map(
             ({ variant = 'standard', type = 'text', name, ...props }) => (
               <TextField
                 control={modalControl}
@@ -160,7 +159,7 @@ const ProfilePage = () => {
             Сохранить
           </Button>
         </form>
-      </Modal>
+      </Dialog>
     )
   }
 
@@ -173,71 +172,75 @@ const ProfilePage = () => {
   return (
     <MainLayout>
       <div className={cx('profile__page')}>
-        <div className={cx('profile__page_content')}>
-          <form
-            className={cx('profile__page_form')}
-            onSubmit={handleSubmit(onSubmit)}>
-            <div className={cx('profile__form_content')}>
-              <div className={cx('form__content_settings')}>
-                <Avatar src={user?.avatar} changeAvatar={changeAvatar}></Avatar>
-                <div className={cx('user__settings')}>
-                  <div className={cx('user__settings_theme')}>
-                    <span>Сменить тему</span>
-                    <Switch defaultChecked />
+        <div className={cx('profile__page-wrapper')}>
+          <div>
+            <MainStage>
+              <form
+                className={cx('profile__page_form')}
+                onSubmit={handleSubmit(onSubmit)}>
+                <div className={cx('profile__form_content')}>
+                  <div className={cx('form__content_settings')}>
+                    <Avatar
+                      src={user?.avatar}
+                      changeAvatar={changeAvatar}></Avatar>
+                    <div className={cx('user__settings')}>
+                      <div className={cx('user__settings_theme')}>
+                        <span>Сменить тему</span>
+                        <Switch defaultChecked />
+                      </div>
+                      <Link onClick={logoutHandler} to={'/'}>
+                        Выйти из аккаунта
+                      </Link>
+                    </div>
                   </div>
-                  <Link onClick={logoutHandler} to={'/'}>
-                    Выйти из аккаунта
-                  </Link>
+                  <div className={cx('form__content_inputlist')}>
+                    {formFields.map(
+                      ({
+                        variant = 'standard',
+                        type = 'text',
+                        value = '',
+                        name,
+                        ...props
+                      }) => {
+                        return (
+                          <TextField
+                            control={control}
+                            fieldError={errors[name]}
+                            name={name}
+                            variant={variant}
+                            value={value}
+                            handleChange={ev => {
+                              setValue(name, ev.target.value)
+                            }}
+                            type={type}
+                            {...props}
+                          />
+                        )
+                      }
+                    )}
+                    <Button
+                      className={cx('form__content_inputlist_button')}
+                      variant="contained"
+                      type="button"
+                      onClick={handleOpen}>
+                      Изменить пароль
+                    </Button>
+                  </div>
+                  <div className={cx('form__content_close')}>
+                    <CloseButton onClick={cancelClick} />
+                  </div>
                 </div>
-              </div>
-              <div className={cx('form__content_inputlist')}>
-                {formFields.map(
-                  ({
-                    variant = 'standard',
-                    type = 'text',
-                    value = '',
-                    name,
-                    ...props
-                  }) => {
-                    return (
-                      <TextField
-                        control={control}
-                        fieldError={errors[name]}
-                        name={name}
-                        variant={variant}
-                        value={value}
-                        handleChange={ev => {
-                          setValue(name, ev.target.value)
-                        }}
-                        type={type}
-                        {...props}
-                      />
-                    )
-                  }
-                )}
-                <Button
-                  className={cx('form__content_inputlist_button')}
-                  variant="contained"
-                  type="button"
-                  onClick={handleOpen}>
-                  Изменить пароль
-                </Button>
-              </div>
-              <div className={cx('form__content_close')}>
-                <IconButton onClick={cancelClick}>
-                  <HighlightOffIcon />
-                </IconButton>
-              </div>
-            </div>
-            <div className={cx('profile__form_submit')}>
-              <Button variant="contained" type="submit">
-                Сохранить
-              </Button>
-            </div>
-          </form>
+                <div className={cx('profile__form_submit')}>
+                  <Button variant="contained" type="submit">
+                    Сохранить
+                  </Button>
+                </div>
+              </form>
+            </MainStage>
+          </div>
         </div>
       </div>
-      {renderModal()}
+      {renderDialog()}
     </MainLayout>
   )
 }

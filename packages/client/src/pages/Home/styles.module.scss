@@ -1,12 +1,12 @@
+@use 'themes/mixins' as mx;
+
 .main__page {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100vh;
-  background: url(images/background_light_theme.png) no-repeat;
   background-size: cover;
-  background-color: #3276c5;
 
   &_box {
     display: flex;
@@ -15,20 +15,26 @@
     gap: 4.6rem;
     width: 122.6rem;
     height: 67.8rem;
-    border-radius: 1.5rem;
-    opacity: 0.8999999761581421;
-    background: #f4f4f4;
     box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
 
     hr {
+      @include mx.themify('border-color', 'hr-blue-color');
       height: 80%;
-      border: 0.1rem solid #1673e0;
+      border: 0.1rem solid;
       margin: 0;
     }
   }
 
+  &_box-container {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+  }
+
   .box {
     &__about {
+      @include mx.themify('color', 'secondary-text-color');
       height: 80%;
       flex-basis: 42.4rem;
       font-size: 3.6rem;
@@ -49,17 +55,21 @@
       flex-basis: 49.2rem;
 
       .menu {
+        &__title {
+          @include mx.themify('color', 'primary-text-color')
+        }
         &__item {
           &:first-child {
             .menu__item-link {
-              border-bottom: 0.4rem solid #3276c5;
+              @include mx.themify('border-color', 'border-blue-color');
+              border-bottom: 0.4rem solid;
 
               .link {
                 &__button {
                   &-label {
                     span {
+                      @include mx.themify('color', 'primary-text-color');
                       font-size: 4rem;
-                      color: #3276c5;
                       font-weight: 700;
                     }
                   }
@@ -75,12 +85,12 @@
           }
 
           &-link {
+            @include mx.themify('border-color', 'primary-text-color');
             display: flex;
             height: 12rem;
             width: 49.2rem;
-            color: #000;
             text-decoration: none;
-            border-bottom: 0.2rem solid #3276c5;
+            border-bottom: 0.2rem solid;
 
             .link {
               &__button {
@@ -90,7 +100,7 @@
 
                 &-label {
                   span {
-                    color: #000;
+                    @include mx.themify('color', 'secondary-text-color');
                     font-size: 3.6rem;
                   }
                 }
@@ -107,5 +117,4 @@
     }
   }
 }
-
 

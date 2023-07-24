@@ -1,8 +1,8 @@
+import { MainStage } from '@/components'
+import CloseButton from '@/components/CloseButton'
 import { MainLayout } from '@/layouts'
 import {
   Avatar,
-  IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +21,6 @@ import { useNavigate } from 'react-router-dom'
 import { headerCells, leaderList } from './data'
 import styles from './styles.module.scss'
 import { ILeaderList, Order } from './types'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 
 const cx = classNames.bind(styles)
 
@@ -33,29 +32,13 @@ const getColorForCup = (rating: string) => {
       return SilverCup
     case '3':
       return BronzeCup
+    default:
+      return ''
   }
 }
 const renderCupIcon = (rating: string) => {
   const icon = getColorForCup(rating)
-
-  if (rating === '1' || rating === '2' || rating === '3') {
-    return <img src={icon} className={cx('icon__img')} />
-  }
-  return ''
-}
-
-const renderCloseButton = () => {
-  const navigate = useNavigate()
-  const handleClosePage = () => {
-    navigate('/')
-  }
-  return (
-    <div className={cx('page-content-close')}>
-      <IconButton onClick={handleClosePage}>
-        <HighlightOffIcon />
-      </IconButton>
-    </div>
-  )
+  return <img src={icon} className={cx('icon__img')} />
 }
 
 interface ITableProps {
@@ -130,24 +113,32 @@ const CustomizedTable = () => {
 }
 
 const LeaderBoardPage = () => {
+  const navigate = useNavigate()
+
+  const handleClosePage = () => {
+    navigate('/')
+  }
+
   return (
     <MainLayout>
       <div className={cx('leaderboard__page')}>
-        <Paper
-          variant="outlined"
-          className={cx('leaderboard__page-container')}
-          square>
-          <div className={cx('leaderboard__page-title')}>
-            <Typography variant="h3">Турнирная таблица</Typography>
-            {renderCloseButton()}
-          </div>
-
-          <div className={cx('table-container')}>
-            <TableContainer className={cx('table__block-container')}>
-              <CustomizedTable />
-            </TableContainer>
-          </div>
-        </Paper>
+        <div className={cx('leaderboard__page-wrapper')}>
+          <MainStage>
+            <div className={cx('leaderboard__page-container')}>
+              <div className={cx('leaderboard__page-title')}>
+                <Typography variant="h3">Турнирная таблица</Typography>
+                <div className={cx('page-content-close')}>
+                  <CloseButton onClick={handleClosePage} />
+                </div>
+              </div>
+              <div className={cx('table-container')}>
+                <TableContainer className={cx('table__block-container')}>
+                  <CustomizedTable />
+                </TableContainer>
+              </div>
+            </div>
+          </MainStage>
+        </div>
       </div>
     </MainLayout>
   )

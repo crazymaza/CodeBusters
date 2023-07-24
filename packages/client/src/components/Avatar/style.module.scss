@@ -1,6 +1,8 @@
+@use 'themes/mixins' as mx;
+
 .avatar__component {
+  @include mx.themify('background-color', 'avatar-bg');
   width: 140px;
   height: 140px;
-  background-color: #b4b2b2;
-  padding: 1px;
+  padding: 0.1rem;
 }

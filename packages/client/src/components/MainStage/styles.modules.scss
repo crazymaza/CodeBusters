@@ -1,0 +1,10 @@
+@use 'themes/mixins' as mx;
+
+.mainstage-component {
+    @include mx.themify('background-color', 'mainstage-bg');
+    display: flex;
+    border-radius: 15px;
+    width:100%;
+    height: 100%;
+    box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+}

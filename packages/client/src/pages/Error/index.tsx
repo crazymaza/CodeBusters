@@ -1,9 +1,9 @@
-import React from 'react'
-import { MainLayout } from '@/layouts'
+import ErrorLayout from '@/layouts/ErrorLayout'
 import classNames from 'classnames/bind'
-import styles from './styles.module.scss'
 import ErrorCar from 'images/car_error_page.png'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
 const ErrorPage: React.FC<{ topMessage: string; bottomMessage?: string }> = ({
@@ -11,7 +11,7 @@ const ErrorPage: React.FC<{ topMessage: string; bottomMessage?: string }> = ({
   bottomMessage,
 }) => {
   return (
-    <MainLayout>
+    <ErrorLayout>
       <div className={cx('error')}>
         <img src={ErrorCar} alt="Ошибка" width={'50%'} height={'70%'} />
         <p>{topMessage}</p>
@@ -20,7 +20,7 @@ const ErrorPage: React.FC<{ topMessage: string; bottomMessage?: string }> = ({
           Вернуться на главную
         </Link>
       </div>
-    </MainLayout>
+    </ErrorLayout>
   )
 }
 

@@ -1,24 +1,25 @@
+@use 'themes/mixins' as mx;
+
 .profile__page {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-  background: url('images/background_light_theme.png') no-repeat;
-  background-size: cover;
 
-  &_content {
-    padding: 20px;
-    border-radius: 15px;
-    background: rgba(244, 244, 244, 0.9);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    width: 40%;
+  &-wrapper {
+    width: 100%;
+    max-width: 700px;
+    height: 500px;
   }
+
 
   .profile__page_form {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 100%;
+    padding: 3rem;
   }
 
   .profile__form {
@@ -48,8 +49,13 @@
         flex-direction: column;
 
         &_theme {
+          @include mx.themify('color', 'profile-switch-color');
           display: flex;
           align-items: center;
+        }
+
+        a {
+          @include mx.themify('color', 'profile-logout-color');
         }
       }
     }
@@ -60,6 +66,14 @@
       width: 40%;
       padding-top: 20px;
 
+      &>div>label {
+        @include mx.themify('color', 'profile__form-label')
+      }
+
+      input {
+        @include mx.themify('color', 'profile__form-input')
+      }
+
       &_button {
         margin-top: 20px;
       }
@@ -67,7 +81,7 @@
   }
 }
 
-.modal-password__content {
+.dialog-password__content {
   display: flex;
   flex-direction: column;
 

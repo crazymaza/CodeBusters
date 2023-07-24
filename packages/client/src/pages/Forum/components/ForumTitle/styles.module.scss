@@ -1,0 +1,15 @@
+@use 'themes/mixins' as mx;
+
+
+.forumpage-title {
+    @include mx.themify('color', 'secondary-text-color');
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.button__icon {
+    font-size: 3rem;
+    align-items: center;
+    margin: 2rem 0 2rem;
+}

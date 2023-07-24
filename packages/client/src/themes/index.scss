@@ -14,7 +14,6 @@ html {
 
 body {
   @include mx.themify('background-color', 'primary');
-
   display: flex;
   flex-direction: column;
   margin: 0;

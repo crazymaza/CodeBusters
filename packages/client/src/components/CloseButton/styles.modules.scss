@@ -1,0 +1,7 @@
+@use 'themes/mixins' as mx;
+
+.button-container {
+    .MuiSvgIcon-root {
+        @include mx.themify('fill', 'close__btn-color')
+    }
+}

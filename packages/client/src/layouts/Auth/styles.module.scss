@@ -1,11 +1,14 @@
+@use 'themes/mixins' as mx;
+
 .auth-layout {
   &,
   &__content {
+    @include mx.themify('background-image', 'bg-image');
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-image: url('images/background_light_theme.png');
+    width:100%;
     background-repeat: no-repeat;
     background-size: cover;
   }
