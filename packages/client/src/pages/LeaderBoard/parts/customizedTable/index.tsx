@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Order, ILeaderList } from '../../types'
 import TableHeader from '../tableHeader'
 import { getColorForCup } from '../../functions'
-import classNames from 'classnames'
+import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 import { useAppSelector } from '@/store/typedHooks'
 

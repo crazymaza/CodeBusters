@@ -138,8 +138,12 @@ const ProfilePage = () => {
           className={cx('modal-password__content')}
           onSubmit={dialogHandleSubmit(onDialogSubmit)}>
           {dialogFormFields.map(
-            ({ variant = 'standard', type = 'text', name, ...props }) => (
+            (
+              { variant = 'standard', type = 'text', name, ...props },
+              index
+            ) => (
               <TextField
+                key={index}
                 control={modalControl}
                 fieldError={modalErrors[name]}
                 name={name}
@@ -195,15 +199,19 @@ const ProfilePage = () => {
                   </div>
                   <div className={cx('form__content_inputlist')}>
                     {formFields.map(
-                      ({
-                        variant = 'standard',
-                        type = 'text',
-                        value = '',
-                        name,
-                        ...props
-                      }) => {
+                      (
+                        {
+                          variant = 'standard',
+                          type = 'text',
+                          value = '',
+                          name,
+                          ...props
+                        },
+                        index
+                      ) => {
                         return (
                           <TextField
+                            key={index}
                             control={control}
                             fieldError={errors[name]}
                             name={name}
