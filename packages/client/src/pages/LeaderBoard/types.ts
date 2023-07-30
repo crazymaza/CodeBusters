@@ -10,4 +10,10 @@ export interface IHeaderCell {
   label: string
 }
 
+export interface ITableProps {
+  onRequestSort: (property: keyof ILeaderList) => void
+  order: Order
+  orderBy: string
+}
+
 export type Order = 'asc' | 'desc'

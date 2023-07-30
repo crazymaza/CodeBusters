@@ -1,9 +1,10 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import { userSlice, gameSlice } from '@/store/slices'
+import { userSlice, gameSlice, leaderboardSlice } from '@/store/slices'
 
 const reducers = combineReducers({
   user: userSlice,
   game: gameSlice,
+  leaderboard: leaderboardSlice,
 })
 
 export const createReduxStore = (initialState = {}) => {

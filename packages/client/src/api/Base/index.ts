@@ -5,6 +5,10 @@ export default class BaseApi {
   public request: ReturnType<typeof http>
 
   constructor(options: HTTPOptions = {}) {
-    this.request = http(options)
+    this.request = http({
+      ...options,
+      baseURL: 'https://ya-praktikum.tech/api/v2',
+      withCredentials: true,
+    })
   }
 }

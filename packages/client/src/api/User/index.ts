@@ -9,10 +9,7 @@ import {
 
 class UserApi extends BaseApi {
   constructor() {
-    super({
-      baseURL: 'https://ya-praktikum.tech/api/v2',
-      withCredentials: true,
-    })
+    super()
   }
 
   signin(data: SigninData) {

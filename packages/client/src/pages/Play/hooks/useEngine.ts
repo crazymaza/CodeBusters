@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '@/store/typedHooks'
+import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import { setGameScores, setGameProcess } from '@/store/slices/gameSlice'
 import { CodeBustersEngine } from '@/engine'
 import { CarObject, TrackObject } from '@/engine/Objects'
@@ -10,6 +10,7 @@ import BackgroundObject from '@/engine/Objects/Background'
 import BarrierObject from '@/engine/Objects/Barrier'
 import backgroundImage from 'sprites/background.png'
 import spriteImages from 'sprites/sprites.png'
+import { setLeaderboardData } from '@/store/slices/leaderboardSlice/thunks'
 
 export type UseEngineProps = {
   backgroundRef: React.RefObject<HTMLCanvasElement>
@@ -27,6 +28,7 @@ export default function useEngine({
   barrierRef,
 }: UseEngineProps) {
   const [engine, setEngine] = useState<CodeBustersEngine | null>(null)
+  const user = useAppSelector(state => state.user.userInfo)
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -47,7 +49,14 @@ export default function useEngine({
     dispatch(setGameScores(0))
   }
 
-  const onEngineStop = () => {
+  const onEngineStop = (engineInstance: CodeBustersEngine) => {
+    const data = {
+      nickname: user?.display_name || 'Неизвестный игрок',
+      avatar: user?.avatar || '',
+      codebustersScores: engineInstance?.getPlayerProgress().scores,
+      userId: user?.id ?? 0,
+    }
+    dispatch(setLeaderboardData(data))
     navigate('/end-game')
   }
 
