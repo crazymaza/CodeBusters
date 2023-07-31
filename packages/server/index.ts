@@ -46,6 +46,17 @@ async function startServer() {
       let template: string
 
       if (!isDev()) {
+        const serviceWorkerFiles = [
+          '/serviceWorker.js',
+          '/manifest.webmanifest',
+          '/registerSW.js',
+        ]
+
+        if (serviceWorkerFiles.includes(req.baseUrl)) {
+          res.sendFile(path.resolve(distPath, req.baseUrl.replace('/', '')))
+          return
+        }
+
         template = fs.readFileSync(
           path.resolve(distPath, 'index.html'),
           'utf-8'

@@ -24,6 +24,7 @@ export default defineConfig({
     VitePWA({
       strategies: 'injectManifest',
       filename: 'serviceWorker.js',
+      outDir: './dist',
       srcDir: './src',
       devOptions: {
         enabled: true,
