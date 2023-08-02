@@ -6,8 +6,10 @@ import * as path from 'path'
 export default defineConfig({
   plugins: [react()],
   build: {
+    outDir: 'ssr-dist',
+    ssr: true,
     lib: {
-      entry: path.resolve(__dirname, 'ssr.tsx'),
+      entry: path.resolve(__dirname, 'entry.server.tsx'),
       name: 'Client',
       formats: ['cjs'],
     },
@@ -19,5 +21,15 @@ export default defineConfig({
   },
   ssr: {
     format: 'cjs',
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      themes: path.resolve(__dirname, './src/themes'),
+      sprites: path.resolve(__dirname, './src/assets/sprites'),
+      images: path.resolve(__dirname, './src/assets/images'),
+      icons: path.resolve(__dirname, './src/assets/icons'),
+      fonts: path.resolve(__dirname, './src/assets/fonts'),
+    },
   },
 })

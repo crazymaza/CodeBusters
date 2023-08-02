@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
-import { VitePWA } from 'vite-plugin-pwa'
 dotenv.config()
 
 // https://vitejs.dev/config/
@@ -19,22 +18,7 @@ export default defineConfig({
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT || 3001,
   },
-  plugins: [
-    react(),
-    VitePWA({
-      strategies: 'injectManifest',
-      filename: 'serviceWorker.js',
-      outDir: './dist',
-      srcDir: './src',
-      devOptions: {
-        enabled: true,
-      },
-      injectManifest: {
-        globPatterns: ['**/*.{html,js,css,png}'],
-      },
-      workbox: {},
-    }),
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

@@ -25,6 +25,6 @@
       "fonts/*": ["./src/assets/fonts/*"]
     }
   },
-  "include": ["src", "**/*.tsx", "src/serviceWorker.js"],
+  "include": ["src", "**/*.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
