@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { UserApi } from '@/api'
+
 import {
   SigninData,
   SignupData,
@@ -7,12 +7,14 @@ import {
   UserUpdateModel,
 } from '@/api/User/types'
 import { ChangePasswordRequest } from '@/api/User/types'
+import { IExtraArgument } from '@/store'
 
 export const signin = createAsyncThunk<void, SigninData>(
   'user/signin',
   async (signinData, thunkApi) => {
     try {
-      await UserApi.signin(signinData)
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+      await userApi.signin(signinData)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
@@ -23,7 +25,8 @@ export const signup = createAsyncThunk<void, SignupData>(
   'user/signup',
   async (SignupData, thunkApi) => {
     try {
-      await UserApi.signup(SignupData)
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+      await userApi.signin(SignupData)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
@@ -34,7 +37,8 @@ export const logout = createAsyncThunk<void, void>(
   'user/logout',
   async (_, thunkApi) => {
     try {
-      await UserApi.logout()
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+      await userApi.logout()
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
@@ -45,8 +49,9 @@ export const getUserInfo = createAsyncThunk<UserInfo, void>(
   'user/getUserInfo',
   async (_, thunkApi) => {
     try {
-      const userInfo = await UserApi.getUserInfo()
-      return userInfo
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+
+      return await userApi.getUserInfo()
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
@@ -59,8 +64,9 @@ export const changeUserAvatar = createAsyncThunk(
     try {
       const formData = new FormData()
       formData.append('avatar', file[0])
-      const userInfo = await UserApi.changeUserAvatar(formData)
-      return userInfo
+
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+      return await userApi.changeUserAvatar(formData)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
@@ -71,7 +77,8 @@ export const changeUserPassword = createAsyncThunk<void, ChangePasswordRequest>(
   'user/changeUserPassword',
   async (changePasswordData, thunkApi) => {
     try {
-      await UserApi.changeUserPassword(changePasswordData)
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+      await userApi.changeUserPassword(changePasswordData)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
@@ -82,8 +89,8 @@ export const changeUserInfo = createAsyncThunk(
   'user/changeUserInfo',
   async (userData: UserUpdateModel, thunkApi) => {
     try {
-      const userInfo = await UserApi.changeUserInfo(userData)
-      return userInfo
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+      return await userApi.changeUserInfo(userData)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }

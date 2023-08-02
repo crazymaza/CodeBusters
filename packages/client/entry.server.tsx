@@ -23,8 +23,10 @@ export async function render(request: express.Request, url: string) {
     throw context
   }
 
+  const cookies = request?.headers?.cookie
+
   const [pathname] = url.split('?')
-  const store = createReduxStore()
+  const store = createReduxStore({}, cookies)
   const router = createStaticRouter(routes, context)
 
   const currentRoute = childrenRoutes.find(({ path }) =>

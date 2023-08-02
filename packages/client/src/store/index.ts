@@ -1,12 +1,17 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { userSlice, gameSlice } from '@/store/slices'
+import { UserApi } from '@/api'
+
+export interface IExtraArgument {
+  userService: UserApi
+}
 
 const reducers = combineReducers({
   user: userSlice,
   game: gameSlice,
 })
 
-export const createReduxStore = (initialState = {}) => {
+export const createReduxStore = (initialState = {}, cookie = '') => {
   const preloadedState =
     typeof window !== 'undefined' ? window.__PRELOADED_STATE__ : initialState
 
@@ -18,6 +23,12 @@ export const createReduxStore = (initialState = {}) => {
     reducer: reducers,
     preloadedState,
     devTools: true,
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        thunk: {
+          extraArgument: { userService: new UserApi(cookie) },
+        },
+      }),
   })
 }
 
