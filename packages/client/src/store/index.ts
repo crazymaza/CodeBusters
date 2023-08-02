@@ -7,9 +7,16 @@ const reducers = combineReducers({
 })
 
 export const createReduxStore = (initialState = {}) => {
+  const preloadedState =
+    typeof window !== 'undefined' ? window.__PRELOADED_STATE__ : initialState
+
+  if (typeof window !== 'undefined') {
+    delete window?.__PRELOADED_STATE__
+  }
+
   return configureStore({
     reducer: reducers,
-    preloadedState: initialState,
+    preloadedState,
     devTools: true,
   })
 }

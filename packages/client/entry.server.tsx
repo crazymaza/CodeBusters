@@ -20,18 +20,15 @@ export async function render(request: express.Request, url: string) {
   const context = await query(remixRequest)
 
   if (context instanceof Response) {
-    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw context
   }
-
-  const cookies = request?.headers?.cookie
 
   const [pathname] = url.split('?')
   const store = createReduxStore()
   const router = createStaticRouter(routes, context)
 
   const currentRoute = childrenRoutes.find(({ path }) =>
-    matchPath(pathname, path!)
+    matchPath(pathname, path)
   )
   const { loader } = currentRoute || {}
 
