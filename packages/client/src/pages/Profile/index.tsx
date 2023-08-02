@@ -1,7 +1,6 @@
 import { Avatar, CloseButton, Dialog, MainStage, TextField } from '@/components'
 import { MainLayout } from '@/layouts'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-import { Button, IconButton, Switch, TextFieldVariants } from '@mui/material'
+import { Button, Switch, TextFieldVariants } from '@mui/material'
 import classNames from 'classnames/bind'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'

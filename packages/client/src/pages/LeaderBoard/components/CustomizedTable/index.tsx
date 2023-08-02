@@ -1,22 +1,24 @@
 import { Table, TableBody, TableRow, TableCell, Avatar } from '@mui/material'
 import { useState } from 'react'
-import { Order, ILeaderList } from '../../types'
-import TableHeader from '../tableHeader'
-import { getColorForCup } from '../../functions'
+import { Order, ILeaderList, OrderTypes } from '@/pages/LeaderBoard/types'
+import TableHeader from '../TableHeader'
+import { getColorForCup } from '@/pages/LeaderBoard/functions'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 import { useAppSelector } from '@/store/typedHooks'
+import { selectLeaderboardData } from '@/store/slices/leaderboardSlice/selectors'
+import AvatarIcon from 'icons/stub_avatar.png'
 
 const cx = classNames.bind(styles)
 
 const CustomizedTable = () => {
-  const [order, setOrder] = useState<Order>('asc')
+  const [order, setOrder] = useState<Order>(OrderTypes.ASC)
   const [orderBy, setOrderBy] = useState<keyof ILeaderList>('rating')
-  const leaderList = useAppSelector(state => state.leaderboard.data)
+  const leaderList = useAppSelector(selectLeaderboardData)
 
   const handleRequestSort = (property: keyof ILeaderList) => {
-    const isAsc = orderBy === property && order === 'asc'
-    setOrder(isAsc ? 'desc' : 'asc')
+    const isAsc = orderBy === property && order === OrderTypes.ASC
+    setOrder(isAsc ? OrderTypes.DESC : OrderTypes.ASC)
     setOrderBy(property)
   }
 
@@ -42,8 +44,8 @@ const CustomizedTable = () => {
               </TableCell>
               <TableCell className={cx('table__column-login')}>
                 <div className={cx('table__column-wrapper')}>
-                  <Avatar src={avatar} />
-                  <span>{nickname}</span>
+                  <Avatar src={avatar || AvatarIcon} />
+                  <span>{nickname || 'Безымянный гонщик'}</span>
                 </div>
               </TableCell>
               <TableCell className={cx('table__column-scores')}>

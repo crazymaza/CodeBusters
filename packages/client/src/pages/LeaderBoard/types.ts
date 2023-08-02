@@ -16,4 +16,9 @@ export interface ITableProps {
   orderBy: string
 }
 
-export type Order = 'asc' | 'desc'
+export enum OrderTypes {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+export type Order = `${OrderTypes}`

@@ -11,6 +11,8 @@ import BarrierObject from '@/engine/Objects/Barrier'
 import backgroundImage from 'sprites/background.png'
 import spriteImages from 'sprites/sprites.png'
 import { setLeaderboardData } from '@/store/slices/leaderboardSlice/thunks'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import AvatarIcon from 'icons/stub_avatar.png'
 
 export type UseEngineProps = {
   backgroundRef: React.RefObject<HTMLCanvasElement>
@@ -28,7 +30,7 @@ export default function useEngine({
   barrierRef,
 }: UseEngineProps) {
   const [engine, setEngine] = useState<CodeBustersEngine | null>(null)
-  const user = useAppSelector(state => state.user.userInfo)
+  const user = useAppSelector(selectUserInfo)
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -51,8 +53,8 @@ export default function useEngine({
 
   const onEngineStop = (engineInstance: CodeBustersEngine) => {
     const data = {
-      nickname: user?.display_name || 'Неизвестный игрок',
-      avatar: user?.avatar || '',
+      nickname: user?.display_name,
+      avatar: user?.avatar,
       codebustersScores: engineInstance?.getPlayerProgress().scores,
       userId: user?.id ?? 0,
     }

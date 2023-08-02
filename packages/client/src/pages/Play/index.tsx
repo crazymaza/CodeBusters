@@ -49,7 +49,9 @@ const PlayPage = () => {
     endGame()
 
     navigate('/')
-    document.exitFullscreen()
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    }
   }
 
   return (

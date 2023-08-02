@@ -1,6 +1,5 @@
 import { RootState } from '@/store'
 
-const selectAuthLoading = (state: RootState) => state.user.loading
-const selectUserInfo = (state: RootState) => state.user.userInfo
+const selectLeaderboardData = (state: RootState) => state.leaderboard.data
 
-export { selectAuthLoading, selectUserInfo }
+export { selectLeaderboardData }

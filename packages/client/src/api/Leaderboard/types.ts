@@ -1,6 +1,6 @@
 export interface LeaderboardValues {
-  nickname: string
-  avatar: string
+  nickname: string | undefined
+  avatar: string | undefined
   codebustersScores: number
   userId: number
 }
