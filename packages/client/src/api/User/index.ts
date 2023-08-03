@@ -11,6 +11,7 @@ class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({
       baseURL: 'http://localhost:3001/api/v2',
+      // baseURL: 'https://ya-praktikum.tech/api/v2',
       withCredentials: true,
       headers: {
         cookie,

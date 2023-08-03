@@ -40,12 +40,10 @@ export const childrenRoutes = [
   {
     path: 'sign-in',
     element: <ErrorElement keyValue="sign-in" children={<Pages.AuthPage />} />,
-    // loader: getUserLoader,
   },
   {
     path: 'sign-up',
     element: <ErrorElement keyValue="sign-up" children={<Pages.AuthPage />} />,
-    // loader: getUserLoader,
   },
   {
     path: 'play',

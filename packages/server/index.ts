@@ -11,7 +11,6 @@ dotenv.config()
 import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
-import * as fsp from 'fs/promises'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -58,16 +57,13 @@ async function startServer() {
       let render: (request: express.Request, url: string) => Promise<string>
 
       if (isDev()) {
-        template = await fsp.readFile(
-          path.resolve(srcPath, 'index.html'),
-          'utf8'
-        )
+        template = fs.readFileSync(path.resolve(srcPath, 'index.html'), 'utf-8')
 
         template = await vite!.transformIndexHtml(url, template)
 
-        render = await vite!
-          .ssrLoadModule(path.resolve(srcPath, 'entry.server.tsx'))
-          .then(m => m.render)
+        render = (
+          await vite!.ssrLoadModule(path.resolve(srcPath, 'entry.server.tsx'))
+        ).render
       } else {
         const serviceWorkerFiles = [
           '/serviceWorker.js',

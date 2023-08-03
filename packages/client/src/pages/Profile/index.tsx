@@ -140,6 +140,7 @@ const ProfilePage = () => {
           {dialogFormFields.map(
             ({ variant = 'standard', type = 'text', name, ...props }) => (
               <TextField
+                key={name}
                 control={modalControl}
                 fieldError={modalErrors[name]}
                 name={name}
@@ -204,6 +205,7 @@ const ProfilePage = () => {
                       }) => {
                         return (
                           <TextField
+                            key={name}
                             control={control}
                             fieldError={errors[name]}
                             name={name}

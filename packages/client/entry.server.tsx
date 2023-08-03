@@ -44,11 +44,7 @@ export async function render(request: express.Request, url: string) {
     <React.StrictMode>
       <Provider store={store}>
         <StyledEngineProvider injectFirst>
-          <StaticRouterProvider
-            router={router}
-            context={context}
-            nonce="the-nonce"
-          />
+          <StaticRouterProvider router={router} context={context} />
         </StyledEngineProvider>
       </Provider>
     </React.StrictMode>
