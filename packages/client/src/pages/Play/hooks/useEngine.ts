@@ -10,6 +10,7 @@ import BackgroundObject from '@/engine/Objects/Background'
 import BarrierObject from '@/engine/Objects/Barrier'
 import backgroundImage from 'sprites/background.png'
 import spriteImages from 'sprites/sprites.png'
+import EndGameMessageObject from '@/engine/Objects/EndGame'
 
 export type UseEngineProps = {
   backgroundRef: React.RefObject<HTMLCanvasElement>
@@ -17,6 +18,7 @@ export type UseEngineProps = {
   trackRef: React.RefObject<HTMLCanvasElement>
   carRef: React.RefObject<HTMLCanvasElement>
   barrierRef: React.RefObject<HTMLCanvasElement>
+  endGameMessageRef: React.RefObject<HTMLCanvasElement>
 }
 
 export default function useEngine({
@@ -25,6 +27,7 @@ export default function useEngine({
   trackRef,
   carRef,
   barrierRef,
+  endGameMessageRef,
 }: UseEngineProps) {
   const [engine, setEngine] = useState<CodeBustersEngine | null>(null)
 
@@ -47,23 +50,21 @@ export default function useEngine({
     dispatch(setGameScores(0))
   }
 
-  const onEngineStop = () => {
-    navigate('/end-game')
-  }
-
   useEffect(() => {
     const isDefineLayers =
       carRef.current instanceof HTMLCanvasElement &&
       trackRef.current instanceof HTMLCanvasElement &&
       barrierRef.current instanceof HTMLCanvasElement &&
       backgroundRef.current instanceof HTMLCanvasElement &&
-      containerRef.current instanceof HTMLElement
+      containerRef.current instanceof HTMLElement &&
+      endGameMessageRef.current instanceof HTMLElement
 
     if (isDefineLayers) {
       const trackCanvasLayer = canvas(trackRef.current)
       const carCanvasLayer = canvas(carRef.current)
       const barrierCanvasLayer = canvas(barrierRef.current)
       const backgroundLayer = canvas(backgroundRef.current)
+      const endGameMessageLayer = canvas(endGameMessageRef.current)
 
       const backgroundObject = new BackgroundObject(backgroundLayer)
       const baseBackgroundSpecs =
@@ -92,6 +93,13 @@ export default function useEngine({
         spriteImages
       )
 
+      const endGameMessageObject = new EndGameMessageObject(endGameMessageLayer)
+      const endGameMessageSpecs =
+        EndGameMessageObject.createBaseEndGameMessageSpecs(
+          TrackObject.width,
+          trackRef.current.offsetHeight
+        )
+
       const loadEngine = async () => {
         await loadImage(spriteImages)
         await loadImage(backgroundImage)
@@ -107,14 +115,22 @@ export default function useEngine({
         // Рисуем припятствия
         barrierObject.draw(0, baseBarrierSpecs)
 
+        //
+        endGameMessageObject.draw(0, endGameMessageSpecs)
+
         // Создаем экземпляр движка для обработки анимации и управлением процессом игры
         setEngine(
           new CodeBustersEngine({
-            objects: [backgroundObject, trackObject, barrierObject, carObject],
+            objects: [
+              backgroundObject,
+              trackObject,
+              barrierObject,
+              carObject,
+              endGameMessageObject,
+            ],
             onChangeProcess: onChangeGameProcess,
             onAnimate: onAnimateEngine,
             onRun: onEngineRun,
-            onStop: onEngineStop,
           })
         )
       }

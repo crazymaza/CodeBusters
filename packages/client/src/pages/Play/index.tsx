@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { PlayerScores, GameControls } from './components'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
+import Button from '@mui/material/Button'
 
 const cx = classNames.bind(styles)
 
@@ -20,6 +21,7 @@ const PlayPage = () => {
   const trackRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
   const barrierRef = useRef<HTMLCanvasElement>(null)
+  const endGameMessageRef = useRef<HTMLCanvasElement>(null)
 
   const engine = useEngine({
     backgroundRef,
@@ -27,6 +29,7 @@ const PlayPage = () => {
     trackRef,
     carRef,
     barrierRef,
+    endGameMessageRef,
   })
 
   useMakeFullscreen()
@@ -43,6 +46,13 @@ const PlayPage = () => {
 
   const endGame = () => {
     engine?.stop()
+  }
+
+  const leaderboard = () => {
+    endGame()
+
+    navigate('/leader-board')
+    document.exitFullscreen()
   }
 
   const exitGame = () => {
@@ -62,7 +72,7 @@ const PlayPage = () => {
         </div>
         <div className={cx('play__buttons')}>
           <GameControls
-            controls={{ startGame, pauseGame, endGame, exitGame }}
+            controls={{ startGame, pauseGame, endGame, leaderboard, exitGame }}
           />
         </div>
         <div ref={containerRef} className={cx('play__area')}>
@@ -83,6 +93,12 @@ const PlayPage = () => {
           <canvas
             ref={barrierRef}
             className={cx('play__barrier')}
+            width={TrackObject.width}
+            height={trackRef?.current?.height || 710}
+          />
+          <canvas
+            ref={endGameMessageRef}
+            className={cx('play__endgame')}
             width={TrackObject.width}
             height={trackRef?.current?.height || 710}
           />

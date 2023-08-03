@@ -77,12 +77,6 @@ export default createBrowserRouter(
           }
         />
         <Route
-          path="end-game"
-          element={
-            <ErrorElement key="end-game" children={<Pages.EndGamePage />} />
-          }
-        />
-        <Route
           path="500"
           element={
             <Pages.ErrorPage

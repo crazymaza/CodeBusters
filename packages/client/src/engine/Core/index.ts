@@ -8,6 +8,7 @@ import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
 import BackgroundObject from '@/engine/Objects/Background'
 import { isFunction } from '@/helpers'
+import EndGameMessageObject from '../Objects/EndGame'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)
@@ -87,6 +88,10 @@ export default class CodeBustersEngine {
         // Подключение управления машиной
         object.addListeners()
       }
+
+      if (object instanceof EndGameMessageObject) {
+        object.clear()
+      }
     })
 
     this.intervalId = setInterval(() => {
@@ -131,10 +136,13 @@ export default class CodeBustersEngine {
     if (this.process === CodeBustersEngineProcess.STOP) {
       return
     }
-
     this.process = CodeBustersEngineProcess.STOP
 
     this.options.objects.forEach(object => {
+      if (object instanceof EndGameMessageObject) {
+        object.clear()
+        object.drawEndGameMessage(this.playerProgress.scores)
+      }
       // Восстановление первоначального состояние объектов
       if (object instanceof TrackObject) {
         this.trackObjectsTopOffset = 0
@@ -171,10 +179,6 @@ export default class CodeBustersEngine {
     this.dropCounters()
 
     this.onChangeProcess()
-
-    if (isFunction(this.options.onStop)) {
-      this.options.onStop(this)
-    }
   }
 
   public animation(timestamp: number) {
@@ -284,7 +288,17 @@ export default class CodeBustersEngine {
         const isCarBreakOfBarrier = isIntersectionByX && isIntersectionByY
 
         if (isOutLeftSideTrack || isOutRightSideTrack || isCarBreakOfBarrier) {
-          alert('Столкновение!')
+          const endGameObject = this.options.objects.find(
+            x => x instanceof EndGameMessageObject
+          ) as EndGameMessageObject
+          if (endGameObject) {
+            this.process = CodeBustersEngineProcess.FAILED
+          }
+        }
+      }
+
+      if (object instanceof EndGameMessageObject) {
+        if (this.process === CodeBustersEngineProcess.FAILED) {
           isContinue = false
           this.stop()
         }
