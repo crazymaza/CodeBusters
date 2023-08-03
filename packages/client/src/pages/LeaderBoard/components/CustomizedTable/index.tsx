@@ -17,8 +17,11 @@ const CustomizedTable = () => {
   const leaderList = useAppSelector(selectLeaderboardData)
 
   const handleRequestSort = (property: keyof ILeaderList) => {
-    const isAsc = orderBy === property && order === OrderTypes.ASC
-    setOrder(isAsc ? OrderTypes.DESC : OrderTypes.ASC)
+    const direction =
+      orderBy === property && order === OrderTypes.ASC
+        ? OrderTypes.DESC
+        : OrderTypes.ASC
+    setOrder(direction)
     setOrderBy(property)
   }
 

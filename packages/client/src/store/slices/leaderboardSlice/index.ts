@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { getLeaderboardData } from './thunks'
-import { LeaderboardValues } from '@/api/Leaderboard/types'
+import { LeaderboardData, LeaderboardValues } from '@/api/Leaderboard/types'
 
 export interface LeaderboardState {
   data: LeaderboardValues[]
@@ -23,9 +23,16 @@ const leaderboardSlice = createSlice({
     })
     builder.addCase(
       getLeaderboardData.fulfilled,
-      (state, { payload }: PayloadAction<LeaderboardValues[]>) => {
+      (state, { payload }: PayloadAction<LeaderboardData[]>) => {
+        const leaderboardData = payload.reduce(
+          (acc: LeaderboardValues[], curr: LeaderboardData) => [
+            ...acc,
+            curr.data,
+          ],
+          []
+        )
         state.loading = false
-        state.data = payload
+        state.data = leaderboardData
       }
     )
     builder.addCase(getLeaderboardData.rejected, state => {

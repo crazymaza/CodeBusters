@@ -17,11 +17,12 @@ const TableHeader = (props: ITableProps) => {
       <TableRow className={cx('table__header')}>
         {headerCells.map(({ id, label }) => (
           <TableCell className={cx('table__header-column')} key={id}>
-            {label}
             <TableSortLabel
               active={orderBy === id}
               direction={orderBy === id ? order : 'asc'}
-              onClick={createSortHandler(id)}></TableSortLabel>
+              onClick={createSortHandler(id)}>
+              {label}
+            </TableSortLabel>
           </TableCell>
         ))}
       </TableRow>

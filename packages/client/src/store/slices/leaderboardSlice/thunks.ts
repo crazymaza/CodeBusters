@@ -1,16 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { LeaderboardApi } from '@/api'
-import { LeaderboardData, LeaderboardValues } from '@/api/Leaderboard/types'
+import { LeaderboardValues } from '@/api/Leaderboard/types'
 
 export const getLeaderboardData = createAsyncThunk(
   'leaderboard/getAll',
   async (_, thunkApi) => {
     try {
       const leaderboardData = await LeaderboardApi.getData()
-      return leaderboardData.data.reduce(
-        (acc: [], curr: LeaderboardData) => [...acc, curr['data']],
-        []
-      )
+      return leaderboardData.data
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
