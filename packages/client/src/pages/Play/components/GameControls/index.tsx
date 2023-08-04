@@ -42,13 +42,13 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
       gameProcess === CodeBustersEngineProcess.PLAY ||
       gameProcess === CodeBustersEngineProcess.PAUSE
 
+    const onEnd = () => {
+      controls.endGame()
+      setPrevGameProcess(gameProcess)
+    }
+
     return isGameProcess ? (
-      <Button
-        variant="contained"
-        onClick={() => {
-          controls.endGame()
-          setPrevGameProcess(gameProcess)
-        }}>
+      <Button variant="contained" onClick={onEnd}>
         Завершить игру
       </Button>
     ) : null

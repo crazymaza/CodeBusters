@@ -1,4 +1,4 @@
-import { BaseObjectSpecs } from '../Base/types'
+import { BaseObjectSpecs } from '@/engine/Objects/Base/types'
 
 export interface EndGameMessageObjectSpecs extends BaseObjectSpecs {
   fontColor: string

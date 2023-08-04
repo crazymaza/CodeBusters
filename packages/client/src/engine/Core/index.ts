@@ -8,7 +8,7 @@ import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'
 import BackgroundObject from '@/engine/Objects/Background'
 import { isFunction } from '@/helpers'
-import EndGameMessageObject from '../Objects/EndGame'
+import EndGameMessageObject from '@/engine/Objects/EndGame'
 
 /*
  * @INFO CodeBustersEngine v0.0.1 ;)

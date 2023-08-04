@@ -1,4 +1,4 @@
-import BaseObject from '../Base'
+import { BaseObject } from '@/engine/Objects'
 import { EndGameMessageObjectSpecs } from './types'
 
 export default class EndGameMessageObject extends BaseObject<EndGameMessageObjectSpecs> {
@@ -31,6 +31,7 @@ export default class EndGameMessageObject extends BaseObject<EndGameMessageObjec
         this.specs.width - EndGameMessageObject.dimension.border,
         this.specs.height
       )
+
       this.canvasApi.ctx.strokeStyle = this.specs.strokeColor
       this.canvasApi.ctx.lineWidth = this.specs.strokeWidth
       const strokeIdent = this.specs.strokeWidth / 2
@@ -40,6 +41,7 @@ export default class EndGameMessageObject extends BaseObject<EndGameMessageObjec
         this.specs.width - EndGameMessageObject.dimension.border - strokeIdent,
         this.specs.height - strokeIdent
       )
+
       this.canvasApi.ctx.fillStyle = this.specs.fontColor
       this.canvasApi.ctx.font = '30px PressStart'
       this.canvasApi.ctx.fillText(
@@ -47,6 +49,7 @@ export default class EndGameMessageObject extends BaseObject<EndGameMessageObjec
         this.specs.x + EndGameMessageObject.dimension.indent,
         this.specs.y + EndGameMessageObject.dimension.textYAxisBegin
       )
+
       this.canvasApi.ctx.font = '20px PressStart'
       this.canvasApi.ctx.fillText(
         `Результат: ${score}`,
