@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser'
 
 dotenv.config()
 
+import compression from 'compression'
 import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -16,6 +17,7 @@ const isDev = () => process.env.NODE_ENV === 'development'
 
 async function startServer() {
   const app = express()
+
   app.use(cors())
   const port = Number(process.env.SERVER_PORT) || 3001
 
@@ -33,8 +35,7 @@ async function startServer() {
 
     app.use(vite.middlewares)
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    app.use(require('compression')())
+    app.use(compression())
     app.use('/assets', express.static(path.resolve(distPath, 'assets')))
   }
 
