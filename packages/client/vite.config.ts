@@ -30,7 +30,7 @@ export default defineConfig({
         enabled: true,
       },
       injectManifest: {
-        globPatterns: ['**/*.{html,js,css,png}'],
+        globPatterns: ['**/*.{html,js,css,png,ttf}'],
       },
       workbox: {},
     }),

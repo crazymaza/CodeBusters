@@ -78,13 +78,6 @@ export const childrenRoutes = [
     loader: getUserLoader,
   },
   {
-    path: 'end-game',
-    element: (
-      <ErrorElement keyValue="end-game" children={<Pages.EndGamePage />} />
-    ),
-    loader: getUserLoader,
-  },
-  {
     path: '500',
     element: (
       <Pages.ErrorPage

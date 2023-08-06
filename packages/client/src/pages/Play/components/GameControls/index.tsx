@@ -7,7 +7,12 @@ import { getStartButtonName } from './helpers'
 
 type ControlHandler = (options?: RunMethodOptions) => void
 
-type ControlHandlerName = 'startGame' | 'pauseGame' | 'endGame' | 'exitGame'
+type ControlHandlerName =
+  | 'startGame'
+  | 'pauseGame'
+  | 'endGame'
+  | 'exitGame'
+  | 'leaderboard'
 
 export type GameControlsProps = {
   controls: {
@@ -37,11 +42,28 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
       gameProcess === CodeBustersEngineProcess.PLAY ||
       gameProcess === CodeBustersEngineProcess.PAUSE
 
+    const onEnd = () => {
+      controls.endGame()
+      setPrevGameProcess(gameProcess)
+    }
+
     return isGameProcess ? (
+      <Button variant="contained" onClick={onEnd}>
+        Завершить игру
+      </Button>
+    ) : null
+  }, [gameProcess])
+
+  const renderLeaderboardButton = useMemo(() => {
+    const isStop =
+      gameProcess !== CodeBustersEngineProcess.PLAY &&
+      gameProcess !== CodeBustersEngineProcess.PAUSE
+
+    return isStop ? (
       <Button
         variant="contained"
-        onClick={controls.endGame as MouseEventHandler}>
-        Завершить игру
+        onClick={controls.leaderboard as MouseEventHandler}>
+        Рейтинг игроков
       </Button>
     ) : null
   }, [gameProcess])
@@ -51,6 +73,8 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
       <Button variant="contained" onClick={onStart}>
         {startButtonName}
       </Button>
+
+      {renderLeaderboardButton}
 
       {renderEndGameButton}
 
