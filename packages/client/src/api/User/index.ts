@@ -8,10 +8,14 @@ import {
 } from './types'
 
 class UserApi extends BaseApi {
-  constructor() {
+  constructor(cookie?: string) {
     super({
-      baseURL: 'https://ya-praktikum.tech/api/v2',
+      baseURL: 'http://localhost:3001/api/v2',
+      // baseURL: 'https://ya-praktikum.tech/api/v2',
       withCredentials: true,
+      headers: {
+        cookie,
+      },
     })
   }
 
@@ -46,4 +50,4 @@ class UserApi extends BaseApi {
   }
 }
 
-export default new UserApi()
+export default UserApi
