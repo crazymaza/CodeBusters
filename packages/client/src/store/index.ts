@@ -1,9 +1,10 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { userSlice, gameSlice } from '@/store/slices'
-import { UserApi } from '@/api'
+import { UserApi, OAuthApi } from '@/api'
 
 export interface IExtraArgument {
   userService: UserApi
+  oauthService: OAuthApi
 }
 
 const reducers = combineReducers({
@@ -26,7 +27,10 @@ export const createReduxStore = (initialState = {}, cookie = '') => {
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
         thunk: {
-          extraArgument: { userService: new UserApi(cookie) },
+          extraArgument: {
+            userService: new UserApi(cookie),
+            oauthService: new OAuthApi(),
+          },
         },
       }),
   })

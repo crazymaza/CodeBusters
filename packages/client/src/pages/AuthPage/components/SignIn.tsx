@@ -7,7 +7,11 @@ import { TextField } from '@/components'
 
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
-import { getUserInfo, signin } from '@/store/slices/userSlice/thunks'
+import {
+  getUserInfo,
+  signin,
+  oauthServiceFetch,
+} from '@/store/slices/userSlice/thunks'
 import { isAxiosError } from 'axios'
 
 import { signInSchema } from './validation'
@@ -58,6 +62,14 @@ const SignIn = () => {
     }
   }
 
+  const onAuthYandex = async () => {
+    try {
+      await dispatch(oauthServiceFetch()).unwrap()
+    } catch (error) {
+      console.log('ERROR AUTH', error)
+    }
+  }
+
   return (
     <Grid
       component="form"
@@ -90,6 +102,9 @@ const SignIn = () => {
       <Link to={'/sign-up'} className={cx('auth__link')}>
         Создать аккаунт
       </Link>
+      <Button variant="outlined" type="button" onClick={onAuthYandex}>
+        Авторизоваться через Яндекс
+      </Button>
       <Button variant="contained" type="submit">
         Авторизоваться
       </Button>

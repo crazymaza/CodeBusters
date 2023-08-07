@@ -6,8 +6,16 @@ import {
   UserInfo,
   UserUpdateModel,
 } from '@/api/User/types'
+import { OAuthRequestParams } from '@/api/OAuth/types'
 import { ChangePasswordRequest } from '@/api/User/types'
 import { IExtraArgument } from '@/store'
+import { isAxiosError } from 'axios'
+
+const isDev = import.meta.env.MODE === 'development'
+const oauthUrl = import.meta.env.VITE_OAUTH_URL
+const redirectUri = isDev
+  ? import.meta.env.VITE_OAUTH_REDIRECT_URL_DEV
+  : import.meta.env.VITE_OAUTH_REDIRECT_URL_PROD
 
 export const signin = createAsyncThunk<void, SigninData>(
   'user/signin',
@@ -91,6 +99,47 @@ export const changeUserInfo = createAsyncThunk(
     try {
       const userApi = (thunkApi.extra as IExtraArgument).userService
       return await userApi.changeUserInfo(userData)
+    } catch (error) {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+)
+
+export const oauthServicePost = createAsyncThunk<
+  void,
+  Pick<OAuthRequestParams, 'code'>
+>('user/oauth-post', async (params, thunkApi) => {
+  try {
+    const oauthApi = (thunkApi.extra as IExtraArgument).oauthService
+
+    const { data } = await oauthApi.postToAccess({
+      code: params.code,
+      redirect_uri: redirectUri,
+    })
+
+    return data
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const reason = error.response?.data.reason
+
+      return thunkApi.rejectWithValue(reason)
+    } else {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+})
+
+export const oauthServiceFetch = createAsyncThunk<void, void>(
+  'user/oauth-fetch',
+  async (_, thunkApi) => {
+    try {
+      const oauthApi = (thunkApi.extra as IExtraArgument).oauthService
+
+      const { data } = await oauthApi.fetchServiceId({
+        redirect_uri: redirectUri,
+      })
+
+      window.location.href = `${oauthUrl}?response_type=code&client_id=${data.service_id}&redirect_uri=${redirectUri}`
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
