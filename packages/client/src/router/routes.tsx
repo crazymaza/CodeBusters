@@ -4,6 +4,7 @@ import { RouteObject } from 'react-router-dom'
 import { ErrorBoundary } from '@/components'
 import { AppDispatch } from '@/store'
 import { getUserInfo } from '@/store/slices/userSlice/thunks'
+import { getLeaderboardData } from '@/store/slices/leaderboardSlice/thunks'
 
 type Props = {
   children: React.ReactNode
@@ -30,6 +31,10 @@ const getUserLoader = (dispatch: AppDispatch) => {
   return dispatch(getUserInfo())
 }
 
+const getLeaderboard = (dispatch: AppDispatch) => {
+  return dispatch(getLeaderboardData())
+}
+
 export const childrenRoutes = [
   {
     path: '/',
@@ -53,7 +58,7 @@ export const childrenRoutes = [
   {
     path: 'leader-board',
     element: <Pages.LeaderBoardPage />,
-    // loader: getUserLoader, тут другой лоадер
+    loader: getLeaderboard,
   },
   {
     path: 'forum',

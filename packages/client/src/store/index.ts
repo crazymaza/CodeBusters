@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { userSlice, gameSlice, leaderboardSlice } from '@/store/slices'
-import { UserApi } from '@/api'
+import { LeaderboardApi, UserApi } from '@/api'
+import Leaderboard from '@/api/Leaderboard'
 
 export interface IExtraArgument {
   userService: UserApi
