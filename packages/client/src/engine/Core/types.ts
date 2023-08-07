@@ -15,6 +15,7 @@ export enum CodeBustersEngineProcess {
   PLAY = 'play',
   PAUSE = 'pause',
   STOP = 'stop',
+  FAILED = 'failed',
 }
 
 export type RunMethodOptions = {

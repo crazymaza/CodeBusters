@@ -70,6 +70,7 @@ const SignUp = () => {
         {formFields.map(
           ({ variant = 'standard', type = 'text', name, ...props }) => (
             <TextField
+              key={name}
               labelClassName={cx('auth__inputs-textfield-label')}
               inputClassName={cx('auth__inputs-textfield-input')}
               control={control}

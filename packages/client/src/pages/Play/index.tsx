@@ -7,11 +7,19 @@ import { useNavigate } from 'react-router-dom'
 import { PlayerScores, GameControls } from './components'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
+import Button from '@mui/material/Button'
+import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { selectGameScores } from '@/store/slices/gameSlice/selectrors'
+import { setLeaderboardData } from '@/store/slices/leaderboardSlice/thunks'
 
 const cx = classNames.bind(styles)
 
 const PlayPage = () => {
   const [level, setLevel] = useState(1)
+  const user = useAppSelector(selectUserInfo)
+  const scores = useAppSelector(selectGameScores)
+  const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
 
@@ -20,6 +28,7 @@ const PlayPage = () => {
   const trackRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
   const barrierRef = useRef<HTMLCanvasElement>(null)
+  const endGameMessageRef = useRef<HTMLCanvasElement>(null)
 
   const engine = useEngine({
     backgroundRef,
@@ -27,6 +36,7 @@ const PlayPage = () => {
     trackRef,
     carRef,
     barrierRef,
+    endGameMessageRef,
   })
 
   useMakeFullscreen()
@@ -43,6 +53,21 @@ const PlayPage = () => {
 
   const endGame = () => {
     engine?.stop()
+
+    const data = {
+      nickname: user?.display_name,
+      avatar: user?.avatar,
+      codebustersScores: scores,
+      userId: user?.id ?? 0,
+    }
+    dispatch(setLeaderboardData(data))
+  }
+
+  const leaderboard = () => {
+    endGame()
+
+    navigate('/leader-board')
+    document.exitFullscreen()
   }
 
   const exitGame = () => {
@@ -64,7 +89,7 @@ const PlayPage = () => {
         </div>
         <div className={cx('play__buttons')}>
           <GameControls
-            controls={{ startGame, pauseGame, endGame, exitGame }}
+            controls={{ startGame, pauseGame, endGame, leaderboard, exitGame }}
           />
         </div>
         <div ref={containerRef} className={cx('play__area')}>
@@ -85,6 +110,12 @@ const PlayPage = () => {
           <canvas
             ref={barrierRef}
             className={cx('play__barrier')}
+            width={TrackObject.width}
+            height={trackRef?.current?.height || 710}
+          />
+          <canvas
+            ref={endGameMessageRef}
+            className={cx('play__endgame')}
             width={TrackObject.width}
             height={trackRef?.current?.height || 710}
           />

@@ -1,5 +1,10 @@
 @use 'themes/mixins' as mx;
 
+@font-face {
+  font-family: 'PressStart';
+  src: url(fonts/PressStart2P-Regular.ttf);
+}
+
 // TODO Базовый конфиг. Подлежит правке
 html {
   width: 100%;

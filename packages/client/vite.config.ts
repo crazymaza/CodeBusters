@@ -7,6 +7,9 @@ dotenv.config()
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {},
+  },
   server: {
     port: Number(process.env.CLIENT_PORT) || 3000,
   },
@@ -14,18 +17,20 @@ export default defineConfig({
     port: Number(process.env.CLIENT_PREVIEW_PORT) || 3003,
   },
   define: {
-    __SERVER_PORT__: process.env.SERVER_PORT,
+    __SERVER_PORT__: process.env.SERVER_PORT || 3001,
   },
   plugins: [
     react(),
     VitePWA({
       strategies: 'injectManifest',
       filename: 'serviceWorker.js',
+      outDir: './dist',
+      srcDir: './src',
       devOptions: {
         enabled: true,
       },
       injectManifest: {
-        globPatterns: ['**/*.{html,js,css,png}'],
+        globPatterns: ['**/*.{html,js,css,png,ttf}'],
       },
       workbox: {},
     }),

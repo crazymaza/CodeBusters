@@ -76,6 +76,7 @@
   &__area {
     @include mx.themify('border-color', 'border-grey-color');
     @include mx.themify('background', 'play-bg');
+    font-family: 'PressStart', regular;
     grid-area: canvas;
     position: relative;
     display: flex;
@@ -109,6 +110,10 @@
     z-index: 2;
   }
   &__barrier {
+    position: absolute;
+    z-index: 2;
+  }
+  &__endgame {
     position: absolute;
     z-index: 2;
   }

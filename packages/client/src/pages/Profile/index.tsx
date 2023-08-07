@@ -142,7 +142,7 @@ const ProfilePage = () => {
               index
             ) => (
               <TextField
-                key={index}
+                key={name}
                 control={modalControl}
                 fieldError={modalErrors[name]}
                 name={name}
@@ -210,7 +210,7 @@ const ProfilePage = () => {
                       ) => {
                         return (
                           <TextField
-                            key={index}
+                            key={name}
                             control={control}
                             fieldError={errors[name]}
                             name={name}

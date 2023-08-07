@@ -105,6 +105,7 @@ const authSlice = createSlice({
       if (action.payload.data.avatar) {
         state.userInfo.avatar = AVATAR_SOURCE_URL + action.payload.data.avatar
       }
+
       state.loading = false
     })
     builder.addCase(changeUserInfo.rejected, state => {
