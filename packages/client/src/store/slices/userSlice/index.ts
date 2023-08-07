@@ -10,10 +10,11 @@ import {
   oauthServiceFetch,
   oauthServicePost,
 } from './thunks'
-import { UserInfo, UserUpdateModel } from '@/api/User/types'
+import { UserInfo } from '@/api/User/types'
 
 export interface UserState {
   loading: boolean
+  isOath?: boolean
   userInfo: UserInfo | null
 }
 
@@ -33,10 +34,18 @@ const authSlice = createSlice({
     builder.addCase(oauthServicePost.pending, state => {
       state.loading = true
     })
-    builder.addCase(oauthServicePost.fulfilled, state => {
+    builder.addCase(oauthServicePost.fulfilled, (state, action) => {
+      localStorage.setItem('isOauth', 'true')
+
+      state.isOath = true
       state.loading = false
     })
-    builder.addCase(oauthServicePost.rejected, state => {
+    builder.addCase(oauthServicePost.rejected, (state, action) => {
+      const isOauth = action.payload === 'User already in system'
+
+      localStorage.setItem('isOauth', JSON.stringify(isOauth))
+
+      state.isOath = isOauth
       state.loading = false
     })
     // oauth-fetch
@@ -74,7 +83,10 @@ const authSlice = createSlice({
       state.loading = true
     })
     builder.addCase(logout.fulfilled, state => {
+      localStorage.setItem('isOauth', 'false')
+
       state.userInfo = null
+      state.isOath = false
       state.loading = false
     })
     builder.addCase(logout.rejected, state => {
@@ -86,9 +98,11 @@ const authSlice = createSlice({
     })
     builder.addCase(getUserInfo.fulfilled, (state, action) => {
       state.userInfo = action.payload
+
       if (action.payload.avatar) {
         state.userInfo.avatar = AVATAR_SOURCE_URL + action.payload.avatar
       }
+
       state.loading = false
     })
     builder.addCase(getUserInfo.rejected, state => {

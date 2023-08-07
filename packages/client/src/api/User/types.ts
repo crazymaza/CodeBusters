@@ -23,6 +23,10 @@ export interface UserInfo {
   avatar: string
 }
 
+export interface UserAuthOptions {
+  isOauth?: boolean
+}
+
 export interface UserUpdateModel {
   first_name: string
   second_name: string

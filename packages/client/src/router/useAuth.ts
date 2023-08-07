@@ -1,11 +1,16 @@
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
-import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import {
+  selectUserInfo,
+  selectUserIsOauth,
+} from '@/store/slices/userSlice/selectors'
 import { getUserInfo, oauthServicePost } from '@/store/slices/userSlice/thunks'
+import { UserAuthOptions } from '@/api/User/types'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
 const useAuth = () => {
   const user = useAppSelector(selectUserInfo)
+  const isOauth = useAppSelector(selectUserIsOauth)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { pathname, search } = useLocation()
@@ -15,9 +20,9 @@ const useAuth = () => {
   const isProtectedRoute =
     pathname !== '/sign-in' && pathname !== '/sign-up' && pathname !== '/'
 
-  const getUserAndRedirect = async () => {
+  const getUserAndRedirect = async (options: UserAuthOptions = {}) => {
     try {
-      await dispatch(getUserInfo()).unwrap()
+      await dispatch(getUserInfo(options)).unwrap()
 
       const currentPathname = !isProtectedRoute ? '/' : pathname
 
@@ -33,18 +38,18 @@ const useAuth = () => {
     try {
       const response = await dispatch(oauthServicePost({ code }))
 
-      console.log('TESR', response)
-
       if (
         response.payload === 'OK' ||
         response.payload === 'User already in system'
       ) {
-        await dispatch(getUserInfo()).unwrap()
+        console.log('OAuth success: ', response.payload)
+
+        setTimeout(async () => {
+          getUserAndRedirect({ isOauth: true })
+        })
       }
     } catch (error) {
-      console.log('OAUTH FAILED', error)
-    } finally {
-      navigate('/')
+      console.log('OAuth error', error)
     }
   }
 
@@ -56,9 +61,9 @@ const useAuth = () => {
 
   useEffect(() => {
     if (!user) {
-      getUserAndRedirect()
+      getUserAndRedirect({ isOauth })
     }
-  }, [user])
+  }, [user, isOauth])
 
   return user
 }

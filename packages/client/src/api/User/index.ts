@@ -4,6 +4,7 @@ import {
   SigninData,
   SignupData,
   UserInfo,
+  UserAuthOptions,
   UserUpdateModel,
 } from './types'
 
@@ -27,13 +28,21 @@ class UserApi extends BaseApi {
     return this.request.post('/auth/signup', data)
   }
 
-  logout() {
-    return this.request.post('/auth/logout')
+  logout(options: UserAuthOptions) {
+    const baseURL = options.isOauth
+      ? import.meta.env.VITE_BASE_YANDEX_API_URL
+      : undefined
+
+    return this.request.post('/auth/logout', { baseURL })
   }
 
-  getUserInfo() {
+  getUserInfo(options: UserAuthOptions = {}) {
+    const baseURL = options.isOauth
+      ? import.meta.env.VITE_BASE_YANDEX_API_URL
+      : undefined
+
     return this.request
-      .get<UserInfo>('/auth/user')
+      .get<UserInfo>('/auth/user', { baseURL })
       .then(response => response.data)
   }
 

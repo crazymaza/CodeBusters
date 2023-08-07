@@ -11,7 +11,10 @@ import { changeUserInfo, logout } from '@/store/slices/userSlice/thunks'
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 
 import { UserUpdateModel } from '@/api/User/types'
-import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import {
+  selectUserInfo,
+  selectUserIsOauth,
+} from '@/store/slices/userSlice/selectors'
 import {
   changeUserAvatar,
   changeUserPassword,
@@ -24,6 +27,7 @@ const cx = classNames.bind(styles)
 
 const ProfilePage = () => {
   const user = useAppSelector(selectUserInfo)
+  const isOauth = useAppSelector(selectUserIsOauth)
 
   const defaultValues = {
     first_name: user?.first_name || '',
@@ -166,8 +170,8 @@ const ProfilePage = () => {
 
   const dispatch = useAppDispatch()
 
-  const logoutHandler = () => {
-    dispatch(logout())
+  const logoutHandler = async () => {
+    await dispatch(logout({ isOauth }))
   }
 
   return (

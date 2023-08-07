@@ -1,5 +1,5 @@
 import * as Pages from '@/pages'
-import { RouteObject, useParams } from 'react-router-dom'
+import { RouteObject } from 'react-router-dom'
 
 import { ErrorBoundary } from '@/components'
 import { AppDispatch } from '@/store'

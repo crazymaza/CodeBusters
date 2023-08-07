@@ -4,6 +4,7 @@ import {
   SigninData,
   SignupData,
   UserInfo,
+  UserAuthOptions,
   UserUpdateModel,
 } from '@/api/User/types'
 import { OAuthRequestParams } from '@/api/OAuth/types'
@@ -41,25 +42,25 @@ export const signup = createAsyncThunk<void, SignupData>(
   }
 )
 
-export const logout = createAsyncThunk<void, void>(
+export const logout = createAsyncThunk<void, UserAuthOptions | void>(
   'user/logout',
-  async (_, thunkApi) => {
+  async (options = {}, thunkApi) => {
     try {
       const userApi = (thunkApi.extra as IExtraArgument).userService
-      await userApi.logout()
+      await userApi.logout(options || {})
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
   }
 )
 
-export const getUserInfo = createAsyncThunk<UserInfo, void>(
+export const getUserInfo = createAsyncThunk<UserInfo, UserAuthOptions | void>(
   'user/getUserInfo',
-  async (_, thunkApi) => {
+  async (options = {}, thunkApi) => {
     try {
       const userApi = (thunkApi.extra as IExtraArgument).userService
 
-      return await userApi.getUserInfo()
+      return await userApi.getUserInfo(options || {})
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
