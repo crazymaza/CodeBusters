@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom'
 import { PlayerScores, GameControls } from './components'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
-import Button from '@mui/material/Button'
 
 const cx = classNames.bind(styles)
 
@@ -45,7 +44,7 @@ const PlayPage = () => {
   }
 
   const endGame = () => {
-    engine?.stop()
+    engine?.destroy()
   }
 
   const leaderboard = () => {
