@@ -1,16 +1,11 @@
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
-import {
-  selectUserInfo,
-  selectUserIsOauth,
-} from '@/store/slices/userSlice/selectors'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
 import { getUserInfo, oauthServicePost } from '@/store/slices/userSlice/thunks'
-import { UserAuthOptions } from '@/api/User/types'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
 const useAuth = () => {
   const user = useAppSelector(selectUserInfo)
-  const isOauth = useAppSelector(selectUserIsOauth)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { pathname, search } = useLocation()
@@ -20,9 +15,9 @@ const useAuth = () => {
   const isProtectedRoute =
     pathname !== '/sign-in' && pathname !== '/sign-up' && pathname !== '/'
 
-  const getUserAndRedirect = async (options: UserAuthOptions = {}) => {
+  const getUserAndRedirect = async () => {
     try {
-      await dispatch(getUserInfo(options)).unwrap()
+      await dispatch(getUserInfo()).unwrap()
 
       const currentPathname = !isProtectedRoute ? '/' : pathname
 
@@ -44,9 +39,9 @@ const useAuth = () => {
       ) {
         console.log('OAuth success: ', response.payload)
 
-        setTimeout(async () => {
-          getUserAndRedirect({ isOauth: true })
-        })
+        // setTimeout(async () => {
+        //   getUserAndRedirect()
+        // })
       }
     } catch (error) {
       console.log('OAuth error', error)
@@ -61,9 +56,9 @@ const useAuth = () => {
 
   useEffect(() => {
     if (!user) {
-      getUserAndRedirect({ isOauth })
+      getUserAndRedirect()
     }
-  }, [user, isOauth])
+  }, [user])
 
   return user
 }

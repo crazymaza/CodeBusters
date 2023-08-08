@@ -6,6 +6,9 @@ import {
   UserInfo,
   UserAuthOptions,
   UserUpdateModel,
+  OAuthRequestParams,
+  OAuthRequestServiceParams,
+  OAuthResponseService,
 } from './types'
 
 class UserApi extends BaseApi {
@@ -28,21 +31,13 @@ class UserApi extends BaseApi {
     return this.request.post('/auth/signup', data)
   }
 
-  logout(options: UserAuthOptions) {
-    const baseURL = options.isOauth
-      ? import.meta.env.VITE_BASE_YANDEX_API_URL
-      : undefined
-
-    return this.request.post('/auth/logout', { baseURL })
+  logout() {
+    return this.request.post('/auth/logout')
   }
 
-  getUserInfo(options: UserAuthOptions = {}) {
-    const baseURL = options.isOauth
-      ? import.meta.env.VITE_BASE_YANDEX_API_URL
-      : undefined
-
+  getUserInfo() {
     return this.request
-      .get<UserInfo>('/auth/user', { baseURL })
+      .get<UserInfo>('/auth/user')
       .then(response => response.data)
   }
 
@@ -56,6 +51,16 @@ class UserApi extends BaseApi {
 
   changeUserInfo(data: UserUpdateModel) {
     return this.request.put<UserInfo>('/user/profile', data)
+  }
+
+  fetchServiceId(params: OAuthRequestServiceParams) {
+    return this.request.get<OAuthResponseService>(
+      `/oauth/yandex/service-id?redirect_uri=${params.redirect_uri}`
+    )
+  }
+
+  postToAccess(params: OAuthRequestParams) {
+    return this.request.post('/oauth/yandex', params)
   }
 }
 

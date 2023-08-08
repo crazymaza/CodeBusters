@@ -34,18 +34,10 @@ const authSlice = createSlice({
     builder.addCase(oauthServicePost.pending, state => {
       state.loading = true
     })
-    builder.addCase(oauthServicePost.fulfilled, (state, action) => {
-      localStorage.setItem('isOauth', 'true')
-
-      state.isOath = true
+    builder.addCase(oauthServicePost.fulfilled, state => {
       state.loading = false
     })
-    builder.addCase(oauthServicePost.rejected, (state, action) => {
-      const isOauth = action.payload === 'User already in system'
-
-      localStorage.setItem('isOauth', JSON.stringify(isOauth))
-
-      state.isOath = isOauth
+    builder.addCase(oauthServicePost.rejected, state => {
       state.loading = false
     })
     // oauth-fetch
@@ -83,10 +75,7 @@ const authSlice = createSlice({
       state.loading = true
     })
     builder.addCase(logout.fulfilled, state => {
-      localStorage.setItem('isOauth', 'false')
-
       state.userInfo = null
-      state.isOath = false
       state.loading = false
     })
     builder.addCase(logout.rejected, state => {

@@ -4,10 +4,9 @@ import {
   SigninData,
   SignupData,
   UserInfo,
-  UserAuthOptions,
   UserUpdateModel,
+  OAuthRequestParams,
 } from '@/api/User/types'
-import { OAuthRequestParams } from '@/api/OAuth/types'
 import { ChangePasswordRequest } from '@/api/User/types'
 import { IExtraArgument } from '@/store'
 import { isAxiosError } from 'axios'
@@ -42,25 +41,25 @@ export const signup = createAsyncThunk<void, SignupData>(
   }
 )
 
-export const logout = createAsyncThunk<void, UserAuthOptions | void>(
+export const logout = createAsyncThunk<void, void>(
   'user/logout',
-  async (options = {}, thunkApi) => {
+  async (_, thunkApi) => {
     try {
       const userApi = (thunkApi.extra as IExtraArgument).userService
-      await userApi.logout(options || {})
+      await userApi.logout()
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
   }
 )
 
-export const getUserInfo = createAsyncThunk<UserInfo, UserAuthOptions | void>(
+export const getUserInfo = createAsyncThunk<UserInfo, void>(
   'user/getUserInfo',
-  async (options = {}, thunkApi) => {
+  async (_, thunkApi) => {
     try {
       const userApi = (thunkApi.extra as IExtraArgument).userService
 
-      return await userApi.getUserInfo(options || {})
+      return await userApi.getUserInfo()
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
@@ -109,11 +108,11 @@ export const changeUserInfo = createAsyncThunk(
 export const oauthServicePost = createAsyncThunk<
   void,
   Pick<OAuthRequestParams, 'code'>
->('user/oauth-post', async (params, thunkApi) => {
+>('user/oauth-post-to-access-code', async (params, thunkApi) => {
   try {
-    const oauthApi = (thunkApi.extra as IExtraArgument).oauthService
+    const userApi = (thunkApi.extra as IExtraArgument).userService
 
-    const { data } = await oauthApi.postToAccess({
+    const { data } = await userApi.postToAccess({
       code: params.code,
       redirect_uri: redirectUri,
     })
@@ -131,12 +130,12 @@ export const oauthServicePost = createAsyncThunk<
 })
 
 export const oauthServiceFetch = createAsyncThunk<void, void>(
-  'user/oauth-fetch',
+  'user/oauth-fetch-service-id',
   async (_, thunkApi) => {
     try {
-      const oauthApi = (thunkApi.extra as IExtraArgument).oauthService
+      const userApi = (thunkApi.extra as IExtraArgument).userService
 
-      const { data } = await oauthApi.fetchServiceId({
+      const { data } = await userApi.fetchServiceId({
         redirect_uri: redirectUri,
       })
 
