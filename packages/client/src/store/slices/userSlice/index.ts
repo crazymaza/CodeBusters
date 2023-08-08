@@ -14,7 +14,7 @@ import { UserInfo } from '@/api/User/types'
 
 export interface UserState {
   loading: boolean
-  isOath?: boolean
+  oauthServiceId?: string
   userInfo: UserInfo | null
 }
 
@@ -44,7 +44,8 @@ const authSlice = createSlice({
     builder.addCase(oauthServiceFetch.pending, state => {
       state.loading = true
     })
-    builder.addCase(oauthServiceFetch.fulfilled, state => {
+    builder.addCase(oauthServiceFetch.fulfilled, (state, action) => {
+      state.oauthServiceId = action.payload
       state.loading = false
     })
     builder.addCase(oauthServiceFetch.rejected, state => {
@@ -77,6 +78,7 @@ const authSlice = createSlice({
     builder.addCase(logout.fulfilled, state => {
       state.userInfo = null
       state.loading = false
+      state.oauthServiceId = undefined
     })
     builder.addCase(logout.rejected, state => {
       state.loading = false

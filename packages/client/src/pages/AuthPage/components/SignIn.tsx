@@ -21,6 +21,12 @@ import { SigninData } from '@/api/User/types'
 
 const cx = classNames.bind(styles)
 
+const isDev = import.meta.env.MODE === 'development'
+const oauthUrl = import.meta.env.VITE_OAUTH_URL
+const redirectUri = isDev
+  ? import.meta.env.VITE_OAUTH_REDIRECT_URL_DEV
+  : import.meta.env.VITE_OAUTH_REDIRECT_URL_PROD
+
 const SignIn = () => {
   const formFields: {
     name: 'login' | 'password'
@@ -45,6 +51,10 @@ const SignIn = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
+  const redirectToOauthYandex = (serviceId: string) => {
+    window.location.href = `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${redirectUri}`
+  }
+
   const onSubmit = async (data: SigninData) => {
     const signInData = {
       login: data.login,
@@ -64,7 +74,9 @@ const SignIn = () => {
 
   const onAuthYandex = async () => {
     try {
-      await dispatch(oauthServiceFetch()).unwrap()
+      const serviceId = await dispatch(oauthServiceFetch()).unwrap()
+
+      redirectToOauthYandex(serviceId)
     } catch (error) {
       console.log('Error on OAuth fetch service id', error)
     }

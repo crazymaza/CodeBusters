@@ -12,7 +12,6 @@ import { IExtraArgument } from '@/store'
 import { isAxiosError } from 'axios'
 
 const isDev = import.meta.env.MODE === 'development'
-const oauthUrl = import.meta.env.VITE_OAUTH_URL
 const redirectUri = isDev
   ? import.meta.env.VITE_OAUTH_REDIRECT_URL_DEV
   : import.meta.env.VITE_OAUTH_REDIRECT_URL_PROD
@@ -129,7 +128,7 @@ export const oauthServicePost = createAsyncThunk<
   }
 })
 
-export const oauthServiceFetch = createAsyncThunk<void, void>(
+export const oauthServiceFetch = createAsyncThunk<string, void>(
   'user/oauth-fetch-service-id',
   async (_, thunkApi) => {
     try {
@@ -139,7 +138,8 @@ export const oauthServiceFetch = createAsyncThunk<void, void>(
         redirect_uri: redirectUri,
       })
 
-      window.location.href = `${oauthUrl}?response_type=code&client_id=${data.service_id}&redirect_uri=${redirectUri}`
+      // window.location.href = `${oauthUrl}?response_type=code&client_id=${data.service_id}&redirect_uri=${redirectUri}`
+      return data.service_id
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
