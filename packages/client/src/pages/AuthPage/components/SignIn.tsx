@@ -67,8 +67,6 @@ const SignIn = () => {
       await dispatch(oauthServiceFetch()).unwrap()
     } catch (error) {
       console.log('Error on OAuth fetch service id', error)
-    } finally {
-      navigate('/')
     }
   }
 

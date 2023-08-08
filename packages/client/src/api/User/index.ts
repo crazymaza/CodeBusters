@@ -4,7 +4,6 @@ import {
   SigninData,
   SignupData,
   UserInfo,
-  UserAuthOptions,
   UserUpdateModel,
   OAuthRequestParams,
   OAuthRequestServiceParams,
