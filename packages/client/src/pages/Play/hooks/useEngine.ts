@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@/store/typedHooks'
 import { setGameScores, setGameProcess } from '@/store/slices/gameSlice'
 import { CodeBustersEngine } from '@/engine'
@@ -31,7 +30,6 @@ export default function useEngine({
 }: UseEngineProps) {
   const [engine, setEngine] = useState<CodeBustersEngine | null>(null)
 
-  const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   const onChangeGameProcess = (engineInstance: CodeBustersEngine) => {
