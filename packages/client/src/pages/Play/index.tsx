@@ -52,8 +52,6 @@ const PlayPage = () => {
   }
 
   const endGame = () => {
-    engine?.stop()
-
     const data = {
       nickname: user?.display_name,
       avatar: user?.avatar,
@@ -61,13 +59,17 @@ const PlayPage = () => {
       userId: user?.id ?? 0,
     }
     dispatch(setLeaderboardData(data))
+
+    engine?.stop()
   }
 
   const leaderboard = () => {
     endGame()
 
     navigate('/leader-board')
-    document.exitFullscreen()
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    }
   }
 
   const exitGame = () => {

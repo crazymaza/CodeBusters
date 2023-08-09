@@ -1,10 +1,10 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { userSlice, gameSlice, leaderboardSlice } from '@/store/slices'
 import { LeaderboardApi, UserApi } from '@/api'
-import Leaderboard from '@/api/Leaderboard'
 
 export interface IExtraArgument {
   userService: UserApi
+  leaderboardService: LeaderboardApi
 }
 
 const reducers = combineReducers({
@@ -28,7 +28,10 @@ export const createReduxStore = (initialState = {}, cookie = '') => {
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
         thunk: {
-          extraArgument: { userService: new UserApi(cookie) },
+          extraArgument: {
+            userService: new UserApi(cookie),
+            leaderboardService: new LeaderboardApi(cookie),
+          },
         },
       }),
   })

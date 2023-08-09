@@ -2,8 +2,15 @@ import BaseApi from '../Base'
 import { LeaderboardValues } from './types'
 
 class LeaderboardApi extends BaseApi {
-  constructor() {
-    super()
+  constructor(cookie?: string) {
+    super({
+      baseURL: 'http://localhost:3001/api/v2',
+      // baseURL: 'https://ya-praktikum.tech/api/v2',
+      withCredentials: true,
+      headers: {
+        cookie,
+      },
+    })
   }
 
   getData() {
@@ -23,4 +30,4 @@ class LeaderboardApi extends BaseApi {
   }
 }
 
-export default new LeaderboardApi()
+export default LeaderboardApi
