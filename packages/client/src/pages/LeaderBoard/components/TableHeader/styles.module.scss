@@ -1,0 +1,14 @@
+@use 'themes/mixins' as mx;
+
+.table {
+    &__header-column {
+      @include mx.themify('background-color', 'leaderboard_top-bg');
+      font-size: 2rem;
+      text-align: center;
+      padding: 2rem;
+  
+      &:nth-child(2) {
+        text-align: left;
+      }
+    }
+}

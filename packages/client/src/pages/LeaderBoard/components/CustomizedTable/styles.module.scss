@@ -1,0 +1,41 @@
+@use 'themes/mixins' as mx;
+
+.table {
+    &__column-raiting {
+      text-align: left;
+      font-size: 2rem;
+      width: 20%;
+  
+      &_flex {
+        display: flex;
+        align-items: center;
+      }
+    }
+  
+    &__column-login {
+      padding-left: 0rem;
+    }
+  
+    &__column-wrapper {
+      margin: 1rem;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+  
+    &__column-scores {
+      @include mx.themify('color', 'leaderboard_scores-text');
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+  
+    &__row:hover {
+      @include mx.themify('background-color', 'leaderboard_item_hover');
+    }
+  }
+  
+  .icon__img {
+    height: 60px;
+  }

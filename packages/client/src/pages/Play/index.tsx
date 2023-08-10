@@ -7,11 +7,19 @@ import { useNavigate } from 'react-router-dom'
 import { PlayerScores, GameControls } from './components'
 import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
+import Button from '@mui/material/Button'
+import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { selectGameScores } from '@/store/slices/gameSlice/selectrors'
+import { setLeaderboardData } from '@/store/slices/leaderboardSlice/thunks'
 
 const cx = classNames.bind(styles)
 
 const PlayPage = () => {
   const [level, setLevel] = useState(1)
+  const user = useAppSelector(selectUserInfo)
+  const scores = useAppSelector(selectGameScores)
+  const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
 
@@ -44,6 +52,14 @@ const PlayPage = () => {
   }
 
   const endGame = () => {
+    const data = {
+      nickname: user?.display_name,
+      avatar: user?.avatar,
+      codebustersScores: scores,
+      userId: user?.id ?? 0,
+    }
+    dispatch(setLeaderboardData(data))
+
     engine?.destroy()
   }
 
@@ -51,14 +67,18 @@ const PlayPage = () => {
     endGame()
 
     navigate('/leader-board')
-    document.exitFullscreen()
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    }
   }
 
   const exitGame = () => {
     endGame()
 
     navigate('/')
-    document.exitFullscreen()
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    }
   }
 
   return (
