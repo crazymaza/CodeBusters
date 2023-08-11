@@ -60,7 +60,7 @@ const PlayPage = () => {
     }
     dispatch(setLeaderboardData(data))
 
-    engine?.stop()
+    engine?.destroy()
   }
 
   const leaderboard = () => {
