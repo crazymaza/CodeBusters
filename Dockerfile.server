@@ -8,8 +8,13 @@ WORKDIR /app
 FROM base as builder
 
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
 
+RUN apt update && apt install -y nodejs && apt install -y npm && apt install -y netcat
+
+COPY utils/wait-for.sh wait-for.sh
+RUN chmod +x wait-for.sh
+ 
+RUN yarn install --frozen-lockfile
 COPY . .
 
 RUN yarn lerna bootstrap
@@ -24,4 +29,3 @@ COPY --from=builder /app/packages/server/package.json /app/package.json
 RUN yarn install --production=true
 
 EXPOSE $SERVER_PORT
-CMD [ "node", "/app/index.js" ]
