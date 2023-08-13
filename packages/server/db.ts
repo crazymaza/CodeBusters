@@ -5,6 +5,8 @@ import User from './database/user/model'
 import Comment from './database/comment/model'
 import { Client } from 'pg'
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
+import TopicService from './database/topic/service'
+import UserService from './database/user/service'
 
 const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT } =
   process.env
@@ -50,6 +52,7 @@ export async function dbConnect() {
   try {
     await sequelize.authenticate() // Проверка аутентификации в БД
     await sequelize.sync() // Синхронизация базы данных
+
     console.log('Connection has been established successfully.')
   } catch (error) {
     console.error('Unable to connect to the database:', error)

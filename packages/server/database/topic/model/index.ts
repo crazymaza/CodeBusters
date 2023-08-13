@@ -13,7 +13,6 @@ export interface ITopic {
   title?: string
   description?: string
   userId?: number
-  creationDate?: Date
 }
 
 @Table({ tableName: 'topics' })
@@ -36,6 +35,7 @@ class Topic extends Model<Topic, ITopic> {
   @Column({
     type: DataType.INTEGER,
     field: 'userId',
+    allowNull: false,
   })
   declare userId: number
 
