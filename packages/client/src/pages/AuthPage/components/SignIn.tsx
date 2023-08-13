@@ -7,12 +7,7 @@ import { TextField } from '@/components'
 
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
-import {
-  getUserInfo,
-  signin,
-  oauthServiceFetch,
-  oauthRedirect,
-} from '@/store/slices/userSlice/thunks'
+import { getUserInfo, signin } from '@/store/slices/userSlice/thunks'
 import { isAxiosError } from 'axios'
 
 import { signInSchema } from './validation'
@@ -46,10 +41,6 @@ const SignIn = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const redirectToOauthYandexPage = (serviceId: string) => {
-    dispatch(oauthRedirect(serviceId))
-  }
-
   const onSubmit = async (data: SigninData) => {
     const signInData = {
       login: data.login,
@@ -64,16 +55,6 @@ const SignIn = () => {
       if (isAxiosError(error) && error.message === 'User already in system') {
         navigate('/')
       }
-    }
-  }
-
-  const onAuthYandex = async () => {
-    try {
-      const serviceId = await dispatch(oauthServiceFetch()).unwrap()
-
-      redirectToOauthYandexPage(serviceId)
-    } catch (error) {
-      console.log('Error on OAuth fetch service id', error)
     }
   }
 
@@ -109,9 +90,6 @@ const SignIn = () => {
       <Link to={'/sign-up'} className={cx('auth__link')}>
         Создать аккаунт
       </Link>
-      <Button variant="outlined" type="button" onClick={onAuthYandex}>
-        Авторизоваться через Яндекс
-      </Button>
       <Button variant="contained" type="submit">
         Авторизоваться
       </Button>
