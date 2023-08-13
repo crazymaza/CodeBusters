@@ -14,13 +14,14 @@ import { UserInfo } from '@/api/User/types'
 
 export interface UserState {
   loading: boolean
-  loadingServiceId?: boolean
+  loadingServiceId: boolean
   oauthServiceId?: string
   userInfo: UserInfo | null
 }
 
 const initialState: UserState = {
   loading: false,
+  loadingServiceId: false,
   userInfo: null,
 }
 

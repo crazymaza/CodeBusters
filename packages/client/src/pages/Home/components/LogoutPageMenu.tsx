@@ -5,6 +5,8 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material'
+import { useAppSelector } from '@/store/typedHooks'
+import { selectOAuthServiceId } from '@/store/slices/userSlice/selectors'
 import YandexOAuthButton from './YandexOAuthButton'
 import { Link } from 'react-router-dom'
 
@@ -19,8 +21,11 @@ const logoutMainPageMenu: { label: string; to: string }[] = [
 ]
 
 const LogoutPageMenu = () => {
+  const isLoadingServiceId = useAppSelector(selectOAuthServiceId)
+
   return (
-    <List>
+    <List
+      className={cx('box__list', { box__list_loading: isLoadingServiceId })}>
       <Typography variant="h1" className={cx('menu__title')}>
         Добро пожаловать
       </Typography>
@@ -36,7 +41,7 @@ const LogoutPageMenu = () => {
           </Link>
         </ListItem>
       ))}
-      <YandexOAuthButton />
+      <YandexOAuthButton isLoading={isLoadingServiceId} />
     </List>
   )
 }
