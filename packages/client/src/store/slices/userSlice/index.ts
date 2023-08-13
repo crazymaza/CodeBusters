@@ -38,9 +38,11 @@ const authSlice = createSlice({
     })
     builder.addCase(oauthServicePost.fulfilled, state => {
       state.loading = false
+      state.loadingServiceId = false
     })
     builder.addCase(oauthServicePost.rejected, state => {
       state.loading = false
+      state.loadingServiceId = false
     })
     // oauth-fetch
     builder.addCase(oauthServiceFetch.pending, state => {
@@ -48,7 +50,6 @@ const authSlice = createSlice({
     })
     builder.addCase(oauthServiceFetch.fulfilled, (state, action) => {
       state.oauthServiceId = action.payload
-      state.loadingServiceId = false
     })
     builder.addCase(oauthServiceFetch.rejected, state => {
       state.loadingServiceId = false
