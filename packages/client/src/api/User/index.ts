@@ -10,6 +10,12 @@ import {
   OAuthResponseService,
 } from './types'
 
+const isDev = import.meta.env.MODE === 'development'
+const oauthUrl = import.meta.env.VITE_OAUTH_URL
+const redirectUri = isDev
+  ? import.meta.env.VITE_OAUTH_REDIRECT_URL_DEV
+  : import.meta.env.VITE_OAUTH_REDIRECT_URL_PROD
+
 class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({
@@ -59,7 +65,19 @@ class UserApi extends BaseApi {
   }
 
   postToAccess(params: OAuthRequestParams) {
-    return this.request.post('/oauth/yandex', params)
+    return this.request.post('/oauth/yandex', JSON.stringify(params), {
+      withCredentials: true,
+      headers: {
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    })
+  }
+
+  redirectToOauthYandexPage(serviceId: string) {
+    window.location.replace(
+      `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${redirectUri}`
+    )
   }
 }
 

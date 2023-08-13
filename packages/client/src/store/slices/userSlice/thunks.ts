@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 
 import {
   SigninData,
@@ -137,9 +137,20 @@ export const oauthServiceFetch = createAsyncThunk<string, void>(
       const { data } = await userApi.fetchServiceId({
         redirect_uri: redirectUri,
       })
-
-      // window.location.href = `${oauthUrl}?response_type=code&client_id=${data.service_id}&redirect_uri=${redirectUri}`
       return data.service_id
+    } catch (error) {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+)
+
+export const oauthRedirect = createAsyncThunk<void, string>(
+  'user/oauth-redirect',
+  async (serviceId, thunkApi) => {
+    try {
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+
+      await userApi.redirectToOauthYandexPage(serviceId)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }

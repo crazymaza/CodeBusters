@@ -11,6 +11,7 @@ import {
   getUserInfo,
   signin,
   oauthServiceFetch,
+  oauthRedirect,
 } from '@/store/slices/userSlice/thunks'
 import { isAxiosError } from 'axios'
 
@@ -20,12 +21,6 @@ import { useForm } from 'react-hook-form'
 import { SigninData } from '@/api/User/types'
 
 const cx = classNames.bind(styles)
-
-const isDev = import.meta.env.MODE === 'development'
-const oauthUrl = import.meta.env.VITE_OAUTH_URL
-const redirectUri = isDev
-  ? import.meta.env.VITE_OAUTH_REDIRECT_URL_DEV
-  : import.meta.env.VITE_OAUTH_REDIRECT_URL_PROD
 
 const SignIn = () => {
   const formFields: {
@@ -51,8 +46,8 @@ const SignIn = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const redirectToOauthYandex = (serviceId: string) => {
-    window.location.href = `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${redirectUri}`
+  const redirectToOauthYandexPage = (serviceId: string) => {
+    dispatch(oauthRedirect(serviceId))
   }
 
   const onSubmit = async (data: SigninData) => {
@@ -76,7 +71,7 @@ const SignIn = () => {
     try {
       const serviceId = await dispatch(oauthServiceFetch()).unwrap()
 
-      redirectToOauthYandex(serviceId)
+      redirectToOauthYandexPage(serviceId)
     } catch (error) {
       console.log('Error on OAuth fetch service id', error)
     }
