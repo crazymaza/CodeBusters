@@ -66,7 +66,6 @@ class UserApi extends BaseApi {
 
   postToAccess(params: OAuthRequestParams) {
     return this.request.post('/oauth/yandex', JSON.stringify(params), {
-      withCredentials: true,
       headers: {
         Accept: 'application/json',
         'Content-type': 'application/json',
