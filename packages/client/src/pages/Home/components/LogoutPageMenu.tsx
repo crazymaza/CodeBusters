@@ -11,16 +11,17 @@ import {
   Typography,
 } from '@mui/material'
 import { Link } from 'react-router-dom'
-
 import classNames from 'classnames/bind'
+import styles from '@/pages/Home/styles.module.scss'
+
+const cx = classNames.bind(styles)
 
 const logoutMainPageMenu: { label: string; to: string }[] = [
   { label: 'Авторизоваться', to: '/sign-in' },
   { label: 'Создать аккаунт', to: '/sign-up' },
 ]
 
-const LogoutPageMenu = ({ styles }: { styles: CSSModuleClasses }) => {
-  const cx = classNames.bind(styles)
+const LogoutPageMenu = () => {
   const dispatch = useAppDispatch()
 
   const redirectToOauthYandexPage = (serviceId: string) => {

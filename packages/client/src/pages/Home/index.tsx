@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { MainLayout } from '@/layouts'
 import { useAppSelector } from '@/store/typedHooks'
 import { selectUserInfo } from '@/store/slices/userSlice/selectors'
@@ -13,6 +14,10 @@ const cx = classNames.bind(styles)
 const HomePage: React.FC = () => {
   const user = useAppSelector(selectUserInfo)
 
+  const menu = useMemo(() => {
+    return user ? <MainPageMenu /> : <LogoutPageMenu />
+  }, [user])
+
   return (
     <MainLayout>
       <div className={cx('main__page')}>
@@ -25,13 +30,7 @@ const HomePage: React.FC = () => {
                 <p>Описание самой лучшей, классной игры</p>
               </div>
               <hr />
-              <div className={cx('box__menu')}>
-                {user ? (
-                  <MainPageMenu styles={styles} />
-                ) : (
-                  <LogoutPageMenu styles={styles} />
-                )}
-              </div>
+              <div className={cx('box__menu')}>{menu}</div>
             </div>
           </MainStage>
         </div>
