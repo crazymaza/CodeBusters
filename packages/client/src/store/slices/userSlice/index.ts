@@ -14,6 +14,7 @@ import { UserInfo } from '@/api/User/types'
 
 export interface UserState {
   loading: boolean
+  loadingServiceId?: boolean
   oauthServiceId?: string
   userInfo: UserInfo | null
 }
@@ -42,14 +43,14 @@ const authSlice = createSlice({
     })
     // oauth-fetch
     builder.addCase(oauthServiceFetch.pending, state => {
-      state.loading = true
+      state.loadingServiceId = true
     })
     builder.addCase(oauthServiceFetch.fulfilled, (state, action) => {
       state.oauthServiceId = action.payload
-      state.loading = false
+      state.loadingServiceId = false
     })
     builder.addCase(oauthServiceFetch.rejected, state => {
-      state.loading = false
+      state.loadingServiceId = false
     })
     // signin
     builder.addCase(signin.pending, state => {

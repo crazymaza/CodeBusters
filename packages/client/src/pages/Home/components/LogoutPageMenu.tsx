@@ -1,8 +1,3 @@
-import { useAppDispatch } from '@/store/typedHooks'
-import {
-  oauthServiceFetch,
-  oauthRedirect,
-} from '@/store/slices/userSlice/thunks'
 import {
   List,
   ListItem,
@@ -10,7 +5,9 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material'
+import YandexOAuthButton from './YandexOAuthButton'
 import { Link } from 'react-router-dom'
+
 import classNames from 'classnames/bind'
 import styles from '@/pages/Home/styles.module.scss'
 
@@ -22,24 +19,6 @@ const logoutMainPageMenu: { label: string; to: string }[] = [
 ]
 
 const LogoutPageMenu = () => {
-  const dispatch = useAppDispatch()
-
-  const redirectToOauthYandexPage = (serviceId: string) => {
-    setTimeout(() => {
-      dispatch(oauthRedirect(serviceId))
-    }, 200)
-  }
-
-  const onAuthYandex = async () => {
-    try {
-      const serviceId = await dispatch(oauthServiceFetch()).unwrap()
-
-      redirectToOauthYandexPage(serviceId)
-    } catch (error) {
-      console.log('Error on OAuth fetch service id', error)
-    }
-  }
-
   return (
     <List>
       <Typography variant="h1" className={cx('menu__title')}>
@@ -57,16 +36,7 @@ const LogoutPageMenu = () => {
           </Link>
         </ListItem>
       ))}
-      <ListItem className={cx('menu__item')}>
-        <div className={cx('menu__item-link')} onClick={onAuthYandex}>
-          <ListItemButton className={cx('link__button')}>
-            <ListItemText
-              primary="Войти с Yandex ID"
-              className={cx('link__button-label')}
-            />
-          </ListItemButton>
-        </div>
-      </ListItem>
+      <YandexOAuthButton />
     </List>
   )
 }

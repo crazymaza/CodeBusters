@@ -2,12 +2,11 @@ import { useMemo } from 'react'
 import { MainLayout } from '@/layouts'
 import { useAppSelector } from '@/store/typedHooks'
 import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { MainPageMenu, LogoutPageMenu } from './components'
+import { MainStage } from '@/components'
 
 import styles from './styles.module.scss'
 import classNames from 'classnames/bind'
-import LogoutPageMenu from './components/LogoutPageMenu'
-import MainPageMenu from './components/MainPageMenu'
-import { MainStage } from '@/components'
 
 const cx = classNames.bind(styles)
 
