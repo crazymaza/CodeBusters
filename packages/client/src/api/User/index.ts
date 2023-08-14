@@ -53,7 +53,12 @@ class UserApi extends BaseApi {
 
   getUserInfo() {
     return this.request
-      .get<UserInfo>('/auth/user')
+      .get<UserInfo>('/auth/user', {
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json',
+        },
+      })
       .then(response => response.data)
   }
 
