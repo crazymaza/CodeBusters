@@ -24,6 +24,11 @@ const baseUri = isDev
   ? import.meta.env.VITE_SERVER_URL_DEV
   : import.meta.env.VITE_SERVER_URL_PROD
 
+console.log(
+  '`${baseUri}:${serverPort}/${yandexApiPath}`',
+  `${baseUri}:${serverPort}/${yandexApiPath}`
+)
+
 class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({

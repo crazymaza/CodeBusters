@@ -1,4 +1,4 @@
-import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
+import { createAsyncThunk } from '@reduxjs/toolkit'
 
 import {
   SigninData,
@@ -12,9 +12,14 @@ import { IExtraArgument } from '@/store'
 import { isAxiosError } from 'axios'
 
 const isDev = import.meta.env.MODE === 'development'
+
+const clientPort = import.meta.env.VITE_CLIENT_PORT
+
+console.log('clientPort', clientPort)
+
 const redirectUri = isDev
-  ? import.meta.env.VITE_OAUTH_REDIRECT_URL_DEV
-  : import.meta.env.VITE_OAUTH_REDIRECT_URL_PROD
+  ? import.meta.env.VITE_SERVER_URL_DEV
+  : import.meta.env.VITE_SERVER_URL_PROD
 
 export const signin = createAsyncThunk<void, SigninData>(
   'user/signin',
@@ -113,7 +118,7 @@ export const oauthServicePost = createAsyncThunk<
 
     const { data } = await userApi.postToAccess({
       code: params.code,
-      redirect_uri: redirectUri,
+      redirect_uri: `${redirectUri}:${clientPort}`,
     })
 
     return data
@@ -134,9 +139,15 @@ export const oauthServiceFetch = createAsyncThunk<string, void>(
     try {
       const userApi = (thunkApi.extra as IExtraArgument).userService
 
+      console.log(
+        '`${redirectUri}:${clientPort}`',
+        `${redirectUri}:${clientPort}`
+      )
+
       const { data } = await userApi.fetchServiceId({
-        redirect_uri: redirectUri,
+        redirect_uri: `${redirectUri}:${clientPort}`,
       })
+
       return data.service_id
     } catch (error) {
       return thunkApi.rejectWithValue(false)
