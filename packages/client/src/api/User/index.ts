@@ -30,8 +30,8 @@ const baseURL = `${baseUri}:${serverPort}/${yandexApiPath}`
 class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({
-      baseURL,
-      // baseURL: yandexUrl,
+      // baseURL,
+      baseURL: yandexUrl,
       withCredentials: true,
       headers: {
         cookie,
