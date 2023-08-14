@@ -27,7 +27,7 @@ export class Reply extends Model<Reply, IReply> {
   @ForeignKey(() => Comment)
   @Column({
     type: DataType.INTEGER,
-    field: 'commentId',
+    field: 'comment_Id',
   })
   declare commentId: number
 
@@ -37,7 +37,7 @@ export class Reply extends Model<Reply, IReply> {
   @ForeignKey(() => Comment)
   @Column({
     type: DataType.INTEGER,
-    field: 'responseId',
+    field: 'response_Id',
   })
   declare responseId: number
 

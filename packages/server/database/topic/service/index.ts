@@ -1,6 +1,6 @@
-import sequelize from 'sequelize/types/sequelize'
 import { ITopic, Topic } from '../model'
 import { Comment } from '../../comment'
+//import sequelize from 'sequelize/types/sequelize'
 
 export class TopicService {
   public async getAllTopics() {
@@ -25,9 +25,9 @@ export class TopicService {
 
   public async getTopTopics() {
     return Comment.findAll({
-      attributes: {
-        include: [[sequelize.fn('COUNT', sequelize.col('topicId')), 'topics']],
-      },
+      // attributes: {
+      //   include: [[sequelize.fn('COUNT', sequelize.col('topicId')), 'topics']],
+      // },
       group: ['topicId'],
       order: ['topics', 'DESC'],
       limit: 5,

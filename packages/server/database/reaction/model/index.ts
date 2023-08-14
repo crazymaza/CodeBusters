@@ -32,7 +32,7 @@ export class Reaction extends Model<Reaction, IReaction> {
   @ForeignKey(() => Comment)
   @Column({
     type: DataType.INTEGER,
-    field: 'commentId',
+    field: 'comment_Id',
   })
   declare commentId: number
 
@@ -44,7 +44,7 @@ export class Reaction extends Model<Reaction, IReaction> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    field: 'userId',
+    field: 'user_Id',
   })
   declare userId: number
 
