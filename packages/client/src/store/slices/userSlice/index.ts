@@ -25,7 +25,7 @@ const initialState: UserState = {
   userInfo: null,
 }
 
-const AVATAR_SOURCE_URL = 'https://ya-praktikum.tech/api/v2/resources/'
+const AVATAR_SOURCE_URL = 'https://ya-praktikum.tech/api/v2/resources'
 
 const authSlice = createSlice({
   name: 'user',

@@ -10,4 +10,15 @@ export interface IHeaderCell {
   label: string
 }
 
-export type Order = 'asc' | 'desc'
+export interface ITableProps {
+  onRequestSort: (property: keyof ILeaderList) => void
+  order: Order
+  orderBy: string
+}
+
+export enum OrderTypes {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+export type Order = `${OrderTypes}`

@@ -44,7 +44,7 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
 
     const onEnd = () => {
       controls.endGame()
-      setPrevGameProcess(gameProcess)
+      setPrevGameProcess(CodeBustersEngineProcess.STOP)
     }
 
     return isGameProcess ? (

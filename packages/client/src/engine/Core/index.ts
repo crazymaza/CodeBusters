@@ -288,19 +288,14 @@ export default class CodeBustersEngine {
         const isCarBreakOfBarrier = isIntersectionByX && isIntersectionByY
 
         if (isOutLeftSideTrack || isOutRightSideTrack || isCarBreakOfBarrier) {
-          const endGameObject = this.options.objects.find(
-            x => x instanceof EndGameMessageObject
-          ) as EndGameMessageObject
-          if (endGameObject) {
-            this.process = CodeBustersEngineProcess.FAILED
-          }
+          this.process = CodeBustersEngineProcess.FAILED
         }
       }
 
       if (object instanceof EndGameMessageObject) {
         if (this.process === CodeBustersEngineProcess.FAILED) {
           isContinue = false
-          this.stop()
+          this.destroy()
         }
       }
     })
