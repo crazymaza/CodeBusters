@@ -40,6 +40,8 @@ export class Comment extends Model<Comment, IComment> {
   @BelongsTo(() => Topic, {
     onDelete: 'CASCADE',
   })
+  declare topic: Topic
+
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
