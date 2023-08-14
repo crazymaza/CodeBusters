@@ -39,9 +39,9 @@ const useAuth = () => {
       ) {
         console.log('OAuth success: ', response.payload)
 
-        setTimeout(() => {
-          getUserAndRedirect()
-        }, 200)
+        getUserAndRedirect()
+      } else {
+        navigate('/')
       }
     } catch (error) {
       console.log('OAuth error', error)
@@ -55,10 +55,10 @@ const useAuth = () => {
   }, [code])
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !code) {
       getUserAndRedirect()
     }
-  }, [user])
+  }, [user, code])
 
   return user
 }

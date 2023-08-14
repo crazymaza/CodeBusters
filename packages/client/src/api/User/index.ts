@@ -19,6 +19,8 @@ const serverPort = import.meta.env.VITE_SERVER_PORT
 
 const oauthUrl = import.meta.env.VITE_OAUTH_URL
 
+const yandexUrl = import.meta.env.VITE_BASE_YANDEX_API_URL
+
 const baseUri = isDev
   ? import.meta.env.VITE_SERVER_URL_DEV
   : import.meta.env.VITE_SERVER_URL_PROD
@@ -29,6 +31,7 @@ class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({
       baseURL,
+      // baseURL: yandexUrl,
       withCredentials: true,
       headers: {
         cookie,
@@ -75,7 +78,7 @@ class UserApi extends BaseApi {
   postToAccess(params: OAuthRequestParams) {
     return this.request.post(
       '/oauth/yandex',
-      JSON.stringify({ ...params, redirect_uri: `${baseUri}:${clientPort}` }),
+      { ...params, redirect_uri: `${baseUri}:${clientPort}` },
       {
         headers: {
           Accept: 'application/json',
