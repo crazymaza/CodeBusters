@@ -11,15 +11,23 @@ import {
 } from './types'
 
 const isDev = import.meta.env.MODE === 'development'
+
+const yandexApiPath = import.meta.env.VITE_YANDEX_API_PATH
+
+const clientPort = import.meta.env.VITE_CLIENT_PORT
+
+const serverPort = import.meta.env.VITE_SERVER_PORT
+
 const oauthUrl = import.meta.env.VITE_OAUTH_URL
-const redirectUri = isDev
-  ? import.meta.env.VITE_OAUTH_REDIRECT_URL_DEV
-  : import.meta.env.VITE_OAUTH_REDIRECT_URL_PROD
+
+const baseUri = isDev
+  ? import.meta.env.VITE_SERVER_URL_DEV
+  : import.meta.env.VITE_SERVER_URL_PROD
 
 class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({
-      baseURL: 'http://localhost:3000/api/v2',
+      baseURL: `${baseUri}:${serverPort}/${yandexApiPath}`,
       // baseURL: 'https://ya-praktikum.tech/api/v2',
       withCredentials: true,
       headers: {
@@ -60,7 +68,7 @@ class UserApi extends BaseApi {
 
   fetchServiceId(params: OAuthRequestServiceParams) {
     return this.request.get<OAuthResponseService>(
-      `/oauth/yandex/service-id?redirect_uri=${params.redirect_uri}`
+      `/service-id?redirect_uri=${params.redirect_uri}:${clientPort}`
     )
   }
 
@@ -75,7 +83,7 @@ class UserApi extends BaseApi {
 
   redirectToOauthYandexPage(serviceId: string) {
     window.location.replace(
-      `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${redirectUri}`
+      `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${baseUri}:${clientPort}`
     )
   }
 }
