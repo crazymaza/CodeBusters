@@ -1,5 +1,5 @@
-import User from '../../user/model'
-import Topic from '../../topic/model'
+import { User } from '../../user'
+import { Topic } from '../../topic'
 import {
   BelongsTo,
   Column,
@@ -14,11 +14,11 @@ export interface IComment {
   topicId?: number
   userId?: number
   text?: string
-  creationDate?: Date
+  parentCommentId?: number
 }
 
 @Table({ tableName: 'comments' })
-class Comment extends Model<Comment, IComment> {
+export class Comment extends Model<Comment, IComment> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -30,12 +30,6 @@ class Comment extends Model<Comment, IComment> {
   @Column(DataType.TEXT)
   declare text: string
 
-  @Column({
-    type: DataType.DATE,
-    defaultValue: Date.now,
-  })
-  declare creationDate: Date
-
   @ForeignKey(() => Topic)
   @Column({
     type: DataType.INTEGER,
@@ -43,9 +37,9 @@ class Comment extends Model<Comment, IComment> {
   })
   declare topicId: number
 
-  @BelongsTo(() => Topic)
-  declare topic: Topic
-
+  @BelongsTo(() => Topic, {
+    onDelete: 'CASCADE',
+  })
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
@@ -56,5 +50,3 @@ class Comment extends Model<Comment, IComment> {
   @BelongsTo(() => User)
   declare user: User
 }
-
-export default Comment

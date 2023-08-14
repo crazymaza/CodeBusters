@@ -1,5 +1,5 @@
-import User from '../../user/model'
-import Comment from '../../comment/model'
+import { User } from '../../user'
+import { Comment } from '../../comment'
 import {
   BelongsTo,
   Column,
@@ -17,7 +17,7 @@ export interface IReaction {
 }
 
 @Table({ tableName: 'reactions' })
-class Reaction extends Model<Reaction, IReaction> {
+export class Reaction extends Model<Reaction, IReaction> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -36,6 +36,11 @@ class Reaction extends Model<Reaction, IReaction> {
   })
   declare commentId: number
 
+  @BelongsTo(() => Comment, {
+    onDelete: 'CASCADE',
+  })
+  declare comment: Comment
+
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
@@ -46,5 +51,3 @@ class Reaction extends Model<Reaction, IReaction> {
   @BelongsTo(() => User)
   declare user: User
 }
-
-export default Reaction

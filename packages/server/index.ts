@@ -12,7 +12,8 @@ import compression from 'compression'
 import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
-import { createClientAndConnect, dbConnect } from './db'
+import { dbConnect } from './db'
+import { apiRouter } from './database'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -50,6 +51,8 @@ async function startServer() {
       target: 'https://ya-praktikum.tech',
     })
   )
+
+  app.use('/api/forum', apiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {
     const url = req.originalUrl
@@ -114,7 +117,6 @@ async function startServer() {
   })
 
   dbConnect()
-  //createClientAndConnect()
 }
 
 startServer()

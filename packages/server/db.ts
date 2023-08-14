@@ -1,42 +1,20 @@
-import Reaction from './database/reaction/model'
-import Reply from './database/reply/model'
-import Topic from './database/topic/model'
-import User from './database/user/model'
-import Comment from './database/comment/model'
-import { Client } from 'pg'
+import { Reaction } from './database/reaction'
+import { Reply } from './database/reply'
+import { Topic } from './database/topic'
+import { User } from './database/user'
+import { Comment } from './database/comment'
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
-import TopicService from './database/topic/service'
-import UserService from './database/user/service'
 
-const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT } =
-  process.env
-
-export const createClientAndConnect = async (): Promise<Client | null> => {
-  try {
-    const client = new Client({
-      user: POSTGRES_USER,
-      host: 'localhost',
-      database: POSTGRES_DB,
-      password: POSTGRES_PASSWORD,
-      port: Number(POSTGRES_PORT),
-    })
-
-    await client.connect()
-
-    const res = await client.query('SELECT NOW()')
-    console.log('  ➜ 🎸 Connected to the database at:', res?.rows?.[0].now)
-    client.end()
-
-    return client
-  } catch (e) {
-    console.error(e)
-  }
-
-  return null
-}
+const {
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  POSTGRES_DB,
+  POSTGRES_PORT,
+  POSTGRES_HOST,
+} = process.env
 
 const sequelizeOptions: SequelizeOptions = {
-  host: 'localhost',
+  host: POSTGRES_HOST || 'localhost',
   port: Number(POSTGRES_PORT),
   username: POSTGRES_USER,
   password: POSTGRES_DB,

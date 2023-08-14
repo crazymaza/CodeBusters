@@ -10,7 +10,7 @@ export interface IUser {
 }
 
 @Table({ tableName: 'users' })
-class User extends Model<User, IUser> {
+export class User extends Model<User, IUser> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -34,5 +34,3 @@ class User extends Model<User, IUser> {
   @Column(DataType.STRING)
   declare theme: string
 }
-
-export default User

@@ -1,3 +1,19 @@
-class ReactionService {}
+import { IReaction, Reaction } from '../model'
 
-export default ReactionService
+export class ReactionService {
+  public async getCommentReactions(commentId: number) {
+    return Reaction.findAll({
+      where: {
+        commentId,
+      },
+    })
+  }
+
+  public async addReaction(reaction: IReaction) {
+    return Reaction.create({
+      commentId: reaction.commentId,
+      reaction: reaction.reaction,
+      userId: reaction.userId,
+    })
+  }
+}

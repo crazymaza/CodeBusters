@@ -1,4 +1,4 @@
-import Comment from '../../comment/model'
+import { Comment } from '../../comment'
 import {
   BelongsTo,
   Column,
@@ -15,7 +15,7 @@ export interface IReply {
 }
 
 @Table({ tableName: 'replies' })
-class Reply extends Model<Reply, IReply> {
+export class Reply extends Model<Reply, IReply> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -44,5 +44,3 @@ class Reply extends Model<Reply, IReply> {
   @BelongsTo(() => Comment)
   declare response: Comment
 }
-
-export default Reply

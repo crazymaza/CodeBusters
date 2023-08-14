@@ -1,12 +1,18 @@
-import User, { IUser } from '../model'
+import { IUser, User } from '../model'
 
-class UserService {
+export class UserService {
   public async addUser(user: IUser) {
     return User.create({
       displayName: user.displayName,
       firstName: user.firstName,
     })
   }
-}
 
-export default UserService
+  public async getUser(userId: number) {
+    return User.findOne({
+      where: {
+        id: userId,
+      },
+    })
+  }
+}

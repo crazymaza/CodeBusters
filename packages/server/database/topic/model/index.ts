@@ -1,4 +1,4 @@
-import User from '../../user/model'
+import { User } from '../../user'
 import {
   Column,
   DataType,
@@ -16,7 +16,7 @@ export interface ITopic {
 }
 
 @Table({ tableName: 'topics' })
-class Topic extends Model<Topic, ITopic> {
+export class Topic extends Model<Topic, ITopic> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -42,5 +42,3 @@ class Topic extends Model<Topic, ITopic> {
   @BelongsTo(() => User)
   declare user: User
 }
-
-export default Topic
