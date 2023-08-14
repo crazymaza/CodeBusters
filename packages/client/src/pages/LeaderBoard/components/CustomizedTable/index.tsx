@@ -34,7 +34,10 @@ const CustomizedTable = () => {
       />
       <TableBody>
         {leaderList.map(
-          ({ avatar, nickname, codebustersScores, userId }, index) => (
+          (
+            { avatar, nickname, codebustersScores, userId, userCountry },
+            index
+          ) => (
             <TableRow key={userId} className={cx('table__row')}>
               <TableCell className={cx('table__column-raiting')}>
                 <div className={cx('table__column-raiting_flex')}>
@@ -53,6 +56,9 @@ const CustomizedTable = () => {
               </TableCell>
               <TableCell className={cx('table__column-scores')}>
                 {codebustersScores}
+              </TableCell>
+              <TableCell>
+                <div className={cx('table__column-country')}>{userCountry}</div>
               </TableCell>
             </TableRow>
           )

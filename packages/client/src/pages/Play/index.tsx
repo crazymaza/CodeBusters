@@ -1,17 +1,17 @@
-import { useRef, useState } from 'react'
-import { useEngine, useMakeFullscreen } from './hooks'
-import { MainLayout } from '@/layouts'
-import { CarObject, TrackObject } from '@/engine/Objects'
 import { RunMethodOptions } from '@/engine/Core/types'
-import { useNavigate } from 'react-router-dom'
-import { PlayerScores, GameControls } from './components'
-import classNames from 'classnames/bind'
-import styles from './styles.module.scss'
-import Button from '@mui/material/Button'
-import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
-import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { CarObject, TrackObject } from '@/engine/Objects'
+import { MainLayout } from '@/layouts'
 import { selectGameScores } from '@/store/slices/gameSlice/selectrors'
 import { setLeaderboardData } from '@/store/slices/leaderboardSlice/thunks'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
+import classNames from 'classnames/bind'
+import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { GameControls, PlayerScores } from './components'
+import { useEngine, useMakeFullscreen, useCountry } from './hooks'
+import styles from './styles.module.scss'
+
 
 const cx = classNames.bind(styles)
 
@@ -41,6 +41,8 @@ const PlayPage = () => {
 
   useMakeFullscreen()
 
+  const country =  useCountry()
+
   const startGame = (options?: RunMethodOptions) => {
     setLevel(1)
 
@@ -57,6 +59,7 @@ const PlayPage = () => {
       avatar: user?.avatar,
       codebustersScores: scores,
       userId: user?.id ?? 0,
+      userCountry: country.user_country ?? '-',
     }
     dispatch(setLeaderboardData(data))
 
