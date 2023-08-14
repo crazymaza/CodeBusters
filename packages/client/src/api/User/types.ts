@@ -47,7 +47,6 @@ export type OAuthRequestServiceParams = {
 
 export type OAuthRequestParams = {
   code: string
-  redirect_uri: string
 }
 
 export type OAuthResponseService = {

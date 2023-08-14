@@ -38,6 +38,10 @@ const useAuth = () => {
         response.payload === 'User already in system'
       ) {
         console.log('OAuth success: ', response.payload)
+
+        setTimeout(() => {
+          getUserAndRedirect()
+        }, 200)
       }
     } catch (error) {
       console.log('OAuth error', error)

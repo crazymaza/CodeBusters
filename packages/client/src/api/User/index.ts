@@ -6,7 +6,6 @@ import {
   UserInfo,
   UserUpdateModel,
   OAuthRequestParams,
-  OAuthRequestServiceParams,
   OAuthResponseService,
 } from './types'
 
@@ -24,16 +23,12 @@ const baseUri = isDev
   ? import.meta.env.VITE_SERVER_URL_DEV
   : import.meta.env.VITE_SERVER_URL_PROD
 
-console.log(
-  '`${baseUri}:${serverPort}/${yandexApiPath}`',
-  `${baseUri}:${serverPort}/${yandexApiPath}`
-)
+const baseURL = `${baseUri}:${serverPort}/${yandexApiPath}`
 
 class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({
-      baseURL: `${baseUri}:${serverPort}/${yandexApiPath}`,
-      // baseURL: 'https://ya-praktikum.tech/api/v2',
+      baseURL,
       withCredentials: true,
       headers: {
         cookie,
@@ -71,19 +66,23 @@ class UserApi extends BaseApi {
     return this.request.put<UserInfo>('/user/profile', data)
   }
 
-  fetchServiceId(params: OAuthRequestServiceParams) {
+  fetchServiceId() {
     return this.request.get<OAuthResponseService>(
-      `/service-id?redirect_uri=${params.redirect_uri}:${clientPort}`
+      `/oauth/yandex/service-id?redirect_uri=${baseUri}:${clientPort}`
     )
   }
 
   postToAccess(params: OAuthRequestParams) {
-    return this.request.post('/oauth/yandex', JSON.stringify(params), {
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-    })
+    return this.request.post(
+      '/oauth/yandex',
+      JSON.stringify({ ...params, redirect_uri: `${baseUri}:${clientPort}` }),
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json',
+        },
+      }
+    )
   }
 
   redirectToOauthYandexPage(serviceId: string) {
