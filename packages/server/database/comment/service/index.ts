@@ -1,11 +1,25 @@
+import { Reply } from '../../reply'
+import { Reaction } from '../../reaction'
 import { Comment, IComment } from '../model'
+import { User } from '../../user'
 
 export class CommentService {
-  public async getAllTopicCommnets(topicId: number) {
+  public async getAllTopicComments(topicId: number) {
     return Comment.findAll({
       where: {
         topicId,
       },
+      include: [
+        {
+          model: Reaction,
+        },
+        {
+          model: Reply,
+        },
+        {
+          model: User,
+        },
+      ],
     })
   }
 
@@ -22,6 +36,14 @@ export class CommentService {
       where: {
         id: commentId,
       },
+      include: [
+        {
+          model: Reaction,
+        },
+        {
+          model: Reply,
+        },
+      ],
     })
   }
 }

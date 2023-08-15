@@ -1,16 +1,20 @@
+import { TopicService } from '../../topic'
+import { IReply, ReplyService } from '../../reply'
 import { CommentService } from '../service'
 import { Request, Response } from 'express'
+import { IComment, ITreeComment } from '../model'
+import { ReactionService } from '../../reaction'
 
 const commentService = new CommentService()
+const replyService = new ReplyService()
 
 export class CommentController {
-  public async getAllTopicCommnets(req: Request, res: Response) {
-    const { topicId } = req.params
-
+  public async getAllTopicComments(req: Request, res: Response) {
+    const { topicId } = req.query
     try {
-      const topics = await commentService.getAllTopicCommnets(Number(topicId))
-      if (topics) {
-        res.status(200).json(topics)
+      const comments = await commentService.getAllTopicComments(Number(topicId))
+      if (comments) {
+        res.status(200).json(comments)
       } else {
         res.status(500)
         res.json({ error: 'Failed to get list of topic comments' })
@@ -27,6 +31,13 @@ export class CommentController {
     try {
       const newComment = await commentService.addComment(body)
       if (newComment) {
+        if (body.parentCommentId) {
+          const reply = {
+            responseId: newComment.id,
+            commentId: body.parentCommentId,
+          } as IReply
+          await replyService.addReply(reply)
+        }
         res.status(201).json(newComment)
       } else {
         res.status(500)
@@ -39,7 +50,7 @@ export class CommentController {
   }
 
   public async getComment(req: Request, res: Response) {
-    const { commentId } = req.params
+    const { commentId } = req.query
 
     try {
       const comment = await commentService.getComment(Number(commentId))

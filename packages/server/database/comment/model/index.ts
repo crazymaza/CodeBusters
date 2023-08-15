@@ -5,9 +5,12 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript'
+import { Reaction } from '../../reaction'
+import { Reply } from '../../reply'
 
 export interface IComment {
   id?: number
@@ -15,6 +18,11 @@ export interface IComment {
   userId?: number
   text?: string
   parentCommentId?: number
+}
+
+export interface ITreeComment {
+  comment: Comment
+  replies: Comment[]
 }
 
 @Table({ tableName: 'comments' })
@@ -51,4 +59,10 @@ export class Comment extends Model<Comment, IComment> {
 
   @BelongsTo(() => User)
   declare user: User
+
+  @HasMany(() => Reaction)
+  declare reaction: Reaction
+
+  @HasMany(() => Reply)
+  declare reply: Reply
 }

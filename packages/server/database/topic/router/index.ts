@@ -8,11 +8,11 @@ export const topicRouter = (router: Router) => {
   const commentController = new CommentController()
 
   routes
-    .get('/comments', [], commentController.getAllTopicCommnets)
-    .get('/all', [], topicController.getAllTopics)
-    .get('/top', [], topicController.getTopTopics)
-    .post('/', [], topicController.addTopic)
-    .delete('/', [], topicController.deleteTopic)
+    .get('/comments', commentController.getAllTopicComments)
+    .get('/', topicController.getAllTopics)
+    .get('/top', topicController.getTopTopics)
+    .post('/', topicController.addTopic)
+    .delete('/', topicController.deleteTopic)
 
   router.use('/topic', routes)
 }

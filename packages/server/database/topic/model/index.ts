@@ -1,4 +1,5 @@
 import { User } from '../../user'
+import { Comment } from '../../comment'
 import {
   Column,
   DataType,
@@ -6,6 +7,7 @@ import {
   Table,
   BelongsTo,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript'
 
 export interface ITopic {
@@ -41,4 +43,7 @@ export class Topic extends Model<Topic, ITopic> {
 
   @BelongsTo(() => User)
   declare user: User
+
+  @HasMany(() => Comment)
+  declare comment: Comment
 }

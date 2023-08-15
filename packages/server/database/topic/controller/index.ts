@@ -7,6 +7,7 @@ export class TopicController {
   public async getAllTopics(_req: Request, res: Response) {
     try {
       const topics = await topicService.getAllTopics()
+      console.log(topics)
       if (topics) {
         res.status(200).json(topics)
       } else {
@@ -21,7 +22,8 @@ export class TopicController {
 
   public async getTopTopics(_req: Request, res: Response) {
     try {
-      const topTopics = await topicService.getTopTopics()
+      const topics = await topicService.getTopTopics()
+      const topTopics = topics.slice(0, 5)
       if (topTopics) {
         res.status(200).json(topTopics)
       } else {
@@ -52,7 +54,7 @@ export class TopicController {
   }
 
   public async deleteTopic(req: Request, res: Response) {
-    const { topicId } = req.params
+    const { topicId } = req.query
 
     try {
       const newTopic = await topicService.deleteTopic(Number(topicId))

@@ -16,4 +16,12 @@ export class ReactionService {
       userId: reaction.userId,
     })
   }
+
+  public async deleteReaction(reactionId: number) {
+    return Reaction.destroy({
+      where: {
+        id: reactionId,
+      },
+    })
+  }
 }

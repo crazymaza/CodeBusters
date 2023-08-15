@@ -1,10 +1,23 @@
 import { ITopic, Topic } from '../model'
 import { Comment } from '../../comment'
-//import sequelize from 'sequelize/types/sequelize'
+import { Sequelize } from 'sequelize-typescript'
 
 export class TopicService {
   public async getAllTopics() {
-    return Topic.findAll()
+    return Topic.findAll({
+      attributes: {
+        include: [
+          [Sequelize.fn('COUNT', Sequelize.col('comment.id')), 'commentCount'],
+        ],
+      },
+      include: [
+        {
+          model: Comment,
+          attributes: [],
+        },
+      ],
+      group: ['Topic.id'],
+    })
   }
 
   public async addTopic(topic: ITopic) {
@@ -24,13 +37,20 @@ export class TopicService {
   }
 
   public async getTopTopics() {
-    return Comment.findAll({
-      // attributes: {
-      //   include: [[sequelize.fn('COUNT', sequelize.col('topicId')), 'topics']],
-      // },
-      group: ['topicId'],
-      order: ['topics', 'DESC'],
-      limit: 5,
+    return Topic.findAll({
+      attributes: {
+        include: [
+          [Sequelize.fn('COUNT', Sequelize.col('comment.id')), 'commentCount'],
+        ],
+      },
+      include: [
+        {
+          model: Comment,
+          attributes: [],
+        },
+      ],
+      group: ['Topic.id'],
+      order: [['commentCount', 'DESC']],
     })
   }
 }
