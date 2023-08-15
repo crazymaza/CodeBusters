@@ -9,12 +9,17 @@ import {
 import { Provider } from 'react-redux'
 import { createReduxStore } from '@/store'
 import { StyledEngineProvider } from '@mui/material/styles'
+import { UserInfo } from '@/api/User/types'
 
 import '@/themes'
 import { childrenRoutes, routes } from '@/router/routes'
 import { matchPath } from 'react-router-dom'
 
-export async function render(request: express.Request, url: string) {
+export async function render(
+  request: express.Request,
+  url: string,
+  yandexApi: { getCurrent: () => Promise<UserInfo> }
+) {
   const { query } = createStaticHandler(routes)
   const remixRequest = createFetchRequest(request)
   const context = await query(remixRequest)
@@ -25,8 +30,16 @@ export async function render(request: express.Request, url: string) {
 
   const cookies = request?.headers?.cookie
 
+  let userInfo: UserInfo | null = null
+
+  try {
+    userInfo = await yandexApi.getCurrent()
+  } catch (error) {
+    console.log('current user in undefined')
+  }
+
   const [pathname] = url.split('?')
-  const store = createReduxStore({}, cookies)
+  const store = createReduxStore({ user: { userInfo } }, cookies)
   const router = createStaticRouter(routes, context)
 
   const currentRoute = childrenRoutes.find(({ path }) =>
@@ -41,13 +54,11 @@ export async function render(request: express.Request, url: string) {
   const initialState = store.getState()
 
   const appHtml = ReactDOMServer.renderToString(
-    <React.StrictMode>
-      <Provider store={store}>
-        <StyledEngineProvider injectFirst>
-          <StaticRouterProvider router={router} context={context} />
-        </StyledEngineProvider>
-      </Provider>
-    </React.StrictMode>
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <StaticRouterProvider router={router} context={context} />
+      </StyledEngineProvider>
+    </Provider>
   )
 
   return [initialState, appHtml]

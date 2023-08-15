@@ -30,8 +30,8 @@ const baseURL = `${baseUri}:${serverPort}/${yandexApiPath}`
 class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({
-      // baseURL,
-      baseURL: yandexUrl,
+      baseURL,
+      // baseURL: yandexUrl,
       withCredentials: true,
       headers: {
         cookie,
@@ -76,14 +76,14 @@ class UserApi extends BaseApi {
 
   fetchServiceId() {
     return this.request.get<OAuthResponseService>(
-      `/oauth/yandex/service-id?redirect_uri=${baseUri}:${clientPort}`
+      `/oauth/yandex/service-id?redirect_uri=${baseUri}:${serverPort}`
     )
   }
 
   postToAccess(params: OAuthRequestParams) {
     return this.request.post(
       '/oauth/yandex',
-      { ...params, redirect_uri: `${baseUri}:${clientPort}` },
+      { ...params, redirect_uri: `${baseUri}:${serverPort}` },
       {
         headers: {
           Accept: 'application/json',
@@ -95,7 +95,7 @@ class UserApi extends BaseApi {
 
   redirectToOauthYandexPage(serviceId: string) {
     window.location.replace(
-      `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${baseUri}:${clientPort}`
+      `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${baseUri}:${serverPort}`
     )
   }
 }

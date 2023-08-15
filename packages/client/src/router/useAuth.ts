@@ -15,14 +15,12 @@ const useAuth = () => {
   const isProtectedRoute =
     pathname !== '/sign-in' && pathname !== '/sign-up' && pathname !== '/'
 
-  const getUserAndRedirect = async () => {
-    try {
-      await dispatch(getUserInfo()).unwrap()
-
+  const checkUserAndRedirect = async () => {
+    if (user) {
       const currentPathname = !isProtectedRoute ? '/' : pathname
 
       navigate(currentPathname)
-    } catch (error) {
+    } else {
       const currentPathname = isProtectedRoute ? '/' : pathname
 
       navigate(currentPathname)
@@ -39,7 +37,7 @@ const useAuth = () => {
       ) {
         console.log('OAuth success: ', response.payload)
 
-        getUserAndRedirect()
+        await dispatch(getUserInfo()).unwrap()
       } else {
         navigate('/')
       }
@@ -55,10 +53,8 @@ const useAuth = () => {
   }, [code])
 
   useEffect(() => {
-    if (!user && !code) {
-      getUserAndRedirect()
-    }
-  }, [user, code])
+    checkUserAndRedirect()
+  }, [user])
 
   return user
 }
