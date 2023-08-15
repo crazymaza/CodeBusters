@@ -26,7 +26,7 @@ export const signup = createAsyncThunk<void, SignupData>(
   async (SignupData, thunkApi) => {
     try {
       const userApi = (thunkApi.extra as IExtraArgument).userService
-      await userApi.signin(SignupData)
+      await userApi.signup(SignupData)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }

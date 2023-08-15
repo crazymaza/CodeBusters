@@ -1,16 +1,13 @@
-import { TopicService } from '../../topic'
 import { IReply, ReplyService } from '../../reply'
 import { CommentService } from '../service'
 import { Request, Response } from 'express'
-import { IComment, ITreeComment } from '../model'
-import { ReactionService } from '../../reaction'
 
 const commentService = new CommentService()
 const replyService = new ReplyService()
 
 export class CommentController {
   public async getAllTopicComments(req: Request, res: Response) {
-    const { topicId } = req.query
+    const { topicId } = req.params
     try {
       const comments = await commentService.getAllTopicComments(Number(topicId))
       if (comments) {
@@ -50,7 +47,7 @@ export class CommentController {
   }
 
   public async getComment(req: Request, res: Response) {
-    const { commentId } = req.query
+    const { commentId } = req.params
 
     try {
       const comment = await commentService.getComment(Number(commentId))

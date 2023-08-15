@@ -5,7 +5,7 @@ const userService = new UserService()
 
 export class UserController {
   public async getUser(req: Request, res: Response) {
-    const { userId } = req.query
+    const { userId } = req.params
 
     try {
       const user = await userService.getUser(Number(userId))

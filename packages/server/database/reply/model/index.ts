@@ -31,7 +31,9 @@ export class Reply extends Model<Reply, IReply> {
   })
   declare commentId: number
 
-  @BelongsTo(() => Comment)
+  @BelongsTo(() => Comment, {
+    onDelete: 'CASCADE',
+  })
   declare comment: Comment
 
   @ForeignKey(() => Comment)

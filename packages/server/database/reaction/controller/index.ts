@@ -5,7 +5,7 @@ const reactionService = new ReactionService()
 
 export class ReactionController {
   public async getCommentReaction(req: Request, res: Response) {
-    const { commentId } = req.query
+    const { commentId } = req.params
     try {
       const reactions = await reactionService.getCommentReactions(
         Number(commentId)
@@ -40,7 +40,7 @@ export class ReactionController {
   }
 
   public async deleteReaction(req: Request, res: Response) {
-    const { reactionId } = req.query
+    const { reactionId } = req.params
 
     try {
       const reaction = await reactionService.deleteReaction(Number(reactionId))

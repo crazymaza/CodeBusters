@@ -54,7 +54,7 @@ export class TopicController {
   }
 
   public async deleteTopic(req: Request, res: Response) {
-    const { topicId } = req.query
+    const { topicId } = req.params
 
     try {
       const newTopic = await topicService.deleteTopic(Number(topicId))
