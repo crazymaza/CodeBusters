@@ -1,5 +1,4 @@
 import { Reaction } from './database/reaction'
-import { Reply } from './database/reply'
 import { Topic } from './database/topic'
 import { User } from './database/user'
 import { Comment } from './database/comment'
@@ -20,7 +19,7 @@ const sequelizeOptions: SequelizeOptions = {
   password: POSTGRES_DB,
   database: POSTGRES_PASSWORD,
   dialect: 'postgres',
-  models: [User, Topic, Comment, Reply, Reaction],
+  models: [User, Topic, Comment, Reaction],
 }
 
 // Создаем инстанс Sequelize

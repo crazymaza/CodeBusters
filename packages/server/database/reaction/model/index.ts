@@ -1,6 +1,7 @@
 import { User } from '../../user'
 import { Comment } from '../../comment'
 import {
+  AllowNull,
   BelongsTo,
   Column,
   DataType,
@@ -26,13 +27,17 @@ export class Reaction extends Model<Reaction, IReaction> {
   })
   declare id: number
 
-  @Column(DataType.TEXT)
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+  })
   declare reaction: string
 
   @ForeignKey(() => Comment)
   @Column({
     type: DataType.INTEGER,
     field: 'comment_Id',
+    allowNull: false,
   })
   declare commentId: number
 
@@ -45,6 +50,7 @@ export class Reaction extends Model<Reaction, IReaction> {
   @Column({
     type: DataType.INTEGER,
     field: 'user_Id',
+    allowNull: false,
   })
   declare userId: number
 

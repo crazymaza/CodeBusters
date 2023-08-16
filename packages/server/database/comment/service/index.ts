@@ -1,4 +1,3 @@
-import { Reply } from '../../reply'
 import { Reaction } from '../../reaction'
 import { Comment, IComment } from '../model'
 import { User } from '../../user'
@@ -14,9 +13,6 @@ export class CommentService {
           model: Reaction,
         },
         {
-          model: Reply,
-        },
-        {
           model: User,
         },
       ],
@@ -28,6 +24,7 @@ export class CommentService {
       text: comment.text,
       topicId: comment.topicId,
       userId: comment.userId,
+      parentCommentId: comment.parentCommentId ?? null,
     })
   }
 
@@ -39,9 +36,6 @@ export class CommentService {
       include: [
         {
           model: Reaction,
-        },
-        {
-          model: Reply,
         },
       ],
     })

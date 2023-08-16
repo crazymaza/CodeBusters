@@ -1,6 +1,7 @@
 import { User } from '../../user'
 import { Topic } from '../../topic'
 import {
+  AllowNull,
   BelongsTo,
   Column,
   DataType,
@@ -10,19 +11,18 @@ import {
   Table,
 } from 'sequelize-typescript'
 import { Reaction } from '../../reaction'
-import { Reply } from '../../reply'
 
 export interface IComment {
   id?: number
   topicId?: number
   userId?: number
   text?: string
-  parentCommentId?: number
+  parentCommentId: number | null
 }
 
-export interface ITreeComment {
-  comment: Comment
-  replies: Comment[]
+export interface ITreeCommentElement {
+  comment: IComment
+  replies: ITreeCommentElement[]
 }
 
 @Table({ tableName: 'comments' })
@@ -35,13 +35,17 @@ export class Comment extends Model<Comment, IComment> {
   })
   declare id: number
 
-  @Column(DataType.TEXT)
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+  })
   declare text: string
 
   @ForeignKey(() => Topic)
   @Column({
     type: DataType.INTEGER,
     field: 'topic_Id',
+    allowNull: false,
   })
   declare topicId: number
 
@@ -54,15 +58,24 @@ export class Comment extends Model<Comment, IComment> {
   @Column({
     type: DataType.INTEGER,
     field: 'user_Id',
+    allowNull: false,
   })
   declare userId: number
 
   @BelongsTo(() => User)
   declare user: User
 
+  @ForeignKey(() => Comment)
+  @Column({
+    type: DataType.INTEGER,
+    field: 'parent_comment_Id',
+    allowNull: true,
+  })
+  declare parentCommentId: number
+
+  @BelongsTo(() => Comment)
+  declare comment: Comment
+
   @HasMany(() => Reaction)
   declare reaction: Reaction
-
-  @HasMany(() => Reply)
-  declare reply: Reply
 }
