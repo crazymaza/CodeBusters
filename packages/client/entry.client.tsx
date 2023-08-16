@@ -16,12 +16,11 @@ async function hydrate() {
 
   ReactDOM.hydrateRoot(
     document.getElementById('root') as HTMLElement,
-    <React.StrictMode>
-      <Provider store={store}>
-        <StyledEngineProvider injectFirst>
-          <RouterProvider router={router} fallbackElement={<p>Loading</p>} />
-        </StyledEngineProvider>
-      </Provider>
-    </React.StrictMode>
+
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <RouterProvider router={router} fallbackElement={<p>Loading</p>} />
+      </StyledEngineProvider>
+    </Provider>
   )
 }

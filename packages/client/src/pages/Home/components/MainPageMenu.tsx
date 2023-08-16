@@ -9,6 +9,9 @@ import {
   ListItemText,
 } from '@mui/material'
 import { Link } from 'react-router-dom'
+import styles from '@/pages/Home/styles.module.scss'
+
+const cx = classNames.bind(styles)
 
 const mainPageMenu: { label: string; to: string; picture: string }[] = [
   { label: 'Начать игру', to: 'play', picture: icons.Wheel },
@@ -17,9 +20,7 @@ const mainPageMenu: { label: string; to: string; picture: string }[] = [
   { label: 'Настройки аккаунта', to: 'profile', picture: icons.Gear },
 ]
 
-const MainPageMenu = ({ styles }: { styles: CSSModuleClasses }) => {
-  const cx = classNames.bind(styles)
-
+const MainPageMenu = () => {
   return (
     <List>
       {mainPageMenu.map(({ label, to, picture }) => (

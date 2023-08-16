@@ -5,9 +5,11 @@ import {
   SignupData,
   UserInfo,
   UserUpdateModel,
+  OAuthRequestParams,
 } from '@/api/User/types'
 import { ChangePasswordRequest } from '@/api/User/types'
 import { IExtraArgument } from '@/store'
+import { isAxiosError } from 'axios'
 
 export const signin = createAsyncThunk<void, SigninData>(
   'user/signin',
@@ -91,6 +93,57 @@ export const changeUserInfo = createAsyncThunk(
     try {
       const userApi = (thunkApi.extra as IExtraArgument).userService
       return await userApi.changeUserInfo(userData)
+    } catch (error) {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+)
+
+export const oauthServicePost = createAsyncThunk<
+  void,
+  Pick<OAuthRequestParams, 'code'>
+>('user/oauth-post-to-access-code', async (params, thunkApi) => {
+  try {
+    const userApi = (thunkApi.extra as IExtraArgument).userService
+
+    const { data } = await userApi.postToAccess({
+      code: params.code,
+    })
+
+    return data
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const reason = error.response?.data.reason
+
+      return thunkApi.rejectWithValue(reason)
+    } else {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+})
+
+export const oauthServiceFetch = createAsyncThunk<string, void>(
+  'user/oauth-fetch-service-id',
+  async (_, thunkApi) => {
+    try {
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+
+      const { data } = await userApi.fetchServiceId()
+
+      return data.service_id
+    } catch (error) {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+)
+
+export const oauthRedirect = createAsyncThunk<void, string>(
+  'user/oauth-redirect',
+  async (serviceId, thunkApi) => {
+    try {
+      const userApi = (thunkApi.extra as IExtraArgument).userService
+
+      await userApi.redirectToOauthYandexPage(serviceId)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
