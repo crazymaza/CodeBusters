@@ -16,6 +16,7 @@ import * as path from 'path'
 import { dbConnect } from './db'
 import { apiRouter } from './database'
 import bodyParser from 'body-parser'
+import { xssFilter } from 'helmet'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -54,6 +55,7 @@ async function startServer() {
     })
   )
 
+  app.use(xssFilter())
   app.use('/api/forum', [bodyParser.json()], apiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {
