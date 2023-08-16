@@ -7,11 +7,10 @@ WORKDIR /app
 
 FROM base as builder
 
-COPY package.json yarn.lock ./
-RUN apt update && apt install -y nodejs && apt install -y npm && apt install -y netcat
+COPY package.json yarn.lock utils/wait-for.sh /app/
 
-COPY utils/wait-for.sh wait-for.sh
-RUN chmod +x wait-for.sh
+RUN chmod +x wait-for.sh .
+RUN apt update && apt install -y nodejs && apt install -y npm && apt install -y netcat
 
 RUN yarn install --frozen-lockfile
 
@@ -19,14 +18,19 @@ COPY . .
 
 RUN yarn lerna bootstrap
 RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
+RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
 
 
 FROM node:$NODE_VERSION-buster-slim as production
 WORKDIR /app
 
 COPY --from=builder /app/packages/server/dist/ /app/
+COPY --from=builder /app/packages/client/dist/ /app/client/
+
 COPY --from=builder /app/packages/server/package.json /app/package.json
-RUN yarn install --production=true
+COPY --from=builder /app/wait-for.sh /app/ 
+
+RUN yarn install --production=true && apt update && apt install -y nodejs && apt install -y npm && apt install -y netcat
+RUN chmod +x wait-for.sh .
 
 EXPOSE $SERVER_PORT
-CMD [ "node", "/app/index.js" ]
