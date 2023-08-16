@@ -57,7 +57,7 @@ async function startServer() {
   )
 
   app.use('/api/forum', apiRouter)
-  app.use('/api/themes', bdyParser, themeApiRouter)
+  app.use('/api/theme', bdyParser, themeApiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {
     const url = req.originalUrl
