@@ -8,7 +8,7 @@ export const reactionRouter = (router: Router) => {
 
   routes
     .post('/', reactionController.addReaction)
-    .get('/:reactionId', reactionController.getCommentReaction)
+    .get('/:commentId', reactionController.getCommentReaction)
     .delete('/:reactionId', reactionController.deleteReaction)
 
   router.use('/reaction', [checkUserAuth], routes)
