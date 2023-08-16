@@ -6,7 +6,6 @@ export interface IUser {
   firstName?: string
   secondName?: string
   avatar?: string
-  theme?: number
 }
 
 @Table({ tableName: 'users' })
@@ -30,7 +29,4 @@ export class User extends Model<User, IUser> {
 
   @Column(DataType.STRING)
   declare avatar: string
-
-  @Column(DataType.STRING)
-  declare theme: string
 }
