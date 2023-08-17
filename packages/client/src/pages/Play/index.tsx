@@ -12,7 +12,6 @@ import { GameControls, PlayerScores } from './components'
 import { useEngine, useMakeFullscreen, useCountry } from './hooks'
 import styles from './styles.module.scss'
 
-
 const cx = classNames.bind(styles)
 
 const PlayPage = () => {
@@ -41,7 +40,7 @@ const PlayPage = () => {
 
   useMakeFullscreen()
 
-  const country =  useCountry()
+  const country = useCountry()
 
   const startGame = (options?: RunMethodOptions) => {
     setLevel(1)
@@ -59,7 +58,7 @@ const PlayPage = () => {
       avatar: user?.avatar,
       codebustersScores: scores,
       userId: user?.id ?? 0,
-      userCountry: country.user_country ?? '-',
+      userCountry: country.userCountry ?? '-',
     }
     dispatch(setLeaderboardData(data))
 
