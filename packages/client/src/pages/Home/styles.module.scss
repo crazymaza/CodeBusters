@@ -51,12 +51,19 @@
       }
     }
 
+    &__list {
+      &_loading {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+    }
+
     &__menu {
       flex-basis: 49.2rem;
 
       .menu {
         &__title {
-          @include mx.themify('color', 'primary-text-color')
+          @include mx.themify('color', 'primary-text-color');
         }
         &__item {
           &:first-child {
@@ -117,4 +124,3 @@
     }
   }
 }
-

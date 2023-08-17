@@ -23,6 +23,10 @@ export interface UserInfo {
   avatar: string
 }
 
+export interface UserAuthOptions {
+  isOauth?: boolean
+}
+
 export interface UserUpdateModel {
   first_name: string
   second_name: string
@@ -35,4 +39,16 @@ export interface UserUpdateModel {
 export interface ChangePasswordRequest {
   oldPassword: string
   newPassword: string
+}
+
+export type OAuthRequestServiceParams = {
+  redirect_uri: string
+}
+
+export type OAuthRequestParams = {
+  code: string
+}
+
+export type OAuthResponseService = {
+  service_id: string
 }

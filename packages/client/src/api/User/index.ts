@@ -5,13 +5,33 @@ import {
   SignupData,
   UserInfo,
   UserUpdateModel,
+  OAuthRequestParams,
+  OAuthResponseService,
 } from './types'
+
+const isDev = import.meta.env.MODE === 'development'
+
+const yandexApiPath = import.meta.env.VITE_YANDEX_API_PATH
+
+const clientPort = import.meta.env.VITE_CLIENT_PORT
+
+const serverPort = import.meta.env.VITE_SERVER_PORT
+
+const oauthUrl = import.meta.env.VITE_OAUTH_URL
+
+const yandexUrl = import.meta.env.VITE_BASE_YANDEX_API_URL
+
+const baseUri = isDev
+  ? import.meta.env.VITE_SERVER_URL_DEV
+  : import.meta.env.VITE_SERVER_URL_PROD
+
+const baseURL = `${baseUri}:${serverPort}/${yandexApiPath}`
 
 class UserApi extends BaseApi {
   constructor(cookie?: string) {
     super({
-      baseURL: 'http://localhost:3001/api/v2',
-      // baseURL: 'https://ya-praktikum.tech/api/v2',
+      baseURL,
+      // baseURL: yandexUrl,
       withCredentials: true,
       headers: {
         cookie,
@@ -33,7 +53,12 @@ class UserApi extends BaseApi {
 
   getUserInfo() {
     return this.request
-      .get<UserInfo>('/auth/user')
+      .get<UserInfo>('/auth/user', {
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json',
+        },
+      })
       .then(response => response.data)
   }
 
@@ -47,6 +72,31 @@ class UserApi extends BaseApi {
 
   changeUserInfo(data: UserUpdateModel) {
     return this.request.put<UserInfo>('/user/profile', data)
+  }
+
+  fetchServiceId() {
+    return this.request.get<OAuthResponseService>(
+      `/oauth/yandex/service-id?redirect_uri=${baseUri}:${serverPort}`
+    )
+  }
+
+  postToAccess(params: OAuthRequestParams) {
+    return this.request.post(
+      '/oauth/yandex',
+      { ...params, redirect_uri: `${baseUri}:${serverPort}` },
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json',
+        },
+      }
+    )
+  }
+
+  redirectToOauthYandexPage(serviceId: string) {
+    window.location.replace(
+      `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${baseUri}:${serverPort}`
+    )
   }
 }
 
