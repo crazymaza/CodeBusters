@@ -8,8 +8,9 @@ const getRootElements = (comments: Comment[]) => {
   return comments.filter(x => x.parentCommentId === null)
 }
 
-const getTopicCommentsTree = (comments: Comment[], rootComments: Comment[]) => {
+const getTopicCommentsTree = (comments: Comment[]) => {
   const result: ITreeCommentElement[] = []
+  const rootComments = getRootElements(comments)
   rootComments.forEach(comment => {
     const treeRoot: ITreeCommentElement = {
       comment,
@@ -54,8 +55,7 @@ export class CommentController {
     try {
       const comments = await commentService.getAllTopicComments(Number(topicId))
       if (comments) {
-        const rootElements = getRootElements(comments)
-        const treeComments = getTopicCommentsTree(comments, rootElements)
+        const treeComments = getTopicCommentsTree(comments)
 
         res.status(200).json(treeComments)
       } else {
