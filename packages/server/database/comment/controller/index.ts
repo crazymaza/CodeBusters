@@ -36,16 +36,16 @@ const getTopicCommentsTreeElements = (
       comment: parentComment,
       replies: [],
     } as ITreeCommentElement
-  } else {
-    childComments.forEach(child => {
-      const childLeaf = {
-        comment: child,
-        replies: [],
-      }
-      const replies = getTopicCommentsTreeElements(comments, child, childLeaf)
-      result.replies.push(replies)
-    })
   }
+  childComments.forEach(child => {
+    const childLeaf = {
+      comment: child,
+      replies: [],
+    }
+    const replies = getTopicCommentsTreeElements(comments, child, childLeaf)
+    result.replies.push(replies)
+  })
+
   return result
 }
 
@@ -95,7 +95,7 @@ export class CommentController {
         res.status(200).json(comment)
       } else {
         res.status(500)
-        res.json({ error: 'Failed to add new comment' })
+        res.json({ error: 'Failed to get new comment' })
       }
     } catch (err) {
       res.status(400)

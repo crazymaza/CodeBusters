@@ -14,7 +14,7 @@ export class ReactionController {
         res.status(200).json(reactions)
       } else {
         res.status(500)
-        res.json({ error: 'Failed to get list of comment reactions reactions' })
+        res.json({ error: 'Failed to get list of comment reactions' })
       }
     } catch (err) {
       res.status(400)

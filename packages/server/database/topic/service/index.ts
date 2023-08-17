@@ -20,11 +20,11 @@ export class TopicService {
     })
   }
 
-  public async addTopic(topic: ITopic) {
+  public async addTopic({ description, title, userId }: ITopic) {
     return Topic.create({
-      title: topic.title,
-      description: topic.description,
-      userId: topic.userId,
+      title,
+      description,
+      userId,
     })
   }
 

@@ -9,11 +9,11 @@ export class ReactionService {
     })
   }
 
-  public async addReaction(reaction: IReaction) {
+  public async addReaction({ commentId, reaction, userId }: IReaction) {
     return Reaction.create({
-      commentId: reaction.commentId,
-      reaction: reaction.reaction,
-      userId: reaction.userId,
+      commentId,
+      reaction,
+      userId,
     })
   }
 

@@ -7,7 +7,6 @@ export class TopicController {
   public async getAllTopics(_req: Request, res: Response) {
     try {
       const topics = await topicService.getAllTopics()
-      console.log(topics)
       if (topics) {
         res.status(200).json(topics)
       } else {

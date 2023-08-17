@@ -44,7 +44,7 @@ export class Comment extends Model<Comment, IComment> {
   @ForeignKey(() => Topic)
   @Column({
     type: DataType.INTEGER,
-    field: 'topic_Id',
+    field: 'topic_id',
     allowNull: false,
   })
   declare topicId: number
@@ -57,7 +57,7 @@ export class Comment extends Model<Comment, IComment> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    field: 'user_Id',
+    field: 'user_id',
     allowNull: false,
   })
   declare userId: number
@@ -68,7 +68,7 @@ export class Comment extends Model<Comment, IComment> {
   @ForeignKey(() => Comment)
   @Column({
     type: DataType.INTEGER,
-    field: 'parent_comment_Id',
+    field: 'parent_comment_id',
     allowNull: true,
   })
   declare parentCommentId: number

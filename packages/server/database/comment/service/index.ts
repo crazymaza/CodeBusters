@@ -19,12 +19,17 @@ export class CommentService {
     })
   }
 
-  public async addComment(comment: IComment) {
+  public async addComment({
+    text,
+    topicId,
+    userId,
+    parentCommentId,
+  }: IComment) {
     return await Comment.create({
-      text: comment.text,
-      topicId: comment.topicId,
-      userId: comment.userId,
-      parentCommentId: comment.parentCommentId ?? null,
+      text,
+      topicId,
+      userId,
+      parentCommentId,
     })
   }
 

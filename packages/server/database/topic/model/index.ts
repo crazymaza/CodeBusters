@@ -43,7 +43,7 @@ export class Topic extends Model<Topic, ITopic> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    field: 'user_Id',
+    field: 'user_id',
     allowNull: false,
   })
   declare userId: number
