@@ -18,6 +18,6 @@ export class GeolocationApi extends BaseApi {
           result.data.countryCode
         )
       })
-      .catch(() => '')
+      .catch(e => console.log(`Ошибка получения информации о стране: ${e}`))
   }
 }

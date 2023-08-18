@@ -57,8 +57,8 @@ const CustomizedTable = () => {
               <TableCell className={cx('table__column-scores')}>
                 {codebustersScores}
               </TableCell>
-              <TableCell>
-                <div className={cx('table__column-country')}>{userCountry}</div>
+              <TableCell className={cx('table__column-country')}>
+                {userCountry}
               </TableCell>
             </TableRow>
           )
