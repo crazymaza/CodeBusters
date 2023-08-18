@@ -9,7 +9,7 @@ import {
 import { Provider } from 'react-redux'
 import { createReduxStore } from '@/store'
 import { StyledEngineProvider } from '@mui/material/styles'
-import { UserInfo, ThemeType } from '@/api/User/types'
+import { UserInfo } from '@/api/User/types'
 import { UserApi } from '@/api'
 import { ThemeNameEnum } from '@/themes/types'
 
