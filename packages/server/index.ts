@@ -13,6 +13,7 @@ import compression from 'compression'
 import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
+import { createClientAndConnect } from './db'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -118,6 +119,8 @@ async function startServer() {
   app.listen(port, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
   })
+
+  createClientAndConnect()
 }
 
 startServer()
