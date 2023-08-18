@@ -11,6 +11,7 @@ import { createReduxStore } from '@/store'
 import { StyledEngineProvider } from '@mui/material/styles'
 import { UserInfo, ThemeType } from '@/api/User/types'
 import { UserApi } from '@/api'
+import { ThemeNameEnum } from '@/themes/types'
 
 import '@/themes'
 import { childrenRoutes, routes } from '@/router/routes'
@@ -32,7 +33,7 @@ export async function render(
   const cookies = request?.headers?.cookie
 
   let userInfo: UserInfo | null = null
-  let themeName: ThemeType = 'light'
+  let themeName: ThemeNameEnum = ThemeNameEnum.LIGHT
 
   try {
     userInfo = await yandexApi.getCurrent()
