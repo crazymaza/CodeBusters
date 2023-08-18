@@ -7,42 +7,23 @@ WORKDIR /app
 
 FROM base as builder
 
-COPY package.json yarn.lock utils/wait-for.sh /app/
-
-
-RUN chmod +x wait-for.sh .
-RUN apt update && apt install -y nodejs && apt install -y npm && apt install -y netcat
-
+COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
 
 RUN yarn lerna bootstrap
 RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
-RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
 
 
 FROM node:$NODE_VERSION-buster-slim as production
 WORKDIR /app
 
 COPY --from=builder /app/packages/server/dist/ /app/
-COPY --from=builder /app/packages/client/dist/ /app/client/dist/
-COPY --from=builder /app/packages/client/ssr-dist/ /app/client/ssr-dist/
-
 COPY --from=builder /app/packages/server/package.json /app/package.json
-COPY --from=builder /app/wait-for.sh /app/ 
+RUN yarn install --production=true
 
-# COPY --from=builder /app/packages/client/package.json /app/client/dist/package.json
-
-# RUN cd /app/client/dist && yarn install --production=true
-
-RUN yarn install --production=true \
-    && apt update \
-    && apt install -y nodejs \
-    && apt install -y npm \
-    && apt install -y netcat \
-    && yarn prod
-
-RUN chmod +x wait-for.sh .
+COPY --from=builder /app/packages/client/dist/ /app/node_modules/client/dist/
+COPY --from=builder /app/packages/client/ssr-dist/ /app/node_modules/client/ssr-dist/
 
 EXPOSE $SERVER_PORT
