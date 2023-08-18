@@ -2,7 +2,8 @@ export interface ILeaderList {
   rating: string
   avatar: string
   nickname: string
-  scores: string
+  scores: string,
+  country:string,
 }
 
 export interface IHeaderCell {
