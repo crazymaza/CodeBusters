@@ -9,20 +9,24 @@ import {
   changeUserInfo,
   oauthServiceFetch,
   oauthServicePost,
+  setUserTheme,
+  getUserTheme,
 } from './thunks'
-import { UserInfo } from '@/api/User/types'
+import { UserInfo, ThemeType } from '@/api/User/types'
 
 export interface UserState {
   loading: boolean
   loadingServiceId: boolean
   oauthServiceId?: string
   userInfo: UserInfo | null
+  themeName?: ThemeType
 }
 
 const initialState: UserState = {
   loading: false,
   loadingServiceId: false,
   userInfo: null,
+  themeName: 'light',
 }
 
 const AVATAR_SOURCE_URL = 'https://ya-praktikum.tech/api/v2/resources'
@@ -32,6 +36,14 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
+    // theme-set
+    builder.addCase(setUserTheme.fulfilled, (state, action) => {
+      state.themeName = action.meta.arg.themeName
+    })
+    // theme-set
+    builder.addCase(getUserTheme.fulfilled, (state, action) => {
+      state.themeName = action.payload.theme
+    })
     // oauth-post
     builder.addCase(oauthServicePost.pending, state => {
       state.loading = true
@@ -82,6 +94,7 @@ const authSlice = createSlice({
       state.userInfo = null
       state.loading = false
       state.oauthServiceId = undefined
+      state.themeName = 'light'
     })
     builder.addCase(logout.rejected, state => {
       state.loading = false

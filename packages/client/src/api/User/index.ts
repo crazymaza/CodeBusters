@@ -7,6 +7,8 @@ import {
   UserUpdateModel,
   OAuthRequestParams,
   OAuthResponseService,
+  ThemeResponse,
+  ThemeSetRequestParams,
 } from './types'
 
 const isDev = import.meta.env.MODE === 'development'
@@ -97,6 +99,22 @@ class UserApi extends BaseApi {
     window.location.replace(
       `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${baseUri}:${serverPort}`
     )
+  }
+
+  setTheme(params: ThemeSetRequestParams) {
+    return this.request
+      .post('/api/theme', params, {
+        baseURL: `${baseUri}:${serverPort}`,
+      })
+      .then(response => response.data)
+  }
+
+  getTheme(userId: number) {
+    return this.request
+      .get<ThemeResponse>(`/api/theme?userId=${userId}`, {
+        baseURL: `${baseUri}:${serverPort}`,
+      })
+      .then(response => response.data)
   }
 }
 

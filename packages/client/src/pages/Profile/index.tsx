@@ -9,6 +9,7 @@ import styles from './styles.module.scss'
 import { changeUserInfo, logout } from '@/store/slices/userSlice/thunks'
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 
+import { ThemeSwitcher } from './components'
 import { UserUpdateModel } from '@/api/User/types'
 import { selectUserInfo } from '@/store/slices/userSlice/selectors'
 import {
@@ -187,10 +188,7 @@ const ProfilePage = () => {
                       src={user?.avatar}
                       changeAvatar={changeAvatar}></Avatar>
                     <div className={cx('user__settings')}>
-                      <div className={cx('user__settings_theme')}>
-                        <span>Сменить тему</span>
-                        <Switch defaultChecked />
-                      </div>
+                      <ThemeSwitcher label="Темная тема" />
                       <Link onClick={logoutHandler} to={'/'}>
                         Выйти из аккаунта
                       </Link>

@@ -52,3 +52,14 @@ export type OAuthRequestParams = {
 export type OAuthResponseService = {
   service_id: string
 }
+
+export type ThemeType = 'dark' | 'light'
+
+export type ThemeSetRequestParams = {
+  themeName: ThemeType
+  userId: number
+}
+
+export type ThemeResponse = {
+  theme: ThemeType
+}
