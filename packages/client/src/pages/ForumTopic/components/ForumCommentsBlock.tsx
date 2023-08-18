@@ -11,18 +11,12 @@ import {
 } from '@mui/material'
 import styles from './styles.module.scss'
 import classNames from 'classnames/bind'
+import { CommentData } from '@/store/slices/forumSlice'
 
 const cx = classNames.bind(styles)
 
-type CommentsData = {
-  avatar: string
-  user_name: string
-  text: string
-  date: Date
-}
-
 type ForumCommentsBlockProps = {
-  data: CommentsData[]
+  data: CommentData[]
 }
 
 const renderStub = () => (
@@ -35,21 +29,21 @@ const ForumCommentsBlock = (props: ForumCommentsBlockProps) => {
       <List component={Paper} className={cx('comments__list')}>
         {props.data.length === 0
           ? renderStub()
-          : props.data.map(({ avatar, text, date, user_name }, index) => [
+          : props.data.map(({ user, text, createdAt }, index) => [
               <div key={index}>
                 <ListItem className={cx('comments-item')}>
                   <ListItemIcon>
                     <Avatar
-                      src={avatar}
+                      src={user.avatar}
                       className={cx('comments-item-icon')}></Avatar>
                   </ListItemIcon>
                   <ListItemText
                     primary={text}
-                    secondary={user_name}
+                    secondary={user.first_name}
                     className={cx('comments-item-text')}
                   />
                   <ListItemText className={cx('comments-item-date')}>
-                    {date.toLocaleDateString()}
+                    {createdAt}
                   </ListItemText>
                 </ListItem>
                 <Divider variant="fullWidth" />

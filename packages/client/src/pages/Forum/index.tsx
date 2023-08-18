@@ -1,9 +1,18 @@
 import CloseButton from '@/components/CloseButton'
 import MainStage from '@/components/MainStage'
 import { MainLayout } from '@/layouts'
+import {
+  selectTopTopicsData,
+  selectTopicsData,
+} from '@/store/slices/forumSlice/selectors'
+import {
+  getAllTopics,
+  getTopFiveTopics,
+} from '@/store/slices/forumSlice/thunks'
+import { useAppDispatch } from '@/store/typedHooks'
 import classNames from 'classnames/bind'
-import * as data from './data'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import DialogComponent from './components/DialogComponent'
 import ForumBlockPopular from './components/ForumBlockPopular'
@@ -16,6 +25,12 @@ const cx = classNames.bind(styles)
 const ForumPage: React.FC = () => {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(getAllTopics())
+    dispatch(getTopFiveTopics())
+  }, [])
 
   const handleOpenDialog = () => {
     setOpen(true)
@@ -29,10 +44,8 @@ const ForumPage: React.FC = () => {
     navigate('/')
   }
 
-  const handleSubmit = (e: React.MouseEvent) => {
-    e.preventDefault()
-    console.log(e)
-  }
+  const topicsList = useSelector(selectTopicsData)
+  const topicsPopular = useSelector(selectTopTopicsData)
 
   return (
     <MainLayout>
@@ -42,14 +55,14 @@ const ForumPage: React.FC = () => {
             <div className={cx('forumpage__wrapper')}>
               <div className={cx('blocktopics')}>
                 <ForumTitle handleOpenDialog={handleOpenDialog} />
-                <ForumBlockTopicsList data={data.topicsList} />
+                <ForumBlockTopicsList data={topicsList} />
               </div>
               <hr />
               <div className={cx('topics-popular__container')}>
                 <div className={cx('pagecontent-close')}>
                   <CloseButton onClick={handleClosePage} />
                 </div>
-                <ForumBlockPopular data={data.topicsPopular} />
+                <ForumBlockPopular data={topicsPopular} />
               </div>
             </div>
           </MainStage>
@@ -59,7 +72,7 @@ const ForumPage: React.FC = () => {
         <DialogComponent
           open={open}
           handleCloseDialog={handleCloseDialog}
-          handleSubmit={handleSubmit}
+          // handleSubmit={handleSubmit(onSubmit)}
         />
       </div>
     </MainLayout>

@@ -6,30 +6,29 @@ import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
 
-type TopicsListData = {
-  title: string
-  description: string
-  count_messages: number
-}
-
 type ForumBlockTopicsListProps = {
-  data: TopicsListData[]
+  data: {
+    id: number
+    title: string
+    description: string
+    commentCount: number
+  }[]
 }
 
 const ForumBlockTopicsList = (props: ForumBlockTopicsListProps) => {
   return (
     <div className={cx('blocktopics__wrapper')}>
       <Stack direction={'column'} spacing={1} className={cx('topics__list')}>
-        {props.data.map(({ title, description, count_messages }, index) => (
-          <ListItem key={index} className={cx('topics__list-item')}>
-            <Link to={`/forum/${index}`}>
+        {props.data.map(({ id, title, description, commentCount }) => (
+          <ListItem key={id} className={cx('topics__list-item')}>
+            <Link to={`/forum/${id}`}>
               <ListItemText
                 primary={title}
                 secondary={description}
                 className={cx('item-text')}
               />
               <Badge
-                badgeContent={count_messages}
+                badgeContent={commentCount}
                 color="primary"
                 max={999}
                 className={cx('link__badge')}>

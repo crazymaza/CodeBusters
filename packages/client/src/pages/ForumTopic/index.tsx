@@ -7,6 +7,12 @@ import * as data from './data'
 import styles from './styles.module.scss'
 
 import CloseButton from '@/components/CloseButton'
+import { selectCommentsData } from '@/store/slices/forumSlice/selectors'
+import { getCommentsByTopicId } from '@/store/slices/forumSlice/thunks'
+import { useAppDispatch } from '@/store/typedHooks'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import ForumAddCommentForm from './components/ForumAddCommentForm'
 import ForumCommentsBlock from './components/ForumCommentsBlock'
 
@@ -14,6 +20,16 @@ const cx = classNames.bind(styles)
 
 const ForumTopicPage = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { topicId } = useParams()
+
+  const commentsList = useSelector(selectCommentsData)
+
+  useEffect(() => {
+    if (topicId) {
+      dispatch(getCommentsByTopicId(parseInt(topicId)))
+    }
+  }, [])
 
   const handleCloseClick = () => navigate('/')
 
@@ -33,7 +49,7 @@ const ForumTopicPage = () => {
               <Link className={cx('link-back')} to="/forum">
                 &lt;К списку форумов
               </Link>
-              <ForumCommentsBlock data={data.comments} />
+              <ForumCommentsBlock data={commentsList} />
             </div>
           </MainStage>
         </div>

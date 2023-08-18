@@ -14,7 +14,7 @@ import styles from './styles.module.scss'
 const cx = classNames.bind(styles)
 
 type ForumBlockPopularProps = {
-  data: string[]
+  data: { id: number; title: string }[]
 }
 
 const ForumBlockPopular = (props: ForumBlockPopularProps) => {
@@ -26,14 +26,14 @@ const ForumBlockPopular = (props: ForumBlockPopularProps) => {
         square>
         <Typography variant="h3">Топ-5 тем</Typography>
         <List>
-          {props.data.map((topic, index) => (
-            <ListItem key={index}>
+          {props.data.map(({ title, id }) => (
+            <ListItem key={id}>
               <ListItemIcon className={cx('popular__list-icon')}>
                 <img src={icons.Zvezda}></img>
               </ListItemIcon>
-              <Link to={`/forum/${index}`} className={cx('popular__list-link')}>
+              <Link to={`/forum/${id}`} className={cx('popular__list-link')}>
                 <ListItemText
-                  primary={topic}
+                  primary={title}
                   className={cx('popular__list-text')}
                 />
               </Link>
