@@ -7,16 +7,21 @@ import {
   changeUserPassword,
   changeUserAvatar,
   changeUserInfo,
+  oauthServiceFetch,
+  oauthServicePost,
 } from './thunks'
-import { UserInfo, UserUpdateModel } from '@/api/User/types'
+import { UserInfo } from '@/api/User/types'
 
 export interface UserState {
   loading: boolean
+  loadingServiceId: boolean
+  oauthServiceId?: string
   userInfo: UserInfo | null
 }
 
 const initialState: UserState = {
   loading: false,
+  loadingServiceId: false,
   userInfo: null,
 }
 
@@ -27,6 +32,28 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
+    // oauth-post
+    builder.addCase(oauthServicePost.pending, state => {
+      state.loading = true
+    })
+    builder.addCase(oauthServicePost.fulfilled, state => {
+      state.loading = false
+      state.loadingServiceId = false
+    })
+    builder.addCase(oauthServicePost.rejected, state => {
+      state.loading = false
+      state.loadingServiceId = false
+    })
+    // oauth-fetch
+    builder.addCase(oauthServiceFetch.pending, state => {
+      state.loadingServiceId = true
+    })
+    builder.addCase(oauthServiceFetch.fulfilled, (state, action) => {
+      state.oauthServiceId = action.payload
+    })
+    builder.addCase(oauthServiceFetch.rejected, state => {
+      state.loadingServiceId = false
+    })
     // signin
     builder.addCase(signin.pending, state => {
       state.loading = true
@@ -54,6 +81,7 @@ const authSlice = createSlice({
     builder.addCase(logout.fulfilled, state => {
       state.userInfo = null
       state.loading = false
+      state.oauthServiceId = undefined
     })
     builder.addCase(logout.rejected, state => {
       state.loading = false
@@ -64,9 +92,11 @@ const authSlice = createSlice({
     })
     builder.addCase(getUserInfo.fulfilled, (state, action) => {
       state.userInfo = action.payload
+
       if (action.payload.avatar) {
         state.userInfo.avatar = AVATAR_SOURCE_URL + action.payload.avatar
       }
+
       state.loading = false
     })
     builder.addCase(getUserInfo.rejected, state => {

@@ -3,6 +3,7 @@ import cors from 'cors'
 import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
 import { createProxyMiddleware } from 'http-proxy-middleware'
+import { YandexApi } from './api'
 
 import cookieParser from 'cookie-parser'
 
@@ -55,7 +56,11 @@ async function startServer() {
 
     try {
       let template: string
-      let render: (request: express.Request, url: string) => Promise<string>
+      let render: (
+        request: express.Request,
+        url: string,
+        yandexApi: YandexApi
+      ) => Promise<string>
 
       if (isDev()) {
         template = fs.readFileSync(path.resolve(srcPath, 'index.html'), 'utf-8')
@@ -85,7 +90,9 @@ async function startServer() {
         render = (await import(ssrClientPath)).render
       }
 
-      const [initialState, appHtml] = await render(req, url)
+      const yandexApi = new YandexApi(req.headers['cookie'])
+
+      const [initialState, appHtml] = await render(req, url, yandexApi)
       const initStateSerialized = JSON.stringify(initialState).replace(
         /</g,
         '\\u003c'

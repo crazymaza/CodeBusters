@@ -168,8 +168,8 @@ const ProfilePage = () => {
 
   const dispatch = useAppDispatch()
 
-  const logoutHandler = () => {
-    dispatch(logout())
+  const logoutHandler = async () => {
+    await dispatch(logout())
   }
 
   return (
