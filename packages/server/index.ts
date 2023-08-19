@@ -57,8 +57,8 @@ async function startServer() {
     })
   )
 
+  app.use(bodyParserJson)
   app.use('/api/forum', apiRouter)
-  app.use('/api/theme', bodyParserJson)
   app.use('/api/theme', userThemeProvider, themeApiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {

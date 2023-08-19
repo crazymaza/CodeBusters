@@ -16,7 +16,7 @@ const userThemeProvider = async (
     }
 
     if (req.method === 'POST') {
-      req.body.userId = user.id
+      res.locals.userId = user.id
     }
 
     next()

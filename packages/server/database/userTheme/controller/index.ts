@@ -28,7 +28,8 @@ export class ThemeController {
   }
 
   public async update(req: Request, res: Response) {
-    const { themeName, userId } = req.body
+    const { themeName } = req.body
+    const { userId } = res.locals
 
     try {
       await themeService.upsert({ userId, themeName })
