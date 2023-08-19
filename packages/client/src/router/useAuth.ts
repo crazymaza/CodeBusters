@@ -1,10 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import { selectUserInfo } from '@/store/slices/userSlice/selectors'
-import {
-  getUserInfo,
-  oauthServicePost,
-  getUserTheme,
-} from '@/store/slices/userSlice/thunks'
+import { getUserInfo, oauthServicePost } from '@/store/slices/userSlice/thunks'
+import { getTheme } from '@/store/slices/themeSlice/thunks'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
@@ -41,9 +38,8 @@ const useAuth = () => {
       ) {
         console.log('OAuth success: ', response.payload)
 
-        const userInfo = await dispatch(getUserInfo()).unwrap()
-
-        await dispatch(getUserTheme(userInfo.id))
+        await dispatch(getUserInfo())
+        await dispatch(getTheme())
       } else {
         navigate('/')
       }

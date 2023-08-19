@@ -6,9 +6,8 @@ import {
   UserInfo,
   UserUpdateModel,
   OAuthRequestParams,
-  ThemeResponse,
 } from '@/api/User/types'
-import { ChangePasswordRequest, ThemeSetRequestParams } from '@/api/User/types'
+import { ChangePasswordRequest } from '@/api/User/types'
 import { IExtraArgument } from '@/store'
 import { isAxiosError } from 'axios'
 
@@ -145,32 +144,6 @@ export const oauthRedirect = createAsyncThunk<void, string>(
       const userApi = (thunkApi.extra as IExtraArgument).userService
 
       await userApi.redirectToOauthYandexPage(serviceId)
-    } catch (error) {
-      return thunkApi.rejectWithValue(false)
-    }
-  }
-)
-
-export const setUserTheme = createAsyncThunk<void, ThemeSetRequestParams>(
-  'user/set-user-theme',
-  async (params, thunkApi) => {
-    try {
-      const userApi = (thunkApi.extra as IExtraArgument).userService
-
-      await userApi.setTheme(params)
-    } catch (error) {
-      return thunkApi.rejectWithValue(false)
-    }
-  }
-)
-
-export const getUserTheme = createAsyncThunk<ThemeResponse, number>(
-  'user/get-user-theme',
-  async (userId, thunkApi) => {
-    try {
-      const userApi = (thunkApi.extra as IExtraArgument).userService
-
-      return await userApi.getTheme(userId)
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }

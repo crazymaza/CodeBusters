@@ -1,13 +1,12 @@
 import { useEffect } from 'react'
-import { ThemeNameEnum } from './types'
 import { useAppSelector } from '@/store/typedHooks'
-import { selectUserTheme } from '@/store/slices/userSlice/selectors'
-import { ThemeType } from '@/api/User/types'
+import { selectThemeName } from '@/store/slices/themeSlice/selectors'
+import { ThemeNameEnum } from '@/api/Theme/types'
 
 export default function useTheme() {
-  const themeName = useAppSelector(selectUserTheme)
+  const themeName = useAppSelector(selectThemeName)
 
-  const setAppTheme = (themeName: ThemeType) => {
+  const setAppTheme = (themeName: ThemeNameEnum) => {
     const htmlContainer = document.querySelector('html')
 
     htmlContainer?.classList.remove(`theme-${ThemeNameEnum.LIGHT}`)

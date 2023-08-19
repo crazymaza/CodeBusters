@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.scss'
 
 import { changeUserInfo, logout } from '@/store/slices/userSlice/thunks'
+import { dropTheme } from '@/store/slices/themeSlice/thunks'
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 
 import { ThemeSwitcher } from './components'
@@ -171,6 +172,7 @@ const ProfilePage = () => {
 
   const logoutHandler = async () => {
     await dispatch(logout())
+    dispatch(dropTheme())
   }
 
   return (

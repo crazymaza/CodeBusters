@@ -1,12 +1,9 @@
 import { useMemo, useCallback } from 'react'
 import { Switch } from '@mui/material'
 import { useAppSelector, useAppDispatch } from '@/store/typedHooks'
-import {
-  selectUserTheme,
-  selectUserInfo,
-} from '@/store/slices/userSlice/selectors'
-import { ThemeNameEnum } from '@/themes/types'
-import { setUserTheme } from '@/store/slices/userSlice/thunks'
+import { ThemeNameEnum } from '@/api/Theme/types'
+import { selectThemeName } from '@/store/slices/themeSlice/selectors'
+import { setTheme } from '@/store/slices/themeSlice/thunks'
 
 import classNames from 'classnames/bind'
 import styles from '@/pages/Profile/styles.module.scss'
@@ -18,8 +15,7 @@ export type ThemeSwitcherProps = {
 const cx = classNames.bind(styles)
 
 const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ label }) => {
-  const user = useAppSelector(selectUserInfo)
-  const themeName = useAppSelector(selectUserTheme)
+  const themeName = useAppSelector(selectThemeName)
 
   const dispatch = useAppDispatch()
 
@@ -27,15 +23,12 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ label }) => {
     return themeName === ThemeNameEnum.DARK
   }, [themeName])
 
-  const onChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const checked = event.target.checked
-      const nextThemeName = checked ? ThemeNameEnum.DARK : ThemeNameEnum.LIGHT
+  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked
+    const updatedThemeName = checked ? ThemeNameEnum.DARK : ThemeNameEnum.LIGHT
 
-      dispatch(setUserTheme({ userId: user!.id, themeName: nextThemeName }))
-    },
-    [user]
-  )
+    dispatch(setTheme({ themeName: updatedThemeName }))
+  }, [])
 
   return (
     <div className={cx('user__settings_theme')}>

@@ -9,10 +9,7 @@ import {
   changeUserInfo,
   oauthServiceFetch,
   oauthServicePost,
-  setUserTheme,
-  getUserTheme,
 } from './thunks'
-import { ThemeNameEnum } from '@/themes/types'
 import { UserInfo } from '@/api/User/types'
 
 export interface UserState {
@@ -20,14 +17,12 @@ export interface UserState {
   loadingServiceId: boolean
   oauthServiceId?: string
   userInfo: UserInfo | null
-  themeName?: ThemeNameEnum
 }
 
 const initialState: UserState = {
   loading: false,
   loadingServiceId: false,
   userInfo: null,
-  themeName: ThemeNameEnum.LIGHT,
 }
 
 const AVATAR_SOURCE_URL = 'https://ya-praktikum.tech/api/v2/resources'
@@ -37,14 +32,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
-    // theme-set
-    builder.addCase(setUserTheme.fulfilled, (state, action) => {
-      state.themeName = action.meta.arg.themeName
-    })
-    // theme-set
-    builder.addCase(getUserTheme.fulfilled, (state, action) => {
-      state.themeName = action.payload.theme
-    })
     // oauth-post
     builder.addCase(oauthServicePost.pending, state => {
       state.loading = true
@@ -95,7 +82,6 @@ const authSlice = createSlice({
       state.userInfo = null
       state.loading = false
       state.oauthServiceId = undefined
-      state.themeName = ThemeNameEnum.LIGHT
     })
     builder.addCase(logout.rejected, state => {
       state.loading = false

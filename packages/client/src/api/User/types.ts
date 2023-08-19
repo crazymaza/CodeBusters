@@ -1,5 +1,3 @@
-import { ThemeNameEnum } from '@/themes/types'
-
 export interface SigninData {
   login: string
   password: string
@@ -53,15 +51,4 @@ export type OAuthRequestParams = {
 
 export type OAuthResponseService = {
   service_id: string
-}
-
-export type ThemeType = ThemeNameEnum
-
-export type ThemeResponse = {
-  theme: ThemeNameEnum
-}
-
-export type ThemeSetRequestParams = {
-  themeName: ThemeType
-  userId: number
 }

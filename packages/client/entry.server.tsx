@@ -10,8 +10,8 @@ import { Provider } from 'react-redux'
 import { createReduxStore } from '@/store'
 import { StyledEngineProvider } from '@mui/material/styles'
 import { UserInfo } from '@/api/User/types'
-import { UserApi } from '@/api'
-import { ThemeNameEnum } from '@/themes/types'
+import { ThemeApi } from '@/api'
+import { ThemeNameEnum } from '@/api/Theme/types'
 
 import '@/themes'
 import { childrenRoutes, routes } from '@/router/routes'
@@ -43,7 +43,7 @@ export async function render(
 
   if (userInfo) {
     try {
-      const { theme } = await new UserApi(cookies).getTheme(userInfo.id)
+      const { theme } = await new ThemeApi(cookies).get()
 
       themeName = theme
     } catch (error) {
@@ -52,7 +52,10 @@ export async function render(
   }
 
   const [pathname] = url.split('?')
-  const store = createReduxStore({ user: { userInfo, themeName } }, cookies)
+  const store = createReduxStore(
+    { user: { userInfo }, theme: { name: themeName } },
+    cookies
+  )
   const router = createStaticRouter(routes, context)
 
   const currentRoute = childrenRoutes.find(({ path }) =>
