@@ -11,13 +11,7 @@ const userThemeProvider = async (
 
     const user = await yandexApi.getCurrent()
 
-    if (req.method === 'GET') {
-      req.query.userId = user.id
-    }
-
-    if (req.method === 'POST') {
-      res.locals.userId = user.id
-    }
+    res.locals.userId = user.id
 
     next()
   } catch (error) {

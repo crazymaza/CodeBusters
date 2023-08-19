@@ -4,7 +4,7 @@ import { themeService } from '../service'
 
 export class ThemeController {
   public async get(req: Request, res: Response) {
-    const { userId } = req.query
+    const { userId } = res.locals
 
     if (userId) {
       try {
