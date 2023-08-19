@@ -11,7 +11,6 @@ export const topicRouter = (router: Router) => {
   routes
     .get('/comments/:topicId', commentController.getAllTopicComments)
     .get('/', topicController.getAllTopics)
-    .get('/top', topicController.getTopTopics)
     .post('/', topicController.addTopic)
     .delete('/:topicId', topicController.deleteTopic)
 

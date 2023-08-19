@@ -25,7 +25,7 @@ export class CommentService {
     userId,
     parentCommentId,
   }: IComment) {
-    return await Comment.create({
+    return Comment.create({
       text,
       topicId,
       userId,
@@ -34,7 +34,7 @@ export class CommentService {
   }
 
   public async getComment(commentId: number) {
-    return await Comment.findOne({
+    return Comment.findOne({
       where: {
         id: commentId,
       },

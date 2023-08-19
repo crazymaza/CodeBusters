@@ -6,6 +6,7 @@ import {
   Column,
   DataType,
   ForeignKey,
+  Index,
   Model,
   Table,
 } from 'sequelize-typescript'
@@ -34,6 +35,7 @@ export class Reaction extends Model<Reaction, IReaction> {
   declare reaction: string
 
   @ForeignKey(() => Comment)
+  @Index
   @Column({
     type: DataType.INTEGER,
     field: 'comment_id',

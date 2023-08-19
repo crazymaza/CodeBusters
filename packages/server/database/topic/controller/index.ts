@@ -14,23 +14,7 @@ export class TopicController {
         res.json({ error: 'Failed to get list of topics' })
       }
     } catch (err) {
-      res.status(400)
-      res.json({ error: (err as Error).message })
-    }
-  }
-
-  public async getTopTopics(_req: Request, res: Response) {
-    try {
-      const topics = await topicService.getTopTopics()
-      const topTopics = topics.slice(0, 5)
-      if (topTopics) {
-        res.status(200).json(topTopics)
-      } else {
-        res.status(500)
-        res.json({ error: 'Failed to get list of popular topics' })
-      }
-    } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -47,7 +31,7 @@ export class TopicController {
         res.json({ error: 'Failed to add new topic' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -64,7 +48,7 @@ export class TopicController {
         res.json({ error: 'Failed to delete topic' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }

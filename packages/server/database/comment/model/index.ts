@@ -7,6 +7,7 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  Index,
   Model,
   Table,
 } from 'sequelize-typescript'
@@ -42,6 +43,7 @@ export class Comment extends Model<Comment, IComment> {
   declare text: string
 
   @ForeignKey(() => Topic)
+  @Index
   @Column({
     type: DataType.INTEGER,
     field: 'topic_id',

@@ -9,15 +9,14 @@ const getRootElements = (comments: Comment[]) => {
 }
 
 const getTopicCommentsTree = (comments: Comment[]) => {
-  const result: ITreeCommentElement[] = []
   const rootComments = getRootElements(comments)
-  rootComments.forEach(comment => {
+
+  const result = rootComments.map(comment => {
     const treeRoot: ITreeCommentElement = {
       comment,
       replies: [],
     }
-    const tree = getTopicCommentsTreeElements(comments, comment, treeRoot)
-    result.push(tree)
+    return getTopicCommentsTreeElements(comments, comment, treeRoot)
   })
   return result
 }
@@ -63,7 +62,7 @@ export class CommentController {
         res.json({ error: 'Failed to get list of topic comments' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -80,7 +79,7 @@ export class CommentController {
         res.json({ error: 'Failed to add new comment' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -98,7 +97,7 @@ export class CommentController {
         res.json({ error: 'Failed to get new comment' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }

@@ -8,7 +8,7 @@ export class UserService {
     secondName,
     id,
   }: IUser) {
-    return User.create({
+    return User.upsert({
       displayName,
       firstName,
       avatar,

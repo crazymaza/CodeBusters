@@ -17,7 +17,7 @@ export class ReactionController {
         res.json({ error: 'Failed to get list of comment reactions' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -34,7 +34,7 @@ export class ReactionController {
         res.json({ error: 'Failed to add new reaction to comment' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -48,10 +48,10 @@ export class ReactionController {
         res.status(200).json({ message: 'Reaction deleted successfully' })
       } else {
         res.status(500)
-        res.json({ error: 'Failed to add delete reaction' })
+        res.json({ error: 'Failed to delete reaction' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }

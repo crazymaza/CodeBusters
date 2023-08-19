@@ -35,22 +35,4 @@ export class TopicService {
       },
     })
   }
-
-  public async getTopTopics() {
-    return Topic.findAll({
-      attributes: {
-        include: [
-          [Sequelize.fn('COUNT', Sequelize.col('comment.id')), 'commentCount'],
-        ],
-      },
-      include: [
-        {
-          model: Comment,
-          attributes: [],
-        },
-      ],
-      group: ['Topic.id'],
-      order: [['commentCount', 'DESC']],
-    })
-  }
 }
