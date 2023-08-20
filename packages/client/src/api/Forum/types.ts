@@ -18,7 +18,16 @@ export interface CommentInfo {
   parentCommentId: number
   updatedAt: string
   createdAt: string
-  user: UserInfo
+  user: UserCommentInfo
+}
+
+export interface UserCommentInfo {
+  id: number
+  firstName: string
+  secondName: string
+  displayName: string
+  login: string
+  avatar: string
 }
 
 export interface RawComment {
