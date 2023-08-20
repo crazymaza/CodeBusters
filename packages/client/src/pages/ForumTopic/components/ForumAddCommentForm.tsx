@@ -1,9 +1,13 @@
 import Button from '@/components/Button'
+import { addNewComment } from '@/store/slices/forumSlice/thunks'
+import { selectUserInfo } from '@/store/slices/userSlice/selectors'
+import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 import { TextField } from '@mui/material'
 import classNames from 'classnames/bind'
 import Picker from 'emoji-picker-react'
 import { useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
@@ -12,28 +16,49 @@ const ForumAddCommentForm = () => {
   const ref = useRef<HTMLInputElement>(null)
   const [isPickerVisible, setPickerVisible] = useState(false)
   const [inputStr, setInputStr] = useState('')
+  const user = useAppSelector(selectUserInfo)
+  const dispatch = useAppDispatch()
+  const { topicId } = useParams()
 
+  // TODO: баг с курсором
   const handleEmojiClick = (emojiObject: any, event: MouseEvent) => {
     const cursor = (ref?.current && ref.current.selectionStart) ?? 0
     const text = inputStr.slice(0, cursor) + emojiObject.emoji
     setInputStr(text)
   }
 
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    let topicIdNumber = 0
+
+    if (topicId) {
+      topicIdNumber = parseInt(topicId)
+    }
+
+    const createCommentData = {
+      topicId: topicIdNumber,
+      userId: user?.id || 0,
+      text: formData.get('text')?.toString() || '',
+    }
+
+    await dispatch(addNewComment(createCommentData))
+    setInputStr('')
+  }
+
   return (
     <>
-      <form
-        className={cx('topicpage__form')}
-        onSubmit={e => {
-          e.preventDefault()
-        }}>
+      <form className={cx('topicpage__form')} onSubmit={onSubmit}>
         <TextField
           className={cx('topicpage__form-textfield')}
           ref={ref}
+          name="text"
           multiline={true}
           minRows={3}
           maxRows={3}
           placeholder="Введите ваш комментарий"
           value={inputStr}
+          required
           onChange={e => setInputStr(e.target.value)}
         />
         <div className={cx('buttons-container')}>

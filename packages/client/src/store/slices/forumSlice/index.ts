@@ -2,9 +2,10 @@ import { CommentInfo, TopicInfo } from '@/api/Forum/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import {
   addNewComment,
+  addNewTopic,
+  deleteTopic,
   getAllTopics,
   getCommentsByTopicId,
-  getTopFiveTopics,
 } from './thunks'
 
 interface TopicData {
@@ -39,7 +40,7 @@ export interface CommentData {
 
 export interface UserInfo {
   id: number
-  first_name: string
+  firstName: string
   login: string
   avatar: string
 }
@@ -77,18 +78,14 @@ const forumSlice = createSlice({
       state.loading = false
     })
 
-    builder.addCase(getTopFiveTopics.pending, state => {
+    builder.addCase(addNewTopic.pending, state => {
       state.loading = true
     })
 
     builder.addCase(
-      getTopFiveTopics.fulfilled,
-      (state, { payload }: PayloadAction<TopicInfo[]>) => {
-        const topTopicList = payload.reduce(
-          (acc: TopicData[], curr: TopicInfo) => [...acc, curr],
-          []
-        )
-        state.topTopics = topTopicList
+      addNewTopic.fulfilled,
+      (state, { payload }: PayloadAction<TopicInfo>) => {
+        state.topics.unshift(payload)
         state.loading = false
       }
     )
@@ -97,12 +94,29 @@ const forumSlice = createSlice({
       state.loading = true
     })
 
-    builder.addCase(addNewComment.fulfilled, state => {
-      state.loading = false
-    })
+    builder.addCase(
+      addNewComment.fulfilled,
+      (state, { payload }: PayloadAction<CommentInfo>) => {
+        state.comments.unshift(payload)
+        state.loading = false
+      }
+    )
+
     builder.addCase(addNewComment.rejected, state => {
       state.loading = true
     })
+
+    builder.addCase(deleteTopic.pending, state => {
+      state.loading = true
+    })
+
+    builder.addCase(
+      deleteTopic.fulfilled,
+      (state, action: PayloadAction<number>) => {
+        const id = action.payload
+        state.topics = state.topics.filter(topic => topic.id !== id)
+      }
+    )
 
     builder.addCase(getCommentsByTopicId.pending, state => {
       state.loading = true

@@ -8,7 +8,6 @@ import {
 
 class ForumApi extends BaseApi {
   constructor(cookie?: string) {
-    console.log('COOKIE', cookie)
     super({
       baseURL: 'http://localhost:3001/api/forum',
       withCredentials: true,
@@ -23,10 +22,6 @@ class ForumApi extends BaseApi {
     return this.request
       .get<TopicInfo[]>('/topic')
       .then(response => response.data)
-  }
-
-  getTopFiveTopics() {
-    return this.request.get('/topic/top').then(response => response.data)
   }
 
   getCommentsByTopicId(topicId: number) {
@@ -44,7 +39,7 @@ class ForumApi extends BaseApi {
   }
 
   deleteTopic(topicId: number) {
-    return this.request.delete(`/${topicId}`)
+    return this.request.delete(`/topic/${topicId}`)
   }
 
   //Comments

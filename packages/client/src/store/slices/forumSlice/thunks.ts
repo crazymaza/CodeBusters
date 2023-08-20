@@ -2,6 +2,7 @@ import {
   CommentInfo,
   CreateCommentData,
   CreateTopicData,
+  TopicInfo,
 } from '@/api/Forum/types'
 import { IExtraArgument } from '@/store'
 import { createAsyncThunk } from '@reduxjs/toolkit'
@@ -19,25 +20,26 @@ export const getAllTopics = createAsyncThunk(
   }
 )
 
-export const getTopFiveTopics = createAsyncThunk(
-  'forum/getTopFiveTopics',
-  async (_, thunkApi) => {
+export const addNewTopic = createAsyncThunk<TopicInfo, CreateTopicData>(
+  'forum/addNewTopic',
+  async (CreateTopicData, thunkApi) => {
     try {
       const forumApi = (thunkApi.extra as IExtraArgument).forumService
-      const topTopicList = await forumApi.getTopFiveTopics()
-      return topTopicList
+      const newTopic = await forumApi.addNewTopic(CreateTopicData)
+      return newTopic.data
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
   }
 )
 
-export const addNewTopic = createAsyncThunk<void, CreateTopicData>(
-  'forum/addNewTopic',
-  async (CreateTopicData, thunkApi) => {
+export const deleteTopic = createAsyncThunk<number, number>(
+  'forum/deleteTopic',
+  async (topicId, thunkApi) => {
     try {
       const forumApi = (thunkApi.extra as IExtraArgument).forumService
-      await forumApi.addNewTopic(CreateTopicData)
+      await forumApi.deleteTopic(topicId)
+      return topicId
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
@@ -57,13 +59,14 @@ export const getCommentsByTopicId = createAsyncThunk<CommentInfo[], number>(
   }
 )
 
-export const addNewComment = createAsyncThunk<void, CreateCommentData>(
+export const addNewComment = createAsyncThunk<CommentInfo, CreateCommentData>(
   'forum/addNewComment',
   async (CreateCommentData, thunkApi) => {
     try {
       const forumApi = (thunkApi.extra as IExtraArgument).forumService
-      await forumApi.addNewComment(CreateCommentData)
-    } catch (errro) {
+      const newComment = await forumApi.addNewComment(CreateCommentData)
+      return newComment.data
+    } catch (error) {
       return thunkApi.rejectWithValue(false)
     }
   }

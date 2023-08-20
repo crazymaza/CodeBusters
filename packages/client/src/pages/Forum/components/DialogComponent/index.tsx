@@ -42,6 +42,7 @@ const DialogComponent = (props: CloseButtonProps) => {
           label="Название темы"
           fullWidth
           variant="standard"
+          required
           className={cx('dialog__form-textfield')}
         />
         <TextField

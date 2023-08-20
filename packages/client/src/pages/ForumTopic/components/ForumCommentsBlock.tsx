@@ -34,12 +34,12 @@ const ForumCommentsBlock = (props: ForumCommentsBlockProps) => {
                 <ListItem className={cx('comments-item')}>
                   <ListItemIcon>
                     <Avatar
-                      src={user.avatar}
+                      src={user?.avatar || ''}
                       className={cx('comments-item-icon')}></Avatar>
                   </ListItemIcon>
                   <ListItemText
                     primary={text}
-                    secondary={user.first_name}
+                    secondary={user?.firstName}
                     className={cx('comments-item-text')}
                   />
                   <ListItemText className={cx('comments-item-date')}>
