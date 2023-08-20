@@ -65,11 +65,7 @@ const forumSlice = createSlice({
     builder.addCase(
       getAllTopics.fulfilled,
       (state, { payload }: PayloadAction<TopicInfo[]>) => {
-        const topicDataArr = payload.reduce(
-          (acc: TopicData[], curr: TopicInfo) => [...acc, curr],
-          []
-        )
-        state.topics = topicDataArr
+        state.topics = payload
         state.loading = false
       }
     )
@@ -85,7 +81,7 @@ const forumSlice = createSlice({
     builder.addCase(
       addNewTopic.fulfilled,
       (state, { payload }: PayloadAction<TopicInfo>) => {
-        state.topics.unshift(payload)
+        state.topics = [payload, ...state.topics]
         state.loading = false
       }
     )
@@ -97,7 +93,7 @@ const forumSlice = createSlice({
     builder.addCase(
       addNewComment.fulfilled,
       (state, { payload }: PayloadAction<CommentInfo>) => {
-        state.comments.unshift(payload)
+        state.comments = [payload, ...state.comments]
         state.loading = false
       }
     )
@@ -125,11 +121,7 @@ const forumSlice = createSlice({
     builder.addCase(
       getCommentsByTopicId.fulfilled,
       (state, { payload }: PayloadAction<CommentInfo[]>) => {
-        const commentsArr = payload.reduce(
-          (acc: CommentData[], curr: CommentInfo) => [...acc, curr],
-          []
-        )
-        state.comments = commentsArr
+        state.comments = payload
         state.loading = false
       }
     )

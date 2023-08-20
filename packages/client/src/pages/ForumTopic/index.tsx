@@ -3,7 +3,6 @@ import { MainLayout } from '@/layouts'
 import { Typography } from '@mui/material'
 import classNames from 'classnames/bind'
 import { Link, useNavigate } from 'react-router-dom'
-import * as data from './data'
 import styles from './styles.module.scss'
 
 import CloseButton from '@/components/CloseButton'
