@@ -5,7 +5,7 @@ const reactionService = new ReactionService()
 
 export class ReactionController {
   public async getCommentReaction(req: Request, res: Response) {
-    const { commentId } = req.query
+    const { commentId } = req.params
     try {
       const reactions = await reactionService.getCommentReactions(
         Number(commentId)
@@ -14,10 +14,10 @@ export class ReactionController {
         res.status(200).json(reactions)
       } else {
         res.status(500)
-        res.json({ error: 'Failed to get list of comment reactions reactions' })
+        res.json({ error: 'Failed to get list of comment reactions' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -34,13 +34,13 @@ export class ReactionController {
         res.json({ error: 'Failed to add new reaction to comment' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
 
   public async deleteReaction(req: Request, res: Response) {
-    const { reactionId } = req.query
+    const { reactionId } = req.params
 
     try {
       const reaction = await reactionService.deleteReaction(Number(reactionId))
@@ -48,10 +48,10 @@ export class ReactionController {
         res.status(200).json({ message: 'Reaction deleted successfully' })
       } else {
         res.status(500)
-        res.json({ error: 'Failed to add delete reaction' })
+        res.json({ error: 'Failed to delete reaction' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }

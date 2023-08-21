@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { TopicController } from '../controller'
 import { CommentController } from '../../comment'
+import { checkUserAuth } from '../../../middlewares/checkUser'
 
 export const topicRouter = (router: Router) => {
   const routes: Router = Router()
@@ -8,11 +9,10 @@ export const topicRouter = (router: Router) => {
   const commentController = new CommentController()
 
   routes
-    .get('/comments', commentController.getAllTopicComments)
+    .get('/comments/:topicId', commentController.getAllTopicComments)
     .get('/', topicController.getAllTopics)
-    .get('/top', topicController.getTopTopics)
     .post('/', topicController.addTopic)
-    .delete('/', topicController.deleteTopic)
+    .delete('/:topicId', topicController.deleteTopic)
 
-  router.use('/topic', routes)
+  router.use('/topic', [checkUserAuth], routes)
 }

@@ -1,5 +1,6 @@
 import { CommentController } from '../controller'
 import { Router } from 'express'
+import { checkUserAuth } from '../../../middlewares/checkUser'
 
 export const commentRouter = (router: Router) => {
   const routes: Router = Router()
@@ -7,7 +8,7 @@ export const commentRouter = (router: Router) => {
 
   routes
     .post('/', commentController.addComment)
-    .get('/', commentController.getComment)
+    .get('/:commentId', commentController.getComment)
 
-  router.use('/comment', routes)
+  router.use('/comment', [checkUserAuth], routes)
 }

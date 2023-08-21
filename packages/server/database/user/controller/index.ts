@@ -5,7 +5,7 @@ const userService = new UserService()
 
 export class UserController {
   public async getUser(req: Request, res: Response) {
-    const { userId } = req.query
+    const { userId } = req.params
 
     try {
       const user = await userService.getUser(Number(userId))
@@ -16,7 +16,7 @@ export class UserController {
         res.json({ error: 'Failed to get user' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -33,7 +33,7 @@ export class UserController {
         res.json({ error: 'Failed to add new user' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }

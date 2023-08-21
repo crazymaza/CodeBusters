@@ -3,6 +3,7 @@ import cors from 'cors'
 import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
 import { createProxyMiddleware } from 'http-proxy-middleware'
+import { YandexApi } from './api'
 
 import cookieParser from 'cookie-parser'
 import bodyParser = require('body-parser')
@@ -14,8 +15,12 @@ import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
 import { dbConnect } from './db'
+
 import { apiRouter } from './database'
 import { themeApiRouter } from './database/userTheme'
+
+import bodyParser from 'body-parser'
+import { xssFilter } from 'helmet'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -56,15 +61,22 @@ async function startServer() {
     })
   )
 
-  app.use('/api/forum', apiRouter)
+
+  app.use(xssFilter())
+  app.use('/api/forum', [bodyParser.json()], apiRouter)
   app.use('/api/theme', bdyParser, themeApiRouter)
+
 
   app.use('*', cookieParser(), async (req, res, next) => {
     const url = req.originalUrl
 
     try {
       let template: string
-      let render: (request: express.Request, url: string) => Promise<string>
+      let render: (
+        request: express.Request,
+        url: string,
+        yandexApi: YandexApi
+      ) => Promise<string>
 
       if (isDev()) {
         template = fs.readFileSync(path.resolve(srcPath, 'index.html'), 'utf-8')
@@ -94,7 +106,9 @@ async function startServer() {
         render = (await import(ssrClientPath)).render
       }
 
-      const [initialState, appHtml] = await render(req, url)
+      const yandexApi = new YandexApi(req.headers['cookie'])
+
+      const [initialState, appHtml] = await render(req, url, yandexApi)
       const initStateSerialized = JSON.stringify(initialState).replace(
         /</g,
         '\\u003c'
