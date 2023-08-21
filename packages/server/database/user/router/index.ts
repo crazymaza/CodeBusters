@@ -5,7 +5,9 @@ export const userRouter = (router: Router) => {
   const routes: Router = Router()
   const userController = new UserController()
 
-  routes.post('/', userController.addUser).get('/', userController.getUser)
+  routes
+    .post('/', userController.addUser)
+    .get('/:userId', userController.getUser)
 
   router.use('/user', routes)
 }

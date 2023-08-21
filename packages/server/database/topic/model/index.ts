@@ -8,6 +8,7 @@ import {
   BelongsTo,
   ForeignKey,
   HasMany,
+  AllowNull,
 } from 'sequelize-typescript'
 
 export interface ITopic {
@@ -27,16 +28,22 @@ export class Topic extends Model<Topic, ITopic> {
   })
   declare id: number
 
-  @Column(DataType.STRING)
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   declare title: string
 
-  @Column(DataType.TEXT)
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+  })
   declare description: string
 
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    field: 'user_Id',
+    field: 'user_id',
     allowNull: false,
   })
   declare userId: number

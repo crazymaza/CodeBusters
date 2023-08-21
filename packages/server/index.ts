@@ -14,9 +14,12 @@ import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
 import { dbConnect } from './db'
+
 import { apiRouter } from './database'
 import { themeApiRouter } from './database/userTheme'
 import { userThemeProvider } from './middlewares'
+
+import { xssFilter } from 'helmet'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -57,8 +60,9 @@ async function startServer() {
     })
   )
 
+  app.use(xssFilter())
   app.use(bodyParserJson)
-  app.use('/api/forum', apiRouter)
+  app.use('/api/forum', [bodyParser.json()], apiRouter)
   app.use('/api/theme', userThemeProvider, themeApiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {

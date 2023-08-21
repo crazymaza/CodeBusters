@@ -13,7 +13,6 @@ export class User extends Model<User, IUser> {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
-    autoIncrement: true,
     allowNull: false,
   })
   declare id: number

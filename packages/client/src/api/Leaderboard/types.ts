@@ -3,6 +3,7 @@ export interface LeaderboardValues {
   avatar: string | undefined
   codebustersScores: number
   userId: number
+  userCountry: string
 }
 
 export interface LeaderboardData {

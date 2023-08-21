@@ -3,6 +3,7 @@ export interface ILeaderList {
   avatar: string
   nickname: string
   scores: string
+  country: string
 }
 
 export interface IHeaderCell {

@@ -1,26 +1,68 @@
-import { TopicService } from '../../topic'
-import { IReply, ReplyService } from '../../reply'
 import { CommentService } from '../service'
+import { Comment, ITreeCommentElement } from '../model'
 import { Request, Response } from 'express'
-import { IComment, ITreeComment } from '../model'
-import { ReactionService } from '../../reaction'
 
 const commentService = new CommentService()
-const replyService = new ReplyService()
+
+const getRootElements = (comments: Comment[]) => {
+  return comments.filter(x => x.parentCommentId === null)
+}
+
+const getTopicCommentsTree = (comments: Comment[]) => {
+  const rootComments = getRootElements(comments)
+
+  const result = rootComments.map(comment => {
+    const treeRoot: ITreeCommentElement = {
+      comment,
+      replies: [],
+    }
+    return getTopicCommentsTreeElements(comments, comment, treeRoot)
+  })
+  return result
+}
+
+const getTopicCommentsTreeElements = (
+  comments: Comment[],
+  parentComment: Comment,
+  result: ITreeCommentElement
+) => {
+  const childComments = comments.filter(
+    x => x.parentCommentId === parentComment.id
+  )
+
+  if (childComments.length === 0) {
+    return {
+      comment: parentComment,
+      replies: [],
+    } as ITreeCommentElement
+  }
+  childComments.forEach(child => {
+    const childLeaf = {
+      comment: child,
+      replies: [],
+    }
+    const replies = getTopicCommentsTreeElements(comments, child, childLeaf)
+    result.replies.push(replies)
+  })
+
+  return result
+}
 
 export class CommentController {
   public async getAllTopicComments(req: Request, res: Response) {
-    const { topicId } = req.query
+    const { topicId } = req.params
     try {
       const comments = await commentService.getAllTopicComments(Number(topicId))
       if (comments) {
-        res.status(200).json(comments)
+        const treeComments = getTopicCommentsTree(comments)
+
+        res.status(200).json(treeComments)
       } else {
         res.status(500)
         res.json({ error: 'Failed to get list of topic comments' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
@@ -31,37 +73,31 @@ export class CommentController {
     try {
       const newComment = await commentService.addComment(body)
       if (newComment) {
-        if (body.parentCommentId) {
-          const reply = {
-            responseId: newComment.id,
-            commentId: body.parentCommentId,
-          } as IReply
-          await replyService.addReply(reply)
-        }
         res.status(201).json(newComment)
       } else {
         res.status(500)
         res.json({ error: 'Failed to add new comment' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }
 
   public async getComment(req: Request, res: Response) {
-    const { commentId } = req.query
+    const { commentId } = req.params
 
     try {
       const comment = await commentService.getComment(Number(commentId))
+
       if (comment) {
         res.status(200).json(comment)
       } else {
         res.status(500)
-        res.json({ error: 'Failed to add new comment' })
+        res.json({ error: 'Failed to get new comment' })
       }
     } catch (err) {
-      res.status(400)
+      res.status(500)
       res.json({ error: (err as Error).message })
     }
   }

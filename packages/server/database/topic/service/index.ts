@@ -20,11 +20,11 @@ export class TopicService {
     })
   }
 
-  public async addTopic(topic: ITopic) {
+  public async addTopic({ description, title, userId }: ITopic) {
     return Topic.create({
-      title: topic.title,
-      description: topic.description,
-      userId: topic.userId,
+      title,
+      description,
+      userId,
     })
   }
 
@@ -33,24 +33,6 @@ export class TopicService {
       where: {
         id: topicId,
       },
-    })
-  }
-
-  public async getTopTopics() {
-    return Topic.findAll({
-      attributes: {
-        include: [
-          [Sequelize.fn('COUNT', Sequelize.col('comment.id')), 'commentCount'],
-        ],
-      },
-      include: [
-        {
-          model: Comment,
-          attributes: [],
-        },
-      ],
-      group: ['Topic.id'],
-      order: [['commentCount', 'DESC']],
     })
   }
 }

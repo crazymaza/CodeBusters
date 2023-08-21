@@ -1,5 +1,4 @@
 import { Reaction } from './database/reaction'
-import { Reply } from './database/reply'
 import { Topic } from './database/topic'
 import { User } from './database/user'
 import { Comment } from './database/comment'

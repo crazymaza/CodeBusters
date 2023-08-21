@@ -1,10 +1,12 @@
 import { User } from '../../user'
 import { Comment } from '../../comment'
 import {
+  AllowNull,
   BelongsTo,
   Column,
   DataType,
   ForeignKey,
+  Index,
   Model,
   Table,
 } from 'sequelize-typescript'
@@ -26,13 +28,18 @@ export class Reaction extends Model<Reaction, IReaction> {
   })
   declare id: number
 
-  @Column(DataType.TEXT)
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false,
+  })
   declare reaction: string
 
   @ForeignKey(() => Comment)
+  @Index
   @Column({
     type: DataType.INTEGER,
-    field: 'comment_Id',
+    field: 'comment_id',
+    allowNull: false,
   })
   declare commentId: number
 
@@ -44,7 +51,8 @@ export class Reaction extends Model<Reaction, IReaction> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    field: 'user_Id',
+    field: 'user_id',
+    allowNull: false,
   })
   declare userId: number
 

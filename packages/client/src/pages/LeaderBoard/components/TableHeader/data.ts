@@ -13,4 +13,8 @@ export const headerCells: IHeaderCell[] = [
     id: 'scores',
     label: 'Набранные очки',
   },
+  {
+    id: 'country',
+    label: 'Страна',
+  },
 ]
