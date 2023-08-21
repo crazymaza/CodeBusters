@@ -16,5 +16,5 @@ export const headerCells: IHeaderCell[] = [
   {
     id: 'country',
     label: 'Страна',
-  }
+  },
 ]

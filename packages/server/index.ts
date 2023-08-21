@@ -4,9 +4,8 @@ import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import { YandexApi } from './api'
-
+import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import bodyParser = require('body-parser')
 
 dotenv.config()
 
@@ -18,11 +17,13 @@ import { dbConnect } from './db'
 
 import { apiRouter } from './database'
 import { themeApiRouter } from './database/userTheme'
+import { userThemeProvider } from './middlewares'
 
-import bodyParser from 'body-parser'
 import { xssFilter } from 'helmet'
 
 const isDev = () => process.env.NODE_ENV === 'development'
+
+const bodyParserJson = bodyParser.json()
 
 async function startServer() {
   const app = express()
@@ -34,8 +35,6 @@ async function startServer() {
   const distPath = path.dirname(require.resolve('client/dist/index.html'))
   const srcPath = path.dirname(require.resolve('client'))
   const ssrClientPath = require.resolve('client/ssr-dist/entry.server.cjs')
-
-  const bdyParser = bodyParser.json()
 
   if (isDev()) {
     vite = await createViteServer({
@@ -61,11 +60,10 @@ async function startServer() {
     })
   )
 
-
   app.use(xssFilter())
+  app.use(bodyParserJson)
   app.use('/api/forum', [bodyParser.json()], apiRouter)
-  app.use('/api/theme', bdyParser, themeApiRouter)
-
+  app.use('/api/theme', userThemeProvider, themeApiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {
     const url = req.originalUrl

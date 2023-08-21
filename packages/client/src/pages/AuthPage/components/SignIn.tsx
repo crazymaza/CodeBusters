@@ -8,6 +8,7 @@ import { TextField } from '@/components'
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
 import { getUserInfo, signin } from '@/store/slices/userSlice/thunks'
+import { getTheme } from '@/store/slices/themeSlice/thunks'
 import { isAxiosError } from 'axios'
 
 import { signInSchema } from './validation'
@@ -50,6 +51,7 @@ const SignIn = () => {
     try {
       await dispatch(signin(signInData)).unwrap()
       await dispatch(getUserInfo())
+      await dispatch(getTheme())
       navigate('/')
     } catch (error) {
       if (isAxiosError(error) && error.message === 'User already in system') {
