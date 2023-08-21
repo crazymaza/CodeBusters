@@ -13,6 +13,10 @@ import compression from 'compression'
 import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
+import { dbConnect } from './db'
+import { apiRouter } from './database'
+import bodyParser from 'body-parser'
+import { xssFilter } from 'helmet'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -50,6 +54,9 @@ async function startServer() {
       target: 'https://ya-praktikum.tech',
     })
   )
+
+  app.use(xssFilter())
+  app.use('/api/forum', [bodyParser.json()], apiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {
     const url = req.originalUrl
@@ -118,6 +125,8 @@ async function startServer() {
   app.listen(port, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
   })
+
+  dbConnect()
 }
 
 startServer()
