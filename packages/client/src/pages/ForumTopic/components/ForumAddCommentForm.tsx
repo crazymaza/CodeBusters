@@ -30,20 +30,18 @@ const ForumAddCommentForm = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    let topicIdNumber = 0
+    const topicIdNumber = topicId ? parseInt(topicId) : 0
 
-    if (topicId) {
-      topicIdNumber = parseInt(topicId)
+    if (user) {
+      const createCommentData = {
+        topicId: topicIdNumber,
+        userId: user.id,
+        text: formData.get('text')?.toString() || '',
+      }
+
+      await dispatch(addNewComment(createCommentData))
+      setInputStr('')
     }
-
-    const createCommentData = {
-      topicId: topicIdNumber,
-      userId: user?.id || 0,
-      text: formData.get('text')?.toString() || '',
-    }
-
-    await dispatch(addNewComment(createCommentData))
-    setInputStr('')
   }
 
   return (

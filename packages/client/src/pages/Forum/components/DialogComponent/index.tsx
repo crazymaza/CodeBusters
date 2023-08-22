@@ -22,14 +22,16 @@ const DialogComponent = (props: CloseButtonProps) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
-    const createTopicData = {
-      title: formData.get('title')?.toString() || '',
-      description: formData.get('description')?.toString() || '',
-      userId: user?.id ?? 0,
-    }
+    if (user) {
+      const createTopicData = {
+        title: formData.get('title')?.toString() || '',
+        description: formData.get('description')?.toString() || '',
+        userId: user.id,
+      }
 
-    await dispatch(addNewTopic(createTopicData))
-    props.handleCloseDialog()
+      await dispatch(addNewTopic(createTopicData))
+      props.handleCloseDialog()
+    }
   }
 
   return (

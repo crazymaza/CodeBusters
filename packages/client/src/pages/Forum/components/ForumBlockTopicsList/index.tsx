@@ -10,13 +10,15 @@ import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
 
+type TopicsListData = {
+  id: number
+  title: string
+  description: string
+  commentCount: number
+}
+
 type ForumBlockTopicsListProps = {
-  data: {
-    id: number
-    title: string
-    description: string
-    commentCount: number
-  }[]
+  data: TopicsListData[]
 }
 
 const ForumBlockTopicsList = (props: ForumBlockTopicsListProps) => {

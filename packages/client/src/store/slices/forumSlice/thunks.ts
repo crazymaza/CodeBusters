@@ -22,10 +22,10 @@ export const getAllTopics = createAsyncThunk(
 
 export const addNewTopic = createAsyncThunk<TopicInfo, CreateTopicData>(
   'forum/addNewTopic',
-  async (CreateTopicData, thunkApi) => {
+  async (createTopicData, thunkApi) => {
     try {
       const forumApi = (thunkApi.extra as IExtraArgument).forumService
-      const newTopic = await forumApi.addNewTopic(CreateTopicData)
+      const newTopic = await forumApi.addNewTopic(createTopicData)
       return newTopic.data
     } catch (error) {
       return thunkApi.rejectWithValue(false)
@@ -61,10 +61,10 @@ export const getCommentsByTopicId = createAsyncThunk<CommentInfo[], number>(
 
 export const addNewComment = createAsyncThunk<CommentInfo, CreateCommentData>(
   'forum/addNewComment',
-  async (CreateCommentData, thunkApi) => {
+  async (createCommentData, thunkApi) => {
     try {
       const forumApi = (thunkApi.extra as IExtraArgument).forumService
-      const newComment = await forumApi.addNewComment(CreateCommentData)
+      const newComment = await forumApi.addNewComment(createCommentData)
       return newComment.data
     } catch (error) {
       return thunkApi.rejectWithValue(false)

@@ -1,5 +1,3 @@
-import { UserInfo } from '../User/types'
-
 export interface TopicInfo {
   id: number
   title: string
@@ -42,7 +40,7 @@ export interface CreateTopicData {
 
 export interface CreateCommentData {
   topicId: number
-  userId: number
+  userId?: number
   text: string
   parentCommentId?: number
 }
