@@ -10,6 +10,8 @@ import { Provider } from 'react-redux'
 import { createReduxStore } from '@/store'
 import { StyledEngineProvider } from '@mui/material/styles'
 import { UserInfo } from '@/api/User/types'
+import { ThemeApi } from '@/api'
+import { ThemeNameEnum } from '@/api/Theme/types'
 
 import '@/themes'
 import { childrenRoutes, routes } from '@/router/routes'
@@ -31,6 +33,7 @@ export async function render(
   const cookies = request?.headers?.cookie
 
   let userInfo: UserInfo | null = null
+  let themeName: ThemeNameEnum = ThemeNameEnum.LIGHT
 
   try {
     userInfo = await yandexApi.getCurrent()
@@ -38,8 +41,21 @@ export async function render(
     console.log('current user in undefined')
   }
 
+  if (userInfo) {
+    try {
+      const { theme } = await new ThemeApi(cookies).get()
+
+      themeName = theme
+    } catch (error) {
+      console.log('theme is not set for user')
+    }
+  }
+
   const [pathname] = url.split('?')
-  const store = createReduxStore({ user: { userInfo } }, cookies)
+  const store = createReduxStore(
+    { user: { userInfo }, theme: { name: themeName } },
+    cookies
+  )
   const router = createStaticRouter(routes, context)
 
   const currentRoute = childrenRoutes.find(({ path }) =>

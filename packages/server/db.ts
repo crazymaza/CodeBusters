@@ -1,28 +1,49 @@
-import { Client } from 'pg'
+import { Reaction } from './database/reaction'
+import { Topic } from './database/topic'
+import { User } from './database/user'
+import { Comment } from './database/comment'
+import { Themes } from './database/themes'
+import { UserTheme } from './database/userTheme'
+import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
 
-const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT } =
-  process.env
+const {
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  POSTGRES_DB,
+  POSTGRES_PORT,
+  POSTGRES_HOST,
+} = process.env
 
-export const createClientAndConnect = async (): Promise<Client | null> => {
+const sequelizeOptions: SequelizeOptions = {
+  host: POSTGRES_HOST || 'localhost',
+  port: Number(POSTGRES_PORT),
+  username: POSTGRES_USER,
+  password: POSTGRES_DB,
+  database: POSTGRES_PASSWORD,
+  dialect: 'postgres',
+  models: [User, Topic, Comment, Reaction, UserTheme, Themes],
+}
+
+// Создаем инстанс Sequelize
+export const sequelize = new Sequelize(sequelizeOptions)
+
+export async function dbConnect() {
   try {
-    const client = new Client({
-      user: POSTGRES_USER,
-      host: 'localhost',
-      database: POSTGRES_DB,
-      password: POSTGRES_PASSWORD,
-      port: Number(POSTGRES_PORT),
-    })
+    await sequelize.authenticate() // Проверка аутентификации в БД
+    const synced = await sequelize.sync() // Синхронизация базы данных
 
-    await client.connect()
+    if (synced) {
+      await Themes.bulkCreate(
+        [
+          { theme: 'dark', description: 'Dark theme' },
+          { theme: 'light', description: 'Light theme' },
+        ],
+        { ignoreDuplicates: true }
+      )
+    }
 
-    const res = await client.query('SELECT NOW()')
-    console.log('  ➜ 🎸 Connected to the database at:', res?.rows?.[0].now)
-    client.end()
-
-    return client
-  } catch (e) {
-    console.error(e)
+    console.log('Connection has been established successfully.')
+  } catch (error) {
+    console.error('Unable to connect to the database:', error)
   }
-
-  return null
 }

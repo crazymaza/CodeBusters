@@ -3,6 +3,7 @@ import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 
 import useAuth from '@/router/useAuth'
+import { useTheme } from '@/themes'
 import { useAppSelector } from '@/store/typedHooks'
 import { selectAuthLoading } from '@/store/slices/userSlice/selectors'
 import { Backdrop, CircularProgress } from '@mui/material'
@@ -11,7 +12,9 @@ const cx = classNames.bind(styles)
 
 const RootContainer = () => {
   const loading = useAppSelector(selectAuthLoading)
+
   useAuth()
+  useTheme()
 
   return (
     <>

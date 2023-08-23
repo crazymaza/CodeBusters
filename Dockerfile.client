@@ -15,7 +15,6 @@ COPY . .
 RUN yarn lerna bootstrap
 RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
 
-
 FROM nginx:latest as production
 WORKDIR /app
 

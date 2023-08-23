@@ -9,7 +9,9 @@
 
     &__list {
         display: block;
+        width: 100%;
         overflow-y: scroll;
+        padding-left: 1rem;
     }
 
     &-item {
@@ -41,6 +43,7 @@
         &-date {
             @include mx.themify('color', 'forum_date-color');
             display: flex;
+            justify-content: end;
             height: 10rem;
             text-align: end;
         }

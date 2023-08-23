@@ -1,16 +1,27 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import { userSlice, gameSlice, leaderboardSlice } from '@/store/slices'
-import { LeaderboardApi, UserApi } from '@/api'
+import {
+  userSlice,
+  gameSlice,
+  leaderboardSlice,
+  themeSlice,
+  forumSlice,
+} from '@/store/slices'
+import { LeaderboardApi, UserApi, ThemeApi } from '@/api'
+import ForumApi from '@/api/Forum'
 
 export interface IExtraArgument {
   userService: UserApi
   leaderboardService: LeaderboardApi
+  themeService: ThemeApi
+  forumService: ForumApi
 }
 
 const reducers = combineReducers({
   user: userSlice,
   game: gameSlice,
   leaderboard: leaderboardSlice,
+  theme: themeSlice,
+  forum: forumSlice,
 })
 
 export const createReduxStore = (initialState = {}, cookie = '') => {
@@ -31,6 +42,8 @@ export const createReduxStore = (initialState = {}, cookie = '') => {
           extraArgument: {
             userService: new UserApi(cookie),
             leaderboardService: new LeaderboardApi(cookie),
+            themeService: new ThemeApi(cookie),
+            forumService: new ForumApi(cookie),
           },
         },
       }),

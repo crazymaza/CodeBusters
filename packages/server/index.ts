@@ -4,7 +4,7 @@ import { createServer as createViteServer } from 'vite'
 import type { ViteDevServer } from 'vite'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import { YandexApi } from './api'
-
+import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 
 dotenv.config()
@@ -13,8 +13,17 @@ import compression from 'compression'
 import express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
+import { dbConnect } from './db'
+
+import { apiRouter } from './database'
+import { themeApiRouter } from './database/userTheme'
+import { userThemeProvider } from './middlewares'
+
+import { xssFilter } from 'helmet'
 
 const isDev = () => process.env.NODE_ENV === 'development'
+
+const bodyParserJson = bodyParser.json()
 
 async function startServer() {
   const app = express()
@@ -50,6 +59,11 @@ async function startServer() {
       target: 'https://ya-praktikum.tech',
     })
   )
+
+  app.use(xssFilter())
+  app.use(bodyParserJson)
+  app.use('/api/forum', [bodyParser.json()], apiRouter)
+  app.use('/api/theme', userThemeProvider, themeApiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {
     const url = req.originalUrl
@@ -118,6 +132,8 @@ async function startServer() {
   app.listen(port, () => {
     console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
   })
+
+  dbConnect()
 }
 
 startServer()
