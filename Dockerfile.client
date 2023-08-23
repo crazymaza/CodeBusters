@@ -7,11 +7,9 @@ WORKDIR /app
 
 FROM base as builder
 
-COPY package.json yarn.lock ./
-
-RUN apt update && apt install -y nodejs && apt install -y npm && apt install -y netcat
-
+COPY package.json yarn.lock /app/
 RUN yarn install --frozen-lockfile
+
 COPY . .
 
 RUN yarn lerna bootstrap
