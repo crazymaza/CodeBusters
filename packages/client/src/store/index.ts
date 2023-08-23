@@ -4,13 +4,16 @@ import {
   gameSlice,
   leaderboardSlice,
   themeSlice,
+  forumSlice,
 } from '@/store/slices'
 import { LeaderboardApi, UserApi, ThemeApi } from '@/api'
+import ForumApi from '@/api/Forum'
 
 export interface IExtraArgument {
   userService: UserApi
   leaderboardService: LeaderboardApi
   themeService: ThemeApi
+  forumService: ForumApi
 }
 
 const reducers = combineReducers({
@@ -18,6 +21,7 @@ const reducers = combineReducers({
   game: gameSlice,
   leaderboard: leaderboardSlice,
   theme: themeSlice,
+  forum: forumSlice,
 })
 
 export const createReduxStore = (initialState = {}, cookie = '') => {
@@ -39,6 +43,7 @@ export const createReduxStore = (initialState = {}, cookie = '') => {
             userService: new UserApi(cookie),
             leaderboardService: new LeaderboardApi(cookie),
             themeService: new ThemeApi(cookie),
+            forumService: new ForumApi(cookie),
           },
         },
       }),

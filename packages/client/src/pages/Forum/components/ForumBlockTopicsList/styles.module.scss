@@ -17,6 +17,7 @@
       @include mx.themify('color', 'hr-border');
       @include mx.themify('background-color', 'forum_item-bg');
       height: 6rem;
+      gap:3rem;
       border-radius: 1.5rem;
       width: 99%;
 

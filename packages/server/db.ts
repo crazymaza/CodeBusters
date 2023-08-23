@@ -21,7 +21,7 @@ const sequelizeOptions: SequelizeOptions = {
   password: POSTGRES_DB,
   database: POSTGRES_PASSWORD,
   dialect: 'postgres',
-  models: [User, Topic, Comment, Reply, Reaction, UserTheme, Themes],
+  models: [User, Topic, Comment, Reaction, UserTheme, Themes],
 }
 
 // Создаем инстанс Sequelize
