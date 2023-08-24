@@ -25,7 +25,6 @@ export type CreateUserThemeType = Omit<UserThemeType, 'id'>
 
 @Table({
   timestamps: false,
-  paranoid: true,
   tableName: 'user_theme',
 })
 export class UserTheme extends Model<UserThemeType, CreateUserThemeType> {
