@@ -35,12 +35,10 @@ export interface RawComment {
 export interface CreateTopicData {
   title: string
   description: string
-  userId: number
 }
 
 export interface CreateCommentData {
   topicId: number
-  userId?: number
   text: string
   parentCommentId?: number
 }

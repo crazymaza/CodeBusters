@@ -26,7 +26,6 @@ const DialogComponent = (props: CloseButtonProps) => {
       const createTopicData = {
         title: formData.get('title')?.toString() || '',
         description: formData.get('description')?.toString() || '',
-        userId: user.id,
       }
 
       await dispatch(addNewTopic(createTopicData))

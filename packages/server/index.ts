@@ -17,9 +17,9 @@ import { dbConnect } from './db'
 
 import { apiRouter } from './database'
 import { themeApiRouter } from './database/userTheme'
-import { userThemeProvider } from './middlewares'
 
 import { xssFilter } from 'helmet'
+import { checkUserAuth } from './middlewares/checkUser'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
@@ -62,8 +62,8 @@ async function startServer() {
 
   app.use(xssFilter())
   app.use(bodyParserJson)
-  app.use('/api/forum', [bodyParser.json()], apiRouter)
-  app.use('/api/theme', userThemeProvider, themeApiRouter)
+  app.use('/api/forum', [bodyParser.json(), checkUserAuth], apiRouter)
+  app.use('/api/theme', checkUserAuth, themeApiRouter)
 
   app.use('*', cookieParser(), async (req, res, next) => {
     const url = req.originalUrl
