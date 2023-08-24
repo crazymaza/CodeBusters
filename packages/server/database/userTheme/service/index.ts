@@ -2,10 +2,10 @@ import { UserTheme } from '../model'
 import { Themes } from '../../themes/model'
 
 export class ThemeService {
-  public find = async (userId: number) => {
+  public find = async (user_id: number) => {
     try {
       const result = await UserTheme.findOne({
-        where: { userId },
+        where: { user_id },
         include: [{ model: Themes, attributes: ['theme'] }],
       })
 
@@ -16,10 +16,10 @@ export class ThemeService {
   }
 
   public upsert = async ({
-    userId,
+    user_id,
     themeName,
   }: {
-    userId: number
+    user_id: number
     themeName: string
   }) => {
     try {
@@ -31,7 +31,7 @@ export class ThemeService {
         throw new Error('Such theme does not exist')
       }
 
-      return await UserTheme.upsert({ themeId: theme.id, userId })
+      return await UserTheme.upsert({ theme_id: theme.id, user_id })
     } catch (e) {
       throw new Error((e as Error).message)
     }

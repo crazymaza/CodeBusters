@@ -19,11 +19,29 @@ export class TopicController {
     }
   }
 
-  public async addTopic(req: Request, res: Response) {
-    const { body } = req
+  public async getTopic(req: Request, res: Response) {
+    const { topicId } = req.params
 
     try {
-      const newTopic = await topicService.addTopic(body)
+      const topic = await topicService.getTopic(Number(topicId))
+      if (topic) {
+        res.status(200).json(topic)
+      } else {
+        res.status(500)
+        res.json({ error: 'Failed to get topic' })
+      }
+    } catch (err) {
+      res.status(500)
+      res.json({ error: (err as Error).message })
+    }
+  }
+
+  public async addTopic(req: Request, res: Response) {
+    const { body } = req
+    const { user_id } = res.locals
+
+    try {
+      const newTopic = await topicService.addTopic({ ...body, user_id })
       if (newTopic) {
         res.status(201).json(newTopic)
       } else {

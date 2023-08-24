@@ -17,8 +17,8 @@ import { Themes } from '../../themes'
 
 type UserThemeType = {
   id: number
-  themeId: number
-  userId: number
+  theme_id: number
+  user_id: number
 }
 
 export type CreateUserThemeType = Omit<UserThemeType, 'id'>
@@ -40,7 +40,7 @@ export class UserTheme extends Model<UserThemeType, CreateUserThemeType> {
     type: DataType.INTEGER,
     field: 'theme_id',
   })
-  declare themeId: number
+  declare theme_id: number
 
   @ForeignKey(() => User)
   @AllowNull(false)
@@ -49,7 +49,7 @@ export class UserTheme extends Model<UserThemeType, CreateUserThemeType> {
     type: DataType.INTEGER,
     field: 'user_id',
   })
-  declare userId: number
+  declare user_id: number
 
   @BelongsTo(() => Themes, 'theme_id')
   declare theme: Themes

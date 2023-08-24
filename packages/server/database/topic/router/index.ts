@@ -9,6 +9,7 @@ export const topicRouter = (router: Router) => {
 
   routes
     .get('/comments/:topicId', commentController.getAllTopicComments)
+    .get('/:topicId', topicController.getTopic)
     .get('/', topicController.getAllTopics)
     .post('/', topicController.addTopic)
     .delete('/:topicId', topicController.deleteTopic)

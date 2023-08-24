@@ -20,11 +20,15 @@ export class TopicService {
     })
   }
 
-  public async addTopic({ description, title, userId }: ITopic) {
+  public async getTopic(topicId: number) {
+    return Topic.findByPk(topicId)
+  }
+
+  public async addTopic({ description, title, user_id }: ITopic) {
     return Topic.create({
       title,
       description,
-      userId,
+      user_id,
     })
   }
 

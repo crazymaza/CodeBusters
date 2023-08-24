@@ -15,7 +15,7 @@ export interface ITopic {
   id?: number
   title?: string
   description?: string
-  userId?: number
+  user_id?: number
 }
 
 @Table({ tableName: 'topics' })
@@ -46,7 +46,7 @@ export class Topic extends Model<Topic, ITopic> {
     field: 'user_id',
     allowNull: false,
   })
-  declare userId: number
+  declare user_id: number
 
   @BelongsTo(() => User)
   declare user: User

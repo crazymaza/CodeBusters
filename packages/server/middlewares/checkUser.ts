@@ -24,7 +24,7 @@ export const checkUserAuth = async (
       })
     }
 
-    res.locals.userId = userData.id
+    res.locals.user_id = userData.id
     next()
   } catch (error) {
     res.statusCode = 403

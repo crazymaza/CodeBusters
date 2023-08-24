@@ -6,6 +6,7 @@ const reactionService = new ReactionService()
 export class ReactionController {
   public async getCommentReaction(req: Request, res: Response) {
     const { commentId } = req.params
+
     try {
       const reactions = await reactionService.getCommentReactions(
         Number(commentId)
@@ -24,9 +25,10 @@ export class ReactionController {
 
   public async addReaction(req: Request, res: Response) {
     const { body } = req
+    const { user_id } = res.locals
 
     try {
-      const reaction = await reactionService.addReaction(body)
+      const reaction = await reactionService.addReaction({ ...body, user_id })
       if (reaction) {
         res.status(201).json(reaction)
       } else {

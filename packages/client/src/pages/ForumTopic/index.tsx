@@ -6,8 +6,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.scss'
 
 import CloseButton from '@/components/CloseButton'
-import { selectCommentsData } from '@/store/slices/forumSlice/selectors'
-import { getCommentsByTopicId } from '@/store/slices/forumSlice/thunks'
+import {
+  selectCommentsData,
+  selectCurrentTopicName,
+} from '@/store/slices/forumSlice/selectors'
+import {
+  getCommentsByTopicId,
+  getTopic,
+} from '@/store/slices/forumSlice/thunks'
 import { useAppDispatch } from '@/store/typedHooks'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
@@ -23,9 +29,11 @@ const ForumTopicPage = () => {
   const { topicId } = useParams()
 
   const commentsList = useSelector(selectCommentsData)
+  const topicName = useSelector(selectCurrentTopicName)
 
   useEffect(() => {
     if (topicId) {
+      dispatch(getTopic(parseInt(topicId)))
       dispatch(getCommentsByTopicId(parseInt(topicId)))
     }
   }, [])
@@ -42,7 +50,7 @@ const ForumTopicPage = () => {
                 <CloseButton onClick={handleCloseClick} />
               </div>
               <Typography variant="h3" className={cx('topicpage-title')}>
-                Технологии
+                {topicName}
               </Typography>
               <ForumAddCommentForm />
               <Link className={cx('link-back')} to="/forum">

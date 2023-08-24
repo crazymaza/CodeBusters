@@ -6,13 +6,14 @@ import {
   deleteTopic,
   getAllTopics,
   getCommentsByTopicId,
+  getTopic,
 } from './thunks'
 
 interface TopicData {
   id: number
   title: string
   description: string
-  userId: number
+  user_id: number
   createdAt: string
   updatedAt: string
   commentCount: number
@@ -30,9 +31,9 @@ export interface ForumState {
 export interface CommentData {
   id: number
   text: string
-  topicId: number
-  userId: number
-  parentCommentId: number
+  topic_id: number
+  user_id: number
+  parent_comment_id: number
   updatedAt: string
   createdAt: string
   user: UserInfo
@@ -127,6 +128,22 @@ const forumSlice = createSlice({
     )
 
     builder.addCase(getCommentsByTopicId.rejected, state => {
+      state.loading = true
+    })
+
+    builder.addCase(getTopic.pending, state => {
+      state.loading = true
+    })
+
+    builder.addCase(
+      getTopic.fulfilled,
+      (state, { payload }: PayloadAction<TopicInfo>) => {
+        state.currTopicName = payload.title
+        state.loading = false
+      }
+    )
+
+    builder.addCase(getTopic.rejected, state => {
       state.loading = true
     })
   },

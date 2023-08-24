@@ -2,7 +2,7 @@ export interface TopicInfo {
   id: number
   title: string
   description: string
-  userId: number
+  user_id: number
   createdAt: string
   updatedAt: string
   commentCount: number
@@ -11,9 +11,9 @@ export interface TopicInfo {
 export interface CommentInfo {
   id: number
   text: string
-  topicId: number
-  userId: number
-  parentCommentId: number
+  topic_id: number
+  user_id: number
+  parent_comment_id: number
   updatedAt: string
   createdAt: string
   user: UserCommentInfo
@@ -38,9 +38,9 @@ export interface CreateTopicData {
 }
 
 export interface CreateCommentData {
-  topicId: number
+  topic_id: number
   text: string
-  parentCommentId?: number
+  parent_comment_id?: number
 }
 
 export interface ForumData {

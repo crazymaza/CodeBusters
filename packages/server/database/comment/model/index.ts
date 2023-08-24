@@ -15,10 +15,10 @@ import { Reaction } from '../../reaction'
 
 export interface IComment {
   id?: number
-  topicId?: number
-  userId?: number
+  topic_id?: number
+  user_id?: number
   text?: string
-  parentCommentId: number | null
+  parent_comment_id: number | null
 }
 
 export interface ITreeCommentElement {
@@ -49,7 +49,7 @@ export class Comment extends Model<Comment, IComment> {
     field: 'topic_id',
     allowNull: false,
   })
-  declare topicId: number
+  declare topic_id: number
 
   @BelongsTo(() => Topic, {
     onDelete: 'CASCADE',
@@ -62,7 +62,7 @@ export class Comment extends Model<Comment, IComment> {
     field: 'user_id',
     allowNull: false,
   })
-  declare userId: number
+  declare user_id: number
 
   @BelongsTo(() => User)
   declare user: User
@@ -73,7 +73,7 @@ export class Comment extends Model<Comment, IComment> {
     field: 'parent_comment_id',
     allowNull: true,
   })
-  declare parentCommentId: number
+  declare parent_comment_id: number
 
   @BelongsTo(() => Comment)
   declare comment: Comment
