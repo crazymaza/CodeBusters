@@ -102,10 +102,10 @@ export const addNewReaction = createAsyncThunk<
 
 export const getReactionByCommentId = createAsyncThunk<ReactionInfo, number>(
   'forum/getReactionById',
-  async (commentId, thunkApi) => {
+  async (comment_id, thunkApi) => {
     try {
       const forumApi = (thunkApi.extra as IExtraArgument).forumService
-      const reactionsList = await forumApi.getReactionsByCommentId(commentId)
+      const reactionsList = await forumApi.getReactionsByCommentId(comment_id)
       return reactionsList.data
     } catch (error) {
       return thunkApi.rejectWithValue(false)

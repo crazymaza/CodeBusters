@@ -51,19 +51,11 @@ const ForumAddCommentForm = () => {
           onChange={e => setInputStr(e.target.value)}
         />
         <div className={cx('buttons-container')}>
-          <Button onClick={() => setPickerVisible(!isPickerVisible)}>
-            <SentimentSatisfiedAltIcon />
-          </Button>
           <Button type="submit" variant="contained">
             Оставить комментарий
           </Button>
         </div>
       </form>
-      <div className={cx('emoji-picker')}>
-        <div className={cx('emoji-picker-container')}>
-          {isPickerVisible ? <ForumEmojiPicker></ForumEmojiPicker> : null}
-        </div>
-      </div>
     </>
   )
 }

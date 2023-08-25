@@ -45,18 +45,17 @@ export interface CreateCommentData {
 }
 
 export interface CreateReactionData {
-  commentId: number
-  userId: number
+  comment_id: number
   reaction: string
 }
 
 export interface ReactionInfo {
   id: number
-  commentId: number
+  comment_id: number
   createdAt: string
   reaction: string
   updatedAt: string
-  userId: number
+  user_id: number
 }
 
 export interface ForumData {

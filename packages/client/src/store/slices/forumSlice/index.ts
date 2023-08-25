@@ -4,6 +4,7 @@ import {
   addNewComment,
   addNewReaction,
   addNewTopic,
+  deleteReaction,
   deleteTopic,
   getAllTopics,
   getCommentsByTopicId,
@@ -32,6 +33,8 @@ export interface ForumState {
 export interface ReactionData {
   reaction: string
   count: number
+  reactionIdByUser: Map<number, number>
+  ids: number[]
 }
 
 export interface CommentData {
@@ -62,21 +65,33 @@ const initialState: ForumState = {
   loading: false,
 }
 
-const getReactions = (data: ReactionInfo[]): ReactionData[] => {
-  const reactionRec = new Map<string, number>()
+const getReactions = (data: ReactionInfo[]): ReactionData[] | [] => {
+  if (!data) {
+    return []
+  }
+  const reactionMap = new Map<string, ReactionData>()
   data.map(reac => {
-    const v = reactionRec.get(reac.reaction)
-    if (v === undefined) {
-      reactionRec.set(reac.reaction, 1)
-      return
+    let reaction = reactionMap.get(reac.reaction)
+    if (!reaction) {
+      reaction = {
+        reaction: reac.reaction,
+        count: 0,
+        reactionIdByUser: new Map<number, number>(),
+        ids: new Array<number>(),
+      }
     }
-    reactionRec.set(reac.reaction, v + 1)
+    reaction.ids.push(reac.id)
+    reaction.reactionIdByUser.set(reac.user_id, reac.id)
+
+    reactionMap.set(reac.reaction, {
+      ...reaction,
+      count: reaction.count + 1,
+    })
   })
   const res: ReactionData[] = []
-  for (const [reaction, value] of reactionRec) {
+  for (const value of reactionMap.values()) {
     res.push({
-      reaction: reaction,
-      count: value,
+      ...value,
     })
   }
   return res
@@ -123,7 +138,7 @@ const forumSlice = createSlice({
       (state, { payload }: PayloadAction<CommentInfo>) => {
         const data: CommentData = {
           ...payload,
-          reactions: getReactions(payload.reaction),
+          reactions: getReactions(payload.reaction) || [],
         }
         state.comments = [data, ...state.comments]
         state.loading = false
@@ -182,25 +197,69 @@ const forumSlice = createSlice({
     builder.addCase(getTopic.rejected, state => {
       state.loading = true
     })
+
     builder.addCase(addNewReaction.pending, state => {
       state.loading = true
     })
+
     builder.addCase(
       addNewReaction.fulfilled,
       (state, { payload }: PayloadAction<ReactionInfo>) => {
-        state.comments = state.comments.map(value => {
-          if (value.id == payload.commentId) {
-            value.reactions = value.reactions.map(v => {
-              if (v.reaction === payload.reaction) {
-                v.count++
+        const comments_arr = state.comments.map(stateComment => {
+          if (stateComment.id === payload.comment_id) {
+            let foundReaction = false
+            stateComment.reactions = stateComment.reactions.map(
+              stateReaction => {
+                if (stateReaction.reaction === payload.reaction) {
+                  stateReaction.count++
+                  foundReaction = true
+                }
+                return stateReaction
               }
-              return v
-            })
+            )
+            if (!foundReaction) {
+              const reactionIdByUserId = new Map<number, number>()
+              reactionIdByUserId.set(payload.user_id, payload.id)
+              const ids = [payload.id]
+              stateComment.reactions.push({
+                reaction: payload.reaction,
+                count: 1,
+                reactionIdByUser: reactionIdByUserId,
+                ids: ids,
+              })
+            }
           }
-
-          return value
+          return stateComment
         })
+        state.comments = comments_arr
         state.loading = false
+      }
+    )
+
+    builder.addCase(addNewReaction.rejected, state => {
+      state.loading = true
+    })
+
+    builder.addCase(deleteReaction.pending, state => {
+      state.loading = true
+    })
+
+    builder.addCase(
+      deleteReaction.fulfilled,
+      (state, { payload }: PayloadAction<number>) => {
+        const comments_arr = state.comments.map(stateComment => {
+          console.log(payload)
+          stateComment.reactions = stateComment.reactions.map(reaction => {
+            for (const reactionId of reaction.ids) {
+              if (reactionId === payload) {
+                reaction.count--
+              }
+            }
+            return reaction
+          })
+          return stateComment
+        })
+        state.comments = comments_arr
       }
     )
   },
