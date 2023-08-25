@@ -4,11 +4,9 @@ import { selectUserInfo } from '@/store/slices/userSlice/selectors'
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import { TextField } from '@mui/material'
 import classNames from 'classnames/bind'
-import ForumEmojiPicker from './ForumEmojiPicker'
 import { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styles from './styles.module.scss'
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 
 const cx = classNames.bind(styles)
 

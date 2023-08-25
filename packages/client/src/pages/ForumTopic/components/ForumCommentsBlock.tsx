@@ -1,8 +1,6 @@
 import { Button } from '@/components'
 import Avatar from '@/components/Avatar'
 import { CommentData } from '@/store/slices/forumSlice'
-import { addNewReaction } from '@/store/slices/forumSlice/thunks'
-import { useAppDispatch } from '@/store/typedHooks'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 import {
   Box,
@@ -16,9 +14,9 @@ import {
 } from '@mui/material'
 import classNames from 'classnames/bind'
 import { useState } from 'react'
+import ForumEmojiPicker from './ForumEmojiPicker'
 import ForumReactionBlock from './ForumReactionBlock'
 import styles from './styles.module.scss'
-import ForumEmojiPicker from './ForumEmojiPicker'
 
 const cx = classNames.bind(styles)
 
