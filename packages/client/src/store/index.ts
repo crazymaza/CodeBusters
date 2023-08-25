@@ -6,6 +6,7 @@ import {
   themeSlice,
   forumSlice,
 } from '@/store/slices'
+import { enableMapSet } from 'immer'
 import { LeaderboardApi, UserApi, ThemeApi } from '@/api'
 import ForumApi from '@/api/Forum'
 
@@ -31,6 +32,8 @@ export const createReduxStore = (initialState = {}, cookie = '') => {
   if (typeof window !== 'undefined') {
     delete window?.__PRELOADED_STATE__
   }
+
+  enableMapSet()
 
   return configureStore({
     reducer: reducers,

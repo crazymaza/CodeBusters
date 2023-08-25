@@ -34,7 +34,6 @@ export interface ReactionData {
   reaction: string
   count: number
   reactionIdByUser: Map<number, number>
-  ids: number[]
 }
 
 export interface CommentData {
@@ -77,10 +76,8 @@ const getReactions = (data: ReactionInfo[]): ReactionData[] | [] => {
         reaction: reac.reaction,
         count: 0,
         reactionIdByUser: new Map<number, number>(),
-        ids: new Array<number>(),
       }
     }
-    reaction.ids.push(reac.id)
     reaction.reactionIdByUser.set(reac.user_id, reac.id)
 
     reactionMap.set(reac.reaction, {
@@ -212,6 +209,10 @@ const forumSlice = createSlice({
               stateReaction => {
                 if (stateReaction.reaction === payload.reaction) {
                   stateReaction.count++
+                  stateReaction.reactionIdByUser.set(
+                    payload.user_id,
+                    payload.id
+                  )
                   foundReaction = true
                 }
                 return stateReaction
@@ -220,12 +221,10 @@ const forumSlice = createSlice({
             if (!foundReaction) {
               const reactionIdByUserId = new Map<number, number>()
               reactionIdByUserId.set(payload.user_id, payload.id)
-              const ids = [payload.id]
               stateComment.reactions.push({
                 reaction: payload.reaction,
                 count: 1,
                 reactionIdByUser: reactionIdByUserId,
-                ids: ids,
               })
             }
           }
@@ -248,11 +247,14 @@ const forumSlice = createSlice({
       deleteReaction.fulfilled,
       (state, { payload }: PayloadAction<number>) => {
         const comments_arr = state.comments.map(stateComment => {
-          console.log(payload)
           stateComment.reactions = stateComment.reactions.map(reaction => {
-            for (const reactionId of reaction.ids) {
+            for (const [
+              user_id,
+              reactionId,
+            ] of reaction.reactionIdByUser.entries()) {
               if (reactionId === payload) {
                 reaction.count--
+                reaction.reactionIdByUser.delete(user_id)
               }
             }
             return reaction
