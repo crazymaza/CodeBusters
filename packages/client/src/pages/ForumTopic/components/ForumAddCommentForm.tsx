@@ -34,8 +34,7 @@ const ForumAddCommentForm = () => {
 
     if (user) {
       const createCommentData = {
-        topicId: topicIdNumber,
-        userId: user.id,
+        topic_id: topicIdNumber,
         text: formData.get('text')?.toString() || '',
       }
 

@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { ReactionController } from '../controller'
-import { checkUserAuth } from '../../../middlewares/checkUser'
 
 export const reactionRouter = (router: Router) => {
   const routes: Router = Router()
@@ -11,5 +10,5 @@ export const reactionRouter = (router: Router) => {
     .get('/:commentId', reactionController.getCommentReaction)
     .delete('/:reactionId', reactionController.deleteReaction)
 
-  router.use('/reaction', [checkUserAuth], routes)
+  router.use('/reaction', routes)
 }

@@ -1,19 +1,19 @@
 import { IReaction, Reaction } from '../model'
 
 export class ReactionService {
-  public async getCommentReactions(commentId: number) {
+  public async getCommentReactions(comment_id: number) {
     return Reaction.findAll({
       where: {
-        commentId,
+        comment_id,
       },
     })
   }
 
-  public async addReaction({ commentId, reaction, userId }: IReaction) {
+  public async addReaction({ comment_id, reaction, user_id }: IReaction) {
     return Reaction.create({
-      commentId,
+      comment_id,
       reaction,
-      userId,
+      user_id,
     })
   }
 

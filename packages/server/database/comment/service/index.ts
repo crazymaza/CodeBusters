@@ -3,10 +3,10 @@ import { Comment, IComment } from '../model'
 import { User } from '../../user'
 
 export class CommentService {
-  public async getAllTopicComments(topicId: number) {
+  public async getAllTopicComments(topic_id: number) {
     return Comment.findAll({
       where: {
-        topicId,
+        topic_id,
       },
       include: [
         {
@@ -21,15 +21,15 @@ export class CommentService {
 
   public async addComment({
     text,
-    topicId,
-    userId,
-    parentCommentId,
+    topic_id,
+    user_id,
+    parent_comment_id,
   }: IComment) {
     return Comment.create({
       text,
-      topicId,
-      userId,
-      parentCommentId,
+      topic_id,
+      user_id,
+      parent_comment_id,
     })
   }
 

@@ -5,7 +5,7 @@ import { Request, Response } from 'express'
 const commentService = new CommentService()
 
 const getRootElements = (comments: Comment[]) => {
-  return comments.filter(x => x.parentCommentId === null)
+  return comments.filter(x => x.parent_comment_id === null)
 }
 
 const getTopicCommentsTree = (comments: Comment[]) => {
@@ -27,7 +27,7 @@ const getTopicCommentsTreeElements = (
   result: ITreeCommentElement
 ) => {
   const childComments = comments.filter(
-    x => x.parentCommentId === parentComment.id
+    x => x.parent_comment_id === parentComment.id
   )
 
   if (childComments.length === 0) {
@@ -69,9 +69,10 @@ export class CommentController {
 
   public async addComment(req: Request, res: Response) {
     const { body } = req
+    const { user_id } = res.locals
 
     try {
-      const newComment = await commentService.addComment(body)
+      const newComment = await commentService.addComment({ ...body, user_id })
       if (newComment) {
         res.status(201).json(newComment)
       } else {

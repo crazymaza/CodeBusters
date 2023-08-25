@@ -13,8 +13,8 @@ import {
 
 export interface IReaction {
   id?: number
-  commentId?: number
-  userId?: number
+  comment_id?: number
+  user_id?: number
   reaction?: string
 }
 
@@ -41,7 +41,7 @@ export class Reaction extends Model<Reaction, IReaction> {
     field: 'comment_id',
     allowNull: false,
   })
-  declare commentId: number
+  declare comment_id: number
 
   @BelongsTo(() => Comment, {
     onDelete: 'CASCADE',
@@ -54,7 +54,7 @@ export class Reaction extends Model<Reaction, IReaction> {
     field: 'user_id',
     allowNull: false,
   })
-  declare userId: number
+  declare user_id: number
 
   @BelongsTo(() => User)
   declare user: User

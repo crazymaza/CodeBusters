@@ -29,10 +29,10 @@ export class ThemeController {
 
   public async update(req: Request, res: Response) {
     const { themeName } = req.body
-    const { userId } = res.locals
+    const { user_id } = res.locals
 
     try {
-      await themeService.upsert({ userId, themeName })
+      await themeService.upsert({ user_id, themeName })
       res.json({ message: 'Theme was updated' })
     } catch (e) {
       res.status(404).json({ error: (e as Error).message })

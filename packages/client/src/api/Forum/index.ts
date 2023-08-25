@@ -35,6 +35,12 @@ class ForumApi extends BaseApi {
       .then(response => response.data)
   }
 
+  getTopic(topicId: number) {
+    return this.request
+      .get<TopicInfo>(`/topic/${topicId}`)
+      .then(response => response.data)
+  }
+
   getCommentsByTopicId(topicId: number) {
     return this.request
       .get<RawComment[]>(`/topic/comments/${topicId}`)

@@ -20,6 +20,19 @@ export const getAllTopics = createAsyncThunk(
   }
 )
 
+export const getTopic = createAsyncThunk<TopicInfo, number>(
+  'forum/getTopic',
+  async (topicId, thunkApi) => {
+    try {
+      const forumApi = (thunkApi.extra as IExtraArgument).forumService
+      const topic = await forumApi.getTopic(topicId)
+      return topic
+    } catch (error) {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+)
+
 export const addNewTopic = createAsyncThunk<TopicInfo, CreateTopicData>(
   'forum/addNewTopic',
   async (createTopicData, thunkApi) => {

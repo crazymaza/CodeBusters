@@ -21,7 +21,6 @@ export type CreateThemesType = Omit<ThemesType, 'id'>
 
 @Table({
   timestamps: false,
-  paranoid: true,
   tableName: 'themes',
 })
 export class Themes extends Model<ThemesType, CreateThemesType> {
