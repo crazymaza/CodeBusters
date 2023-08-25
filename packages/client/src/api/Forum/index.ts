@@ -1,6 +1,7 @@
 import BaseApi from '../Base'
 import {
   CreateCommentData,
+  CreateReactionData,
   CreateTopicData,
   RawComment,
   TopicInfo,
@@ -63,6 +64,19 @@ class ForumApi extends BaseApi {
 
   addNewComment(data: CreateCommentData) {
     return this.request.post('/comment', data)
+  }
+
+  // Reactions
+  getReactionsByCommentId(commentId: number) {
+    return this.request.get(`/reaction/${commentId}`)
+  }
+
+  addNewReaction(data: CreateReactionData) {
+    return this.request.post('/reaction', data)
+  }
+
+  deleteReaction(reactionId: number) {
+    return this.request.delete(`reaction/${reactionId}`)
   }
 }
 

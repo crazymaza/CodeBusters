@@ -1,7 +1,8 @@
-import { CommentInfo, TopicInfo } from '@/api/Forum/types'
+import { CommentInfo, ReactionInfo, TopicInfo } from '@/api/Forum/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import {
   addNewComment,
+  addNewReaction,
   addNewTopic,
   deleteTopic,
   getAllTopics,
@@ -28,6 +29,11 @@ export interface ForumState {
   loading: boolean
 }
 
+export interface ReactionData {
+  reaction: string
+  count: number
+}
+
 export interface CommentData {
   id: number
   text: string
@@ -37,6 +43,7 @@ export interface CommentData {
   updatedAt: string
   createdAt: string
   user: UserInfo
+  reactions: ReactionData[]
 }
 
 export interface UserInfo {
@@ -53,6 +60,26 @@ const initialState: ForumState = {
   currTopicId: 0,
   currTopicName: '',
   loading: false,
+}
+
+const getReactions = (data: ReactionInfo[]): ReactionData[] => {
+  const reactionRec = new Map<string, number>()
+  data.map(reac => {
+    const v = reactionRec.get(reac.reaction)
+    if (v === undefined) {
+      reactionRec.set(reac.reaction, 1)
+      return
+    }
+    reactionRec.set(reac.reaction, v + 1)
+  })
+  const res: ReactionData[] = []
+  for (const [reaction, value] of reactionRec) {
+    res.push({
+      reaction: reaction,
+      count: value,
+    })
+  }
+  return res
 }
 
 const forumSlice = createSlice({
@@ -94,7 +121,11 @@ const forumSlice = createSlice({
     builder.addCase(
       addNewComment.fulfilled,
       (state, { payload }: PayloadAction<CommentInfo>) => {
-        state.comments = [payload, ...state.comments]
+        const data: CommentData = {
+          ...payload,
+          reactions: getReactions(payload.reaction),
+        }
+        state.comments = [data, ...state.comments]
         state.loading = false
       }
     )
@@ -122,7 +153,12 @@ const forumSlice = createSlice({
     builder.addCase(
       getCommentsByTopicId.fulfilled,
       (state, { payload }: PayloadAction<CommentInfo[]>) => {
-        state.comments = payload
+        state.comments = payload.map(value => {
+          return {
+            ...value,
+            reactions: getReactions(value.reaction),
+          }
+        })
         state.loading = false
       }
     )
@@ -146,6 +182,27 @@ const forumSlice = createSlice({
     builder.addCase(getTopic.rejected, state => {
       state.loading = true
     })
+    builder.addCase(addNewReaction.pending, state => {
+      state.loading = true
+    })
+    builder.addCase(
+      addNewReaction.fulfilled,
+      (state, { payload }: PayloadAction<ReactionInfo>) => {
+        state.comments = state.comments.map(value => {
+          if (value.id == payload.commentId) {
+            value.reactions = value.reactions.map(v => {
+              if (v.reaction === payload.reaction) {
+                v.count++
+              }
+              return v
+            })
+          }
+
+          return value
+        })
+        state.loading = false
+      }
+    )
   },
 })
 
