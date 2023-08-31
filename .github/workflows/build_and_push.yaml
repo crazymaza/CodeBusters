@@ -14,11 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Format repo lower case
-        uses: actions/github-script@v4
-        id: lower_repo
-        with:
-          result-encoding: string
-          script: return `${{ github.event.repository.name.toLowerCase() }}`
+        run: echo ::set-env name=IMAGE_REPOSITORY::$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
