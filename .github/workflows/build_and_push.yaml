@@ -14,7 +14,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Format repo lower case
-        run: echo ::set-env name=IMAGE_REPOSITORY::$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          with:
+            ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+          run: echo ::set-env name=IMAGE_REPOSITORY::$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
