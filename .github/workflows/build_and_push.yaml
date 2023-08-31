@@ -14,8 +14,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Format repo lower case
-          with:
-            ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+          env:
+-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
           run: echo ::set-env name=IMAGE_REPOSITORY::$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -30,7 +30,7 @@ jobs:
           context: .
           file: Dockerfile.client
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ steps.lower_repo.outputs.result }}/client:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_REPOSITORY }}/client:${{ github.sha }}
 
       - name: Build and push server image
         uses: docker/build-push-action@v2
@@ -38,4 +38,4 @@ jobs:
           context: .
           file: Dockerfile.server
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ steps.lower_repo.outputs.result }}/server:${{ github.sha }} 
+          tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_REPOSITORY }}/server:${{ github.sha }} 
