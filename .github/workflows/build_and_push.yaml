@@ -10,9 +10,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-    env:
-      GITHUB_REPOSITORY: crazymaza/codebusters
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,7 +26,7 @@ jobs:
           context: .
           file: Dockerfile.client
           push: true
-          tags: ghcr.io/${{ GITHUB_REPOSITORY }}/client:${{ github.sha }}
+          tags: ghcr.io/crazymaza/codebusters/client:${{ github.sha }}
 
       - name: Build and push server image
         uses: docker/build-push-action@v2
@@ -37,4 +34,4 @@ jobs:
           context: .
           file: Dockerfile.server
           push: true
-          tags: ghcr.io/${{ GITHUB_REPOSITORY }}/server:${{ github.sha }} 
+          tags: ghcr.io/crazymaza/codebusters/server:${{ github.sha }} 
