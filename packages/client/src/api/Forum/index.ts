@@ -6,16 +6,9 @@ import {
   TopicInfo,
 } from './types'
 
-const isDev = import.meta.env.MODE === 'development'
+const forumApiPath = 'api/forum'
 
-const serverPort = import.meta.env.VITE_SERVER_PORT
-const forumApiPath = import.meta.env.VITE_FORUM_API_PATH
-
-const baseUri = isDev
-  ? import.meta.env.VITE_SERVER_URL_DEV
-  : import.meta.env.VITE_SERVER_URL_PROD
-
-const baseURL = `${baseUri}:${serverPort}/${forumApiPath}`
+const baseURL = `/${forumApiPath}`
 
 class ForumApi extends BaseApi {
   constructor(cookie?: string) {
