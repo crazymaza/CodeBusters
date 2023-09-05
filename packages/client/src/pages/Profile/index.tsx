@@ -21,7 +21,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { modalSchema, schema } from './validation'
 
-import useNotification from '@/utils/useNotification'
+import useNotification from '@/hooks/useNotification'
 import notifyIcon from '@/assets/icons/stub_avatar.png'
 
 const cx = classNames.bind(styles)
