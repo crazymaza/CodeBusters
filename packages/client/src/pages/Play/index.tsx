@@ -45,7 +45,7 @@ const PlayPage = () => {
   const startGame = (options?: RunMethodOptions) => {
     setLevel(1)
 
-    engine?.run(options)
+    engine?.start(options)
   }
 
   const pauseGame = () => {

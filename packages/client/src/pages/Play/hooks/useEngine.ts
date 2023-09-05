@@ -11,6 +11,12 @@ import backgroundImage from 'sprites/background.png'
 import spriteImages from 'sprites/sprites.png'
 import EndGameMessageObject from '@/engine/Objects/EndGame'
 
+import { CodeBustersEngineProcess } from '@/engine/Core/types'
+import UpdatedCodeBustersEngine, {
+  ENGINE_EVENT,
+  EnginePlayerProgressType,
+} from '@/engine/Core/Core'
+
 export type UseEngineProps = {
   backgroundRef: React.RefObject<HTMLCanvasElement>
   containerRef: React.RefObject<HTMLDivElement>
@@ -32,19 +38,18 @@ export default function useEngine({
 
   const dispatch = useAppDispatch()
 
-  const onChangeGameProcess = (engineInstance: CodeBustersEngine) => {
-    const gameProcess = engineInstance?.getProcess()
-
-    dispatch(setGameProcess(gameProcess))
+  const onChangeGameProcess = (process: CodeBustersEngineProcess) => {
+    dispatch(setGameProcess(process))
   }
 
-  const onAnimateEngine = (engineInstance: CodeBustersEngine) => {
-    const scores = engineInstance?.getPlayerProgress().scores
-
-    dispatch(setGameScores(scores))
+  const onAnimateEngine = (
+    timestamp: number,
+    params: { playerProgress: EnginePlayerProgressType }
+  ) => {
+    dispatch(setGameScores(params.playerProgress.scores))
   }
 
-  const onEngineRun = () => {
+  const onEngineStart = () => {
     dispatch(setGameScores(0))
   }
 
@@ -117,20 +122,39 @@ export default function useEngine({
         endGameMessageObject.draw(0, endGameMessageSpecs)
 
         // Создаем экземпляр движка для обработки анимации и управлением процессом игры
-        setEngine(
-          new CodeBustersEngine({
-            objects: [
-              backgroundObject,
-              trackObject,
-              barrierObject,
-              carObject,
-              endGameMessageObject,
-            ],
-            onChangeProcess: onChangeGameProcess,
-            onAnimate: onAnimateEngine,
-            onRun: onEngineRun,
-          })
-        )
+        // setEngine(
+        //   new CodeBustersEngine({
+        //     objects: [
+        //       backgroundObject,
+        //       trackObject,
+        //       barrierObject,
+        //       carObject,
+        //       endGameMessageObject,
+        //     ],
+        //     onChangeProcess: onChangeGameProcess,
+        //     onAnimate: onAnimateEngine,
+        //     onRun: onEngineRun,
+        //   })
+        // )
+
+        const updatedEngine = new UpdatedCodeBustersEngine()
+
+        updatedEngine.subscribe([
+          {
+            engineEvent: ENGINE_EVENT.START,
+            callback: onEngineStart,
+          },
+          {
+            engineEvent: ENGINE_EVENT.CHANGE_PROCESS,
+            callback: onChangeGameProcess,
+          },
+          {
+            engineEvent: ENGINE_EVENT.ANIMATE,
+            callback: onAnimateEngine,
+          },
+        ])
+
+        setEngine(updatedEngine)
       }
 
       dispatch(setGameScores(0))

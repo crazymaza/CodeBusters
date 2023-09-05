@@ -22,7 +22,7 @@ export interface UserState {
 const initialState: UserState = {
   loading: false,
   loadingServiceId: false,
-  userInfo: null,
+  userInfo: true, //null,
 }
 
 const AVATAR_SOURCE_URL = 'https://ya-praktikum.tech/api/v2/resources'
