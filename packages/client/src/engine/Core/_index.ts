@@ -2,7 +2,7 @@ import {
   CodeBustersEngineOptions,
   CodeBustersEngineProcess,
   RunMethodOptions,
-} from './types'
+} from './_types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { CarObjectSpecs } from '@/engine/Objects/Car/types'
 import BarrierObject from '@/engine/Objects/Barrier'

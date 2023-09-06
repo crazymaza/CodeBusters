@@ -1,4 +1,4 @@
-import { CodeBustersEngineProcess } from '@/engine/Core/types'
+import { CodeBustersEngineProcess } from '@/engine/Core/_types'
 
 export const getStartButtonName = (gameProcess: CodeBustersEngineProcess) => {
   switch (gameProcess) {

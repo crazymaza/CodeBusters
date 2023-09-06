@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch } from '@/store/typedHooks'
 import { setGameScores, setGameProcess } from '@/store/slices/gameSlice'
-import { CodeBustersEngine } from '@/engine'
-import { CarObject, TrackObject } from '@/engine/Objects'
 import { loadImage } from '@/helpers'
 import { canvas } from '@/utils'
-import BackgroundObject from '@/engine/Objects/Background'
-import BarrierObject from '@/engine/Objects/Barrier'
+// import BackgroundObject from '@/engine/Objects/Background'
+// import BarrierObject from '@/engine/Objects/Barrier'
 import backgroundImage from 'sprites/background.png'
 import spriteImages from 'sprites/sprites.png'
-import EndGameMessageObject from '@/engine/Objects/EndGame'
+// import EndGameMessageObject from '@/engine/Objects/EndGame'
 
-import UpdatedTrackObject from '@/engine/Objects/Track/Track'
-import UpdatedCarObject from '@/engine/Objects/Car/Car'
-import { CodeBustersEngineProcess } from '@/engine/Core/types'
-import UpdatedCodeBustersEngine, {
-  ENGINE_EVENT,
+import { CodeBustersEngine } from '@/engine'
+import { CarObject, TrackObject } from '@/engine/Objects'
+import {
+  EngineEvent,
+  EngineProcess,
   EnginePlayerProgressType,
-} from '@/engine/Core/Core'
+} from '@/engine/Core/types'
 
 export type UseEngineProps = {
   backgroundRef: React.RefObject<HTMLCanvasElement>
@@ -40,7 +38,7 @@ export default function useEngine({
 
   const dispatch = useAppDispatch()
 
-  const onChangeGameProcess = (process: CodeBustersEngineProcess) => {
+  const onChangeGameProcess = (process: EngineProcess) => {
     dispatch(setGameProcess(process))
   }
 
@@ -71,67 +69,66 @@ export default function useEngine({
       const backgroundLayer = canvas(backgroundRef.current)
       const endGameMessageLayer = canvas(endGameMessageRef.current)
 
-      const backgroundObject = new BackgroundObject(backgroundLayer)
-      const baseBackgroundSpecs =
-        BackgroundObject.createBaseBackgroundSpecs(backgroundImage)
+      // const backgroundObject = new BackgroundObject(backgroundLayer)
+      // const baseBackgroundSpecs =
+      //   BackgroundObject.createBaseBackgroundSpecs(backgroundImage)
 
       // Создаем объект трассы для движка с начальными характеристиками
-      const trackObject = new TrackObject(trackCanvasLayer)
-      const baseTrackSpecs = TrackObject.createBaseTrackSpecs(
-        containerRef.current
-      )
+      // const trackObject = new TrackObject(trackCanvasLayer)
+      // const baseTrackSpecs = TrackObject.createBaseTrackSpecs(
+      //   containerRef.current
+      // )
 
       // Создаем объект машины для движка с начальными характеристиками
-      const carObject = new CarObject(carCanvasLayer)
-      const xPositionCar = carObject.getCenterOnTrack(TrackObject.width)
-      const baseCarSpecs = CarObject.createBaseCarSpecs(
-        spriteImages,
-        xPositionCar,
-        0,
-        trackRef.current.offsetHeight
-      )
+      // const carObject = new CarObject(carCanvasLayer)
+      // const xPositionCar = carObject.getCenterOnTrack(TrackObject.width)
+      // const baseCarSpecs = CarObject.createBaseCarSpecs(
+      //   spriteImages,
+      //   xPositionCar,
+      //   0,
+      //   trackRef.current.offsetHeight
+      // )
 
       // Создаём объект припятствий для движка с начальными характеристиками
-      const barrierObject = new BarrierObject(barrierCanvasLayer)
-      const baseBarrierSpecs = BarrierObject.createBaseBarrierSpecs(
-        trackRef.current,
-        spriteImages
-      )
+      // const barrierObject = new BarrierObject(barrierCanvasLayer)
+      // const baseBarrierSpecs = BarrierObject.createBaseBarrierSpecs(
+      //   trackRef.current,
+      //   spriteImages
+      // )
 
-      const endGameMessageObject = new EndGameMessageObject(endGameMessageLayer)
-      const endGameMessageSpecs =
-        EndGameMessageObject.createBaseEndGameMessageSpecs(
-          TrackObject.width,
-          trackRef.current.offsetHeight
-        )
+      // const endGameMessageObject = new EndGameMessageObject(endGameMessageLayer)
+      // const endGameMessageSpecs =
+      //   EndGameMessageObject.createBaseEndGameMessageSpecs(
+      //     TrackObject.width,
+      //     trackRef.current.offsetHeight
+      //   )
 
       // Создаем объект трассы для движка с начальными характеристиками
-      const updatedTrackObject = new UpdatedTrackObject(
-        'track',
-        trackCanvasLayer
-      )
+      const trackObject = new TrackObject('track', trackCanvasLayer)
 
       // Создаем объект машины для движка с начальными характеристиками
-      const updatedCarObject = new UpdatedCarObject('car', carCanvasLayer)
+      const carObject = new CarObject('car', carCanvasLayer)
 
       const loadEngine = async () => {
         await loadImage(spriteImages)
         await loadImage(backgroundImage)
 
         // Рисуем трек
-        updatedTrackObject.draw()
+        trackObject.draw()
 
         // Рисуем машину по центру трассы
+
         const carImage = new Image()
 
         carImage.src = spriteImages
 
-        updatedCarObject.draw({
-          image: carImage,
-          x:
-            updatedTrackObject.getSpecs().width / 2 -
-            updatedCarObject.getSpecs().width / 2,
-        })
+        setTimeout(() => {
+          carObject.draw({
+            image: carImage,
+            x:
+              trackObject.getSpecs().width / 2 - carObject.getSpecs().width / 2,
+          })
+        }, 300)
 
         // Рисуем фон
         // backgroundObject.draw(0, baseBackgroundSpecs)
@@ -163,27 +160,29 @@ export default function useEngine({
         // Рисуем трассу для начального отображения
         // updatedTrackObject.draw()
 
-        const updatedEngine = new UpdatedCodeBustersEngine()
+        const engine = new CodeBustersEngine()
 
         // Добавляем объекты игры
-        updatedEngine.addObject(updatedTrackObject).addObject(updatedCarObject)
+        engine
+          .addObject<TrackObject>(trackObject)
+          .addObject<CarObject>(carObject)
 
         // Подписываемся на события движка
-        updatedEngine
+        engine
           .subscribe({
-            engineEvent: ENGINE_EVENT.START,
+            engineEvent: EngineEvent.START,
             callback: onEngineStart,
           })
           .subscribe({
-            engineEvent: ENGINE_EVENT.CHANGE_PROCESS,
+            engineEvent: EngineEvent.CHANGE_PROCESS,
             callback: onChangeGameProcess,
           })
           .subscribe({
-            engineEvent: ENGINE_EVENT.ANIMATE,
+            engineEvent: EngineEvent.ANIMATE,
             callback: onAnimateEngine,
           })
 
-        setEngine(updatedEngine)
+        setEngine(engine)
       }
 
       dispatch(setGameScores(0))

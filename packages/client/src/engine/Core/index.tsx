@@ -1,88 +1,35 @@
 import EventBus, { EventCallback } from '@/engine/EventBus'
+import { BaseGameObjectType } from '@/engine/Objects/Base'
 import {
-  // CodeBustersEngineOptions,
-  CodeBustersEngineProcess,
-  RunMethodOptions,
+  INITIAL_ENGINE_PROGRESS,
+  INITIAL_GAME_PARAMS,
+  INITIAL_PLAYER_PROGRESS,
+  SECOND,
+  FPS,
+} from './const'
+import {
+  EngineEvent,
+  EngineEventType,
+  EngineOptions,
+  EngineProcess,
+  EngineProgressType,
+  EngineGameParamsType,
+  EnginePlayerProgressType,
+  EngineStartMethodOptions,
 } from './types'
-import BaseGameObject, {
-  BaseGameObjectEvent,
-  BaseGameObjectSpecs,
-} from '@/engine/Objects/Base/BaseGameObject'
-
-export const FPS = 60
-
-export const SECOND = 1000
-
-export const ENGINE_EVENT = {
-  START: '@event-engine-start',
-  PAUSE: '@event-engine-pause',
-  STOP: '@event-engine-stop',
-  CHANGE_PROCESS: '@event-engine-change-process',
-  ANIMATE: '@event-engine-animate',
-  DESTROY: '@event-engine-destroy',
-  INTERSECTION: '@event-engine-intersection', // Событие столкновения с объектом
-  PRESS_KEY: '@event-engine-press-key',
-} as const
-
-const INITIAL_GAME_PARAMS = {
-  startSpeed: 5,
-  maxSpeed: 30,
-  diffSpeed: 2,
-}
-
-const INITIAL_ENGINE_PROGRESS = {
-  intervalId: null,
-  sessionId: 0,
-  timestamp: 0,
-}
-
-const INITIAL_PLAYER_PROGRESS = {
-  speed: 0,
-  distance: 0,
-  playTime: 0, // В секундах
-  scores: 0,
-}
-
-export type EngineGameParamsType = {
-  startSpeed: number
-  maxSpeed: number
-  diffSpeed: number
-}
-
-export type EngineProgressType = {
-  intervalId: NodeJS.Timer | null
-  sessionId: number
-  timestamp: number
-}
-
-export type EnginePlayerProgressType = {
-  speed: number
-  distance: number
-  playTime: number
-  scores: number
-}
-
-export type EngineEventType = typeof ENGINE_EVENT[keyof typeof ENGINE_EVENT]
-
-export type BaseGameObjectType = BaseGameObject<BaseGameObjectSpecs>
-
-export type CodeBustersEngineOptions = {
-  gameParams?: Partial<EngineGameParamsType>
-  playerProgress?: Partial<EnginePlayerProgressType>
-}
 
 export default class CodeBustersEngine {
   public eventEmitter = new EventBus<EngineEventType>()
 
   private gameObjects: Record<string, BaseGameObjectType> = {}
 
-  private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
+  private process: EngineProcess = EngineProcess.STOP
 
   private engineProgress: EngineProgressType = INITIAL_ENGINE_PROGRESS
   private playerProgress: EnginePlayerProgressType = INITIAL_PLAYER_PROGRESS
   private gameParams: EngineGameParamsType = INITIAL_GAME_PARAMS
 
-  constructor(private options?: CodeBustersEngineOptions) {
+  constructor(private options?: EngineOptions) {
     if (options) {
       this.gameParams = { ...this.gameParams, ...this?.options?.gameParams }
       this.playerProgress = {
@@ -91,27 +38,27 @@ export default class CodeBustersEngine {
       }
     }
 
-    this.eventEmitter.on(ENGINE_EVENT.START, this.onStart.bind(this))
+    this.eventEmitter.on(EngineEvent.START, this.onStart.bind(this))
 
-    this.eventEmitter.on(ENGINE_EVENT.PAUSE, this.onPause.bind(this))
+    this.eventEmitter.on(EngineEvent.PAUSE, this.onPause.bind(this))
 
-    this.eventEmitter.on(ENGINE_EVENT.STOP, this.onStop.bind(this))
+    this.eventEmitter.on(EngineEvent.STOP, this.onStop.bind(this))
 
     this.eventEmitter.on(
-      ENGINE_EVENT.CHANGE_PROCESS,
+      EngineEvent.CHANGE_PROCESS,
       this.onChangeProcess.bind(this)
     )
 
-    this.eventEmitter.on(ENGINE_EVENT.ANIMATE, this.onAnimate.bind(this))
+    this.eventEmitter.on(EngineEvent.ANIMATE, this.onAnimate.bind(this))
 
-    this.eventEmitter.on(ENGINE_EVENT.DESTROY, this.onDestroy.bind(this))
+    this.eventEmitter.on(EngineEvent.DESTROY, this.onDestroy.bind(this))
 
     this.eventEmitter.on(
-      ENGINE_EVENT.INTERSECTION,
+      EngineEvent.INTERSECTION,
       this.onIntersection.bind(this)
     )
 
-    this.eventEmitter.on(ENGINE_EVENT.PRESS_KEY, this.onPressKey.bind(this))
+    this.eventEmitter.on(EngineEvent.PRESS_KEY, this.onPressKey.bind(this))
 
     this.keyboardListener = this.keyboardListener.bind(this)
 
@@ -128,6 +75,10 @@ export default class CodeBustersEngine {
     return this
   }
 
+  public getGameObject<TGameObject>(key: string): TGameObject {
+    return this.gameObjects[key] as TGameObject
+  }
+
   public subscribe(listener: {
     engineEvent: EngineEventType
     callback: EventCallback
@@ -137,45 +88,45 @@ export default class CodeBustersEngine {
     return this
   }
 
-  public start(options?: RunMethodOptions) {
-    this.eventEmitter.emit(ENGINE_EVENT.START, options)
+  public start(options?: EngineStartMethodOptions) {
+    this.eventEmitter.emit(EngineEvent.START, options)
   }
 
   public pause() {
-    this.eventEmitter.emit(ENGINE_EVENT.PAUSE)
+    this.eventEmitter.emit(EngineEvent.PAUSE)
   }
 
   public stop() {
-    this.eventEmitter.emit(ENGINE_EVENT.STOP)
+    this.eventEmitter.emit(EngineEvent.STOP)
   }
 
   public destroy() {
-    this.eventEmitter.emit(ENGINE_EVENT.DESTROY)
+    this.eventEmitter.emit(EngineEvent.DESTROY)
   }
 
   private animate(timestamp: number) {
-    this.eventEmitter.emit(ENGINE_EVENT.ANIMATE, timestamp, {
+    this.eventEmitter.emit(EngineEvent.ANIMATE, timestamp, {
       playerProgress: this.playerProgress,
       engineProgress: this.engineProgress,
       gameParams: this.gameParams,
     })
   }
 
-  private changeProcess(updatedProcess: CodeBustersEngineProcess) {
-    this.eventEmitter.emit(ENGINE_EVENT.CHANGE_PROCESS, updatedProcess)
+  private changeProcess(updatedProcess: EngineProcess) {
+    this.eventEmitter.emit(EngineEvent.CHANGE_PROCESS, updatedProcess)
   }
 
   private intersection(...args: unknown[]) {
-    this.eventEmitter.emit(ENGINE_EVENT.INTERSECTION, ...args)
+    this.eventEmitter.emit(EngineEvent.INTERSECTION, ...args)
   }
 
   private keyboardListener(...args: unknown[]) {
-    this.eventEmitter.emit(ENGINE_EVENT.PRESS_KEY, ...args)
+    this.eventEmitter.emit(EngineEvent.PRESS_KEY, ...args)
   }
 
-  private onStart(options?: RunMethodOptions) {
+  private onStart(options?: EngineStartMethodOptions) {
     console.log('start')
-    if (this.process === CodeBustersEngineProcess.PLAY) {
+    if (this.process === EngineProcess.PLAY) {
       return
     }
 
@@ -205,12 +156,12 @@ export default class CodeBustersEngine {
 
     this.animate(options?.isResume ? this.engineProgress.timestamp : 0)
 
-    this.changeProcess(CodeBustersEngineProcess.PLAY)
+    this.changeProcess(EngineProcess.PLAY)
   }
 
   private onPause() {
     console.log('pause')
-    if (this.process === CodeBustersEngineProcess.PAUSE) {
+    if (this.process === EngineProcess.PAUSE) {
       return
     }
 
@@ -224,12 +175,12 @@ export default class CodeBustersEngine {
     // Сбрасывание счетчиков
     this.dropCounters()
 
-    this.changeProcess(CodeBustersEngineProcess.PAUSE)
+    this.changeProcess(EngineProcess.PAUSE)
   }
 
   private onStop() {
     console.log('stop')
-    if (this.process === CodeBustersEngineProcess.STOP) {
+    if (this.process === EngineProcess.STOP) {
       return
     }
 
@@ -273,10 +224,10 @@ export default class CodeBustersEngine {
     // Сбрасывание счетчиков
     this.dropCounters()
 
-    this.changeProcess(CodeBustersEngineProcess.STOP)
+    this.changeProcess(EngineProcess.STOP)
   }
 
-  private onChangeProcess(updatedProcess: CodeBustersEngineProcess) {
+  private onChangeProcess(updatedProcess: EngineProcess) {
     this.process = updatedProcess
   }
 
@@ -321,9 +272,7 @@ export default class CodeBustersEngine {
 
   private onPressKey(event: KeyboardEvent) {
     if (event.key === 'Space') {
-      this.process === CodeBustersEngineProcess.PLAY
-        ? this.pause()
-        : this.start()
+      this.process === EngineProcess.PLAY ? this.pause() : this.start()
     }
   }
 
@@ -337,7 +286,6 @@ export default class CodeBustersEngine {
 
   private dropPlayerProgress() {
     // Создаем новую ссылку на объект прогрессв игрока, для сброса кеша в requestAnimationFrame
-
     this.playerProgress = {
       ...this.playerProgress,
       ...this?.options?.playerProgress,

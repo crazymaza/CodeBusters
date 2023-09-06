@@ -1,4 +1,4 @@
-import CodeBustersEngine from '.'
+import CodeBustersEngine from './_index'
 import { CarObject, TrackObject } from '../Objects'
 import { fireEvent } from '@testing-library/react'
 import 'jest-canvas-mock'

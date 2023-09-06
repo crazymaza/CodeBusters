@@ -1,5 +1,5 @@
-import BaseObject from '.'
-import { BaseObjectSpecs } from './types'
+import BaseObject from './_index'
+import { BaseObjectSpecs } from './_types'
 import 'jest-canvas-mock'
 
 class DummyClass extends BaseObject<BaseObjectSpecs> {

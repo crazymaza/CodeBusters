@@ -89,6 +89,19 @@
     border-radius: 1.5rem;
     overflow: hidden;
     z-index: 1;
+
+    &_hidden {
+      position: absolute;
+      visibility: hidden;
+    }
+  }
+
+  &__loader {
+    grid-area: canvas;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &__background {

@@ -1,10 +1,11 @@
-import { BaseObjectSpecs } from '@/engine/Objects/Base/types'
+import { BaseGameObjectSpecs } from '@/engine/Objects/Base/types'
 
-export interface CarObjectSpecs extends BaseObjectSpecs {
-  image: CanvasImageSource
-}
-
-export enum CarKeyboadControlEventKey {
+export enum CarKeyboardControlEventKey {
   LEFT = 'ArrowLeft',
   RIGHT = 'ArrowRight',
+}
+
+export interface CarObjectSpecs extends BaseGameObjectSpecs {
+  image: CanvasImageSource
+  sensitivity?: number
 }

@@ -1,4 +1,4 @@
-import { BaseObjectSpecs } from '../Base/types'
+import { BaseObjectSpecs } from '../Base/_types'
 
 export interface BackgroundObjectSpecs extends BaseObjectSpecs {
   x: number

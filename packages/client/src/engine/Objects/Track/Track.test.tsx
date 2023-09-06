@@ -1,4 +1,4 @@
-import TrackObject from '.'
+import TrackObject from './_index'
 import 'jest-canvas-mock'
 
 describe('Тест объекта Track', () => {

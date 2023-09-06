@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CodeBustersEngineProcess } from '@/engine/Core/types'
+import { EngineProcess } from '@/engine/Core/types'
 
 export interface GameState {
   scores: number
-  process: CodeBustersEngineProcess
+  process: EngineProcess
 }
 
 const initialState: GameState = {
   scores: 0,
-  process: CodeBustersEngineProcess.STOP,
+  process: EngineProcess.STOP,
 }
 
 const gameSlice = createSlice({
@@ -18,7 +18,7 @@ const gameSlice = createSlice({
     setScores: (state, action: PayloadAction<number>) => {
       state.scores = action.payload
     },
-    setProcess: (state, action: PayloadAction<CodeBustersEngineProcess>) => {
+    setProcess: (state, action: PayloadAction<EngineProcess>) => {
       state.process = action.payload
     },
   },

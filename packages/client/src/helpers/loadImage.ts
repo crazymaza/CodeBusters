@@ -7,5 +7,7 @@ export default async function loadImage(src: string) {
     })
 
     image.src = src
+
+    return image
   })
 }

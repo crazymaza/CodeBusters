@@ -1,8 +1,8 @@
 import { canvas } from '@/utils'
-import CodeBustersEngine from '@/engine/Core/Core'
-import BaseGameObject, {
-  BaseGameObjectSpecs,
-} from '@/engine/Objects/Base/BaseGameObject'
+import { CodeBustersEngine } from '@/engine'
+import { BaseGameObject } from '@/engine/Objects'
+import { INITIAL_SPECS } from './const'
+import { LineObjectSpecs } from './types'
 
 /*
  * @INFO Объект линии трассы
@@ -10,16 +10,6 @@ import BaseGameObject, {
  * Включает в себя описание отрисовки линий для трассы
  *
  */
-
-export type LineObjectSpecs = BaseGameObjectSpecs
-
-const INITIAL_SPECS = {
-  x: 0,
-  y: 0,
-  width: 10,
-  height: 140,
-  fill: '#fff',
-}
 
 export default class LineObject extends BaseGameObject<LineObjectSpecs> {
   protected specs: LineObjectSpecs = INITIAL_SPECS

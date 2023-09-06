@@ -1,7 +1,10 @@
 import { useState, useMemo, MouseEventHandler } from 'react'
 import { selectGameProcess } from '@/store/slices/gameSlice/selectrors'
 import { useAppSelector } from '@/store/typedHooks'
-import { CodeBustersEngineProcess, RunMethodOptions } from '@/engine/Core/types'
+import {
+  CodeBustersEngineProcess,
+  RunMethodOptions,
+} from '@/engine/Core/_types'
 import { Button } from '@mui/material'
 import { getStartButtonName } from './helpers'
 

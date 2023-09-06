@@ -1,4 +1,4 @@
-import CarObject from '.'
+import CarObject from './_index'
 import 'jest-canvas-mock'
 
 describe('Тест объекта Car', () => {
