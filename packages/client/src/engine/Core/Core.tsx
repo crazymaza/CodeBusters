@@ -21,7 +21,7 @@ export const ENGINE_EVENT = {
   ANIMATE: '@event-engine-animate',
   DESTROY: '@event-engine-destroy',
   INTERSECTION: '@event-engine-intersection', // Событие столкновения с объектом
-  PRESS_KEYBOARD: '@event-engine-press-keyboard',
+  PRESS_KEY: '@event-engine-press-key',
 } as const
 
 const INITIAL_GAME_PARAMS = {
@@ -64,10 +64,7 @@ export type EnginePlayerProgressType = {
 
 export type EngineEventType = typeof ENGINE_EVENT[keyof typeof ENGINE_EVENT]
 
-export type BaseGameObjectType = BaseGameObject<
-  BaseGameObjectSpecs,
-  BaseGameObjectEvent
->
+export type BaseGameObjectType = BaseGameObject<BaseGameObjectSpecs>
 
 export type CodeBustersEngineOptions = {
   gameParams?: Partial<EngineGameParamsType>
@@ -75,9 +72,9 @@ export type CodeBustersEngineOptions = {
 }
 
 export default class CodeBustersEngine {
-  private eventEmitter = new EventBus<EngineEventType>()
+  public eventEmitter = new EventBus<EngineEventType>()
 
-  private gameObjects: BaseGameObjectType[] = []
+  private gameObjects: Record<string, BaseGameObjectType> = {}
 
   private process: CodeBustersEngineProcess = CodeBustersEngineProcess.STOP
 
@@ -100,7 +97,10 @@ export default class CodeBustersEngine {
 
     this.eventEmitter.on(ENGINE_EVENT.STOP, this.onStop.bind(this))
 
-    this.eventEmitter.on(ENGINE_EVENT.CHANGE_PROCESS, this.onAnimate.bind(this))
+    this.eventEmitter.on(
+      ENGINE_EVENT.CHANGE_PROCESS,
+      this.onChangeProcess.bind(this)
+    )
 
     this.eventEmitter.on(ENGINE_EVENT.ANIMATE, this.onAnimate.bind(this))
 
@@ -111,10 +111,7 @@ export default class CodeBustersEngine {
       this.onIntersection.bind(this)
     )
 
-    this.eventEmitter.on(
-      ENGINE_EVENT.PRESS_KEYBOARD,
-      this.onKeyboard.bind(this)
-    )
+    this.eventEmitter.on(ENGINE_EVENT.PRESS_KEY, this.onPressKey.bind(this))
 
     this.keyboardListener = this.keyboardListener.bind(this)
 
@@ -124,18 +121,20 @@ export default class CodeBustersEngine {
   public addObject<TGameObject extends BaseGameObjectType>(
     gameObject: TGameObject
   ) {
-    this.gameObjects.push(gameObject)
+    gameObject.bindEngine(this)
+
+    this.gameObjects[gameObject.key] = gameObject
+
+    return this
   }
 
-  public subscribe(
-    listeners: {
-      engineEvent: EngineEventType
-      callback: EventCallback
-    }[]
-  ) {
-    listeners.forEach(listener => {
-      this.eventEmitter.on(listener.engineEvent, listener.callback)
-    })
+  public subscribe(listener: {
+    engineEvent: EngineEventType
+    callback: EventCallback
+  }) {
+    this.eventEmitter.on(listener.engineEvent, listener.callback)
+
+    return this
   }
 
   public start(options?: RunMethodOptions) {
@@ -157,12 +156,12 @@ export default class CodeBustersEngine {
   private animate(timestamp: number) {
     this.eventEmitter.emit(ENGINE_EVENT.ANIMATE, timestamp, {
       playerProgress: this.playerProgress,
+      engineProgress: this.engineProgress,
+      gameParams: this.gameParams,
     })
   }
 
   private changeProcess(updatedProcess: CodeBustersEngineProcess) {
-    this.process = updatedProcess
-
     this.eventEmitter.emit(ENGINE_EVENT.CHANGE_PROCESS, updatedProcess)
   }
 
@@ -171,7 +170,7 @@ export default class CodeBustersEngine {
   }
 
   private keyboardListener(...args: unknown[]) {
-    this.eventEmitter.emit(ENGINE_EVENT.PRESS_KEYBOARD, ...args)
+    this.eventEmitter.emit(ENGINE_EVENT.PRESS_KEY, ...args)
   }
 
   private onStart(options?: RunMethodOptions) {
@@ -277,6 +276,10 @@ export default class CodeBustersEngine {
     this.changeProcess(CodeBustersEngineProcess.STOP)
   }
 
+  private onChangeProcess(updatedProcess: CodeBustersEngineProcess) {
+    this.process = updatedProcess
+  }
+
   private onAnimate(timestamp: number) {
     console.log('animate')
     //let isContinue = true // Флаг для прерывание анимации
@@ -316,7 +319,7 @@ export default class CodeBustersEngine {
     this.removeKeyboardListeners()
   }
 
-  private onKeyboard(event: KeyboardEvent) {
+  private onPressKey(event: KeyboardEvent) {
     if (event.key === 'Space') {
       this.process === CodeBustersEngineProcess.PLAY
         ? this.pause()

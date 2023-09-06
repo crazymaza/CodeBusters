@@ -1,78 +1,65 @@
 import { canvas } from '@/utils'
+import CodeBustersEngine from '@/engine/Core/Core'
 import BaseGameObject, {
-  BaseGameObjectEvent,
   BaseGameObjectSpecs,
 } from '@/engine/Objects/Base/BaseGameObject'
-import { TrackBoundarySide, TrackLineSide } from './types'
 
 /*
  * @INFO Объект трассы
  *
- * Включает в себя описание отрисовки самой трассы и ее границ
- * для имитации скорости машины
+ * Включает в себя описание отрисовки самой трассы
  *
  */
 
-export type TrackObjectSpecs = {
-  boundaryCount?: number
-  linesCount?: number
-} & BaseGameObjectSpecs
+export type TrackObjectSpecs = BaseGameObjectSpecs
 
-export default class TrackObject extends BaseGameObject<
-  TrackObjectSpecs,
-  BaseGameObjectEvent
-> {
-  constructor(canvasApi: ReturnType<typeof canvas>) {
-    super(canvasApi)
+const INITIAL_SPECS = {
+  x: 0,
+  y: 0,
+  width: 500,
+  height: 0,
+  fill: 'gray',
+}
+
+export default class TrackObject extends BaseGameObject<TrackObjectSpecs> {
+  protected specs: TrackObjectSpecs = INITIAL_SPECS
+
+  constructor(
+    key: string,
+    canvasApi: ReturnType<typeof canvas>,
+    initialSpecs: Partial<TrackObjectSpecs> = {}
+  ) {
+    super(key, canvasApi, initialSpecs)
+
+    this.specs.height = this.canvasApi.element.offsetHeight
   }
 
-  private createBoundary(side: TrackBoundarySide) {
-    return Array.from({
-      length: (this.specs?.boundaryCount || 0) + this.trackObjectsTopOffset,
-    }).map(() => {
-      const boundarySpecs = TrackObject.boundarySpecs
-
-      const offset =
-        side === TrackBoundarySide.LEFT
-          ? boundarySpecs.leftOffset
-          : boundarySpecs.leftOffset -
-            (TrackObject.boundarySpecs.width + boundarySpecs.leftOffset * 2) +
-            (this.specs?.width || 0)
-
-      return {
-        offset,
-        topOffset: this.trackObjectsTopOffset,
-        width: boundarySpecs.width,
-        height: boundarySpecs.height,
-      }
-    })
+  public bindEngine = (engine: CodeBustersEngine) => {
+    this.engine = engine
   }
 
-  private createLine(side: TrackLineSide) {
-    return Array.from({
-      length: (this.specs?.linesCount || 0) + this.trackObjectsTopOffset,
-    }).map(() => {
-      const linesSpecs = TrackObject.linesSpecs
+  public drawTrack() {
+    if (this.canvasApi.ctx && this.specs) {
+      const specs = this.specs as TrackObjectSpecs
 
-      let offset = 0
+      this.canvasApi.element.width = specs.width
+      this.canvasApi.element.height = specs.height
 
-      if (side === TrackLineSide.LEFT) {
-        offset = linesSpecs.leftOffset
-      }
+      this.canvasApi.ctx.beginPath()
 
-      if (side === TrackLineSide.RIGHT) {
-        offset =
-          linesSpecs.leftOffset -
-          (TrackObject.linesSpecs.width + linesSpecs.leftOffset * 2) +
-          (this.specs?.width || 0)
-      }
+      this.canvasApi.ctx.fillStyle = specs.fill as string
+      this.canvasApi.ctx.fillRect(specs.x, specs.y, specs.width, specs.height)
+    }
+  }
 
-      return {
-        offset,
-        topOffset: this.trackObjectsTopOffset,
-        width: linesSpecs.width,
-        heigth: linesSpecs.heigth,
-      }
-    })
+  public draw(specs?: Partial<TrackObjectSpecs>) {
+    if (specs) {
+      this.specs = { ...this.specs, ...specs }
+    }
+
+    if (this.canvasApi.ctx) {
+      this.clear()
+      this.drawTrack()
+    }
   }
 }

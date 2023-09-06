@@ -11,6 +11,8 @@ import backgroundImage from 'sprites/background.png'
 import spriteImages from 'sprites/sprites.png'
 import EndGameMessageObject from '@/engine/Objects/EndGame'
 
+import UpdatedTrackObject from '@/engine/Objects/Track/Track'
+import UpdatedCarObject from '@/engine/Objects/Car/Car'
 import { CodeBustersEngineProcess } from '@/engine/Core/types'
 import UpdatedCodeBustersEngine, {
   ENGINE_EVENT,
@@ -103,23 +105,44 @@ export default function useEngine({
           trackRef.current.offsetHeight
         )
 
+      // Создаем объект трассы для движка с начальными характеристиками
+      const updatedTrackObject = new UpdatedTrackObject(
+        'track',
+        trackCanvasLayer
+      )
+
+      // Создаем объект машины для движка с начальными характеристиками
+      const updatedCarObject = new UpdatedCarObject('car', carCanvasLayer)
+
       const loadEngine = async () => {
         await loadImage(spriteImages)
         await loadImage(backgroundImage)
 
-        // Рисуем фон
-        backgroundObject.draw(0, baseBackgroundSpecs)
-        // Рисуем трассу для начального отображения
-        trackObject.draw(0, baseTrackSpecs)
+        // Рисуем трек
+        updatedTrackObject.draw()
 
-        // Рисуем машину
-        carObject.draw(0, baseCarSpecs)
+        // Рисуем машину по центру трассы
+        const carImage = new Image()
+
+        carImage.src = spriteImages
+
+        updatedCarObject.draw({
+          image: carImage,
+          x:
+            updatedTrackObject.getSpecs().width / 2 -
+            updatedCarObject.getSpecs().width / 2,
+        })
+
+        // Рисуем фон
+        // backgroundObject.draw(0, baseBackgroundSpecs)
+        // Рисуем трассу для начального отображения
+        // trackObject.draw(0, baseTrackSpecs)
 
         // Рисуем припятствия
-        barrierObject.draw(0, baseBarrierSpecs)
+        // barrierObject.draw(0, baseBarrierSpecs)
 
         //
-        endGameMessageObject.draw(0, endGameMessageSpecs)
+        // endGameMessageObject.draw(0, endGameMessageSpecs)
 
         // Создаем экземпляр движка для обработки анимации и управлением процессом игры
         // setEngine(
@@ -137,22 +160,28 @@ export default function useEngine({
         //   })
         // )
 
+        // Рисуем трассу для начального отображения
+        // updatedTrackObject.draw()
+
         const updatedEngine = new UpdatedCodeBustersEngine()
 
-        updatedEngine.subscribe([
-          {
+        // Добавляем объекты игры
+        updatedEngine.addObject(updatedTrackObject).addObject(updatedCarObject)
+
+        // Подписываемся на события движка
+        updatedEngine
+          .subscribe({
             engineEvent: ENGINE_EVENT.START,
             callback: onEngineStart,
-          },
-          {
+          })
+          .subscribe({
             engineEvent: ENGINE_EVENT.CHANGE_PROCESS,
             callback: onChangeGameProcess,
-          },
-          {
+          })
+          .subscribe({
             engineEvent: ENGINE_EVENT.ANIMATE,
             callback: onAnimateEngine,
-          },
-        ])
+          })
 
         setEngine(updatedEngine)
       }
