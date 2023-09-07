@@ -142,7 +142,6 @@ export default class CodeBustersEngine {
   }
 
   private onStart(options?: EngineStartMethodOptions) {
-    console.log('start')
     if (this.process === EngineProcess.PLAY) {
       return
     }
@@ -177,7 +176,6 @@ export default class CodeBustersEngine {
   }
 
   private onPause() {
-    console.log('pause')
     if (this.process === EngineProcess.PAUSE) {
       return
     }
@@ -196,7 +194,6 @@ export default class CodeBustersEngine {
   }
 
   private onStop() {
-    console.log('stop')
     if (this.process === EngineProcess.STOP) {
       return
     }
@@ -249,7 +246,6 @@ export default class CodeBustersEngine {
   }
 
   private onAnimate(timestamp: number) {
-    console.log('animate', this.playerProgress.speed)
     //let isContinue = true // Флаг для прерывание анимации
 
     // Сбрасываем процесс игры, если timestamp = 0
@@ -260,6 +256,10 @@ export default class CodeBustersEngine {
     this.engineProgress.timestamp = timestamp
 
     this.playerProgress.playTime += 1 / FPS
+
+    this.engineProgress.frame = Math.round(
+      SECOND / FPS - timestamp - this.engineProgress.timestamp
+    )
 
     // Добавил счетчик дистанции, предположительно для смены уровня и счета очков
     this.playerProgress.distance =
@@ -282,7 +282,6 @@ export default class CodeBustersEngine {
   }
 
   private onDestroy() {
-    console.log('destroy')
     this.stop()
     this.removeKeyboardListeners()
   }

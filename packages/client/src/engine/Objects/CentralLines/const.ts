@@ -5,7 +5,7 @@ export const INITIAL_SPECS = {
   height: 0,
   fill: '#fff',
   countLines: 0,
-  paddingLine: 100,
+  paddingLine: 150,
   heightLine: 140,
   widthLine: 10,
 }

@@ -25,18 +25,16 @@ export default class LineObject extends BaseGameObject<LineObjectSpecs> {
   }
 
   public drawLine() {
-    if (this.canvasApi.ctx && this.specs) {
-      const specs = this.specs as LineObjectSpecs
+    const specs = this.specs as LineObjectSpecs
 
-      const ctx = this.canvasApi.ctx as CanvasRenderingContext2D
+    const ctx = this.canvasApi.ctx as CanvasRenderingContext2D
 
-      ctx.beginPath()
+    ctx.beginPath()
 
-      ctx.fillStyle = specs.fill as string
+    ctx.fillStyle = specs.fill as string
 
-      // ctx.strokeRect(specs.x, specs.y, specs.width, specs.height)
-      ctx.fillRect(specs.x, specs.y, specs.width, specs.height)
-    }
+    // ctx.strokeRect(specs.x, specs.y, specs.width, specs.height)
+    ctx.fillRect(specs.x, specs.y, specs.width, specs.height)
   }
 
   public draw(specs?: Partial<LineObjectSpecs>) {
@@ -44,9 +42,7 @@ export default class LineObject extends BaseGameObject<LineObjectSpecs> {
       this.specs = { ...this.specs, ...specs }
     }
 
-    if (this.canvasApi.ctx) {
-      this.drawLine()
-    }
+    this.drawLine()
   }
 
   public clear() {

@@ -129,28 +129,28 @@ const PlayPage = () => {
           <canvas ref={trackRef} className={cx('play__track')} />
           <canvas
             ref={linesRef}
-            width={trackSpecs?.width || 0}
-            height={trackSpecs?.height || 710}
+            width={trackSpecs?.width}
+            height={trackSpecs?.height}
             className={cx('play__lines')}
           />
           <canvas
             ref={carRef}
             className={cx('play__car')}
-            width={trackSpecs?.width || 0}
-            height={carSpecs?.height || 0}
+            width={trackSpecs?.width}
+            height={carSpecs?.height}
             style={{ bottom: 30 }}
           />
           <canvas
             ref={barrierRef}
             className={cx('play__barrier')}
-            width={trackSpecs?.width || 0}
-            height={trackSpecs?.height || 710}
+            width={trackSpecs?.width}
+            height={trackSpecs?.height}
           />
           <canvas
             ref={endGameMessageRef}
             className={cx('play__endgame')}
-            width={trackSpecs?.width || 0}
-            height={trackRef?.current?.height || 710}
+            width={trackSpecs?.width}
+            height={trackRef?.current?.height}
           />
         </div>
       </div>

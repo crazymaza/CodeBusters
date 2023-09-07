@@ -29,6 +29,9 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
   ) {
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
 
+    this.onPressKey = this.onPressKey.bind(this)
+    this.onDestroy = this.onDestroy.bind(this)
+
     if (initialSpecs.image) {
       this.specs.image = initialSpecs.image
     }
@@ -37,10 +40,9 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
   public bindEngine(engine: CodeBustersEngine) {
     this.engine = engine
 
-    this.engine.eventEmitter.on(
-      EngineEvent.PRESS_KEY,
-      this.onPressKey.bind(this)
-    )
+    this.engine.eventEmitter.on(EngineEvent.PRESS_KEY, this.onPressKey)
+
+    this.engine.eventEmitter.on(EngineEvent.DESTROY, this.onDestroy)
   }
 
   public drawCar() {
@@ -95,5 +97,10 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
       default:
         break
     }
+  }
+
+  private onDestroy() {
+    this.engine?.eventEmitter.off(EngineEvent.PRESS_KEY, this.onPressKey)
+    this.engine?.eventEmitter.off(EngineEvent.DESTROY, this.onDestroy)
   }
 }

@@ -126,12 +126,6 @@ export default function useEngine({
         // Рисуем трек
         trackObject.draw()
 
-        // Рисуем центральную разметку
-        centralLinesObject.draw({
-          width: trackObject.getSpecs().width,
-          height: trackObject.getSpecs().height,
-        })
-
         // Рисуем машину по центру трассы
         const carImage = new Image()
         const xAxisCar =
@@ -143,6 +137,12 @@ export default function useEngine({
           carObject.draw({
             image: carImage,
             x: xAxisCar,
+          })
+
+          // Рисуем центральную разметку
+          centralLinesObject.draw({
+            width: trackObject.getSpecs().width,
+            height: trackObject.getSpecs().height,
           })
         }, 300)
 

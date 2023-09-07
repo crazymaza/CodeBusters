@@ -12,6 +12,7 @@ export const INITIAL_ENGINE_PROGRESS = {
   intervalId: null,
   sessionId: 0,
   timestamp: 0,
+  frame: 0,
 }
 
 export const INITIAL_PLAYER_PROGRESS = {

@@ -7,7 +7,12 @@ import { CentralLinesObjectSpecs } from './types'
 
 export default class CentralLinesObject extends BaseGameObject<CentralLinesObjectSpecs> {
   private deltaTopOffset = 0
+
   private lines: LineObject[] = []
+
+  private topLine: LineObject | null = null
+
+  private xAxisCenter = 0
 
   constructor(
     key: string,
@@ -16,110 +21,81 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
   ) {
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
 
+    this.onAnimate = this.onAnimate.bind(this)
+
+    this.onDestroy = this.onDestroy.bind(this)
+
     // Устанавливаем высоту всего контейнера по высоте трека
     this.specs.height = this.canvasApi.element.offsetHeight
-
-    console.log('this.specs.countLines', this.specs.countLines)
-  }
-
-  private calculateOffsetY(index: number, prevOffsetY: number) {
-    // Считаем y координату сдвига вниз
-
-    // console.log('PREV Y', index, ':', prevOffsetY, this.deltaTopOffset)
-
-    // if (prevOffsetY < 0 && index === 0) {
-    //   console.log(
-    //     'Is less',
-    //     index,
-    //     prevOffsetY,
-    //     prevOffsetY + this.deltaTopOffset
-    //   )
-    //   return prevOffsetY + this.deltaTopOffset
-    // }
-
-    const lineFullHeight = this.specs.heightLine + this.specs.paddingLine
-
-    let offsetY =
-      this.specs.height - index * lineFullHeight + this.deltaTopOffset
-
-    if (offsetY > this.specs.height) {
-      offsetY = -lineFullHeight + this.deltaTopOffset
-    }
-
-    if (index === 1) {
-      console.log('offsetY', offsetY, prevOffsetY, index)
-    }
-
-    // (this.deltaTopOffset % this.specs.height) * index + this.deltaTopOffset
-
-    // const offsetY =
-    //   this.specs.height -
-    //   (this.specs.heightLine + this.specs.paddingLine) * index +
-    //   this.deltaTopOffset
-
-    // if (offsetY >= this.specs.height && index === 0) {
-    //   const droppedOffsetY = -(this.specs.heightLine + this.specs.paddingLine)
-
-    //   // console.log('CALC NEED TO UP', offsetY)
-
-    //   return droppedOffsetY
-    // }
-
-    return offsetY
   }
 
   private onAnimate(timestamp: number, params: EngineAnimateParams) {
-    this.deltaTopOffset += params.playerProgress.speed
-
-    // if (this.deltaTopOffset >= this.specs.height) {
-    //   console.log(
-    //     'this.deltaTopOffset',
-    //     this.deltaTopOffset % this.specs.height
-    //   )
-
-    //   this.deltaTopOffset = 0
-    // }
+    this.deltaTopOffset = params.playerProgress.speed
 
     this.drawLines()
   }
 
+  private onDestroy() {
+    this.engine?.eventEmitter.off(EngineEvent.ANIMATE, this.onAnimate)
+    this.engine?.eventEmitter.off(EngineEvent.DESTROY, this.onDestroy)
+  }
+
+  private calculateOffsetY(index: number, prevOffsetY: number) {
+    const lineFullHeight = this.specs.heightLine + this.specs.paddingLine
+
+    // Считаем Y координату сдвига вниз
+    const offsetY = prevOffsetY + this.deltaTopOffset
+
+    // Если Y координата ушла за зону игрового поля, сдвигаем ее начало экрана
+    if (offsetY > this.specs.height) {
+      const topOffsetY = -lineFullHeight
+
+      this.topLine = this.lines[index]
+
+      return topOffsetY
+    }
+
+    return offsetY
+  }
+
   private createLine(key: string, offsetY: number) {
     const lineObject = new LineObject(key, this.canvasApi, {
-      x: this.specs.width / 2 - this.specs.widthLine / 2,
+      x: this.xAxisCenter,
       y: offsetY,
       width: this.specs.widthLine,
       height: this.specs.heightLine,
     })
 
+    lineObject.draw()
+
     return lineObject
   }
 
-  public bindEngine(engine: CodeBustersEngine) {
-    this.engine = engine
-
-    this.engine.eventEmitter.on(EngineEvent.ANIMATE, this.onAnimate.bind(this))
-  }
-
   public drawLines() {
+    this.clear()
+
     if (this.lines.length > 0) {
       this.lines.forEach((lineObject, index) => {
-        lineObject.clear()
+        const currentOffsetY = lineObject.getSpecs().y
 
+        // Вычисление координат центральных линий в зависимочти от скорости
         lineObject.draw({
-          y: this.calculateOffsetY(index, lineObject.getSpecs().y),
+          y: this.calculateOffsetY(index, currentOffsetY),
         })
       })
     } else {
       this.lines = Array.from({
         length: this.specs.countLines,
       }).map((_, index) => {
+        // Постороение начальных координат центральных линий
         const offsetY =
           this.specs.height -
-          (this.specs.heightLine + this.specs.paddingLine) * index +
-          this.deltaTopOffset
+          (this.specs.heightLine + this.specs.paddingLine) * index
 
         return this.createLine(`line-center-${index}`, offsetY)
       })
+
+      this.topLine = this.lines[this.lines.length - 1]
     }
   }
 
@@ -134,8 +110,16 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
         this.specs.height / (this.specs.heightLine + this.specs.paddingLine)
       ) + 1
 
-    if (this.canvasApi.ctx) {
-      this.drawLines()
-    }
+    // Вычисляем центр трассы
+    this.xAxisCenter = this.specs.width / 2 - this.specs.widthLine / 2
+
+    this.drawLines()
+  }
+
+  public bindEngine(engine: CodeBustersEngine) {
+    this.engine = engine
+
+    this.engine.eventEmitter.on(EngineEvent.ANIMATE, this.onAnimate)
+    this.engine.eventEmitter.on(EngineEvent.DESTROY, this.onDestroy)
   }
 }

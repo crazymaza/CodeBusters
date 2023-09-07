@@ -1,4 +1,4 @@
-import TrackObject from './_index'
+import TrackObject from './index'
 import 'jest-canvas-mock'
 
 describe('Тест объекта Track', () => {
@@ -8,9 +8,9 @@ describe('Тест объекта Track', () => {
 
   const createTestTrack = () => {
     if (canvas && ctx && container) {
-      const Track = new TrackObject({ ctx, element: canvas })
-      const baseTrackSpecs = TrackObject.createBaseTrackSpecs(container)
-      Track.draw(0, baseTrackSpecs)
+      const Track = new TrackObject('track', { ctx, element: canvas })
+
+      Track.draw()
 
       return Track
     }

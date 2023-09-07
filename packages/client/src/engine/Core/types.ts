@@ -26,6 +26,7 @@ export type EngineProgressType = {
   intervalId: NodeJS.Timer | null
   sessionId: number
   timestamp: number
+  frame: number
 }
 
 export type EnginePlayerProgressType = {
