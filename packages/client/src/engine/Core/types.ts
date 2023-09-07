@@ -42,6 +42,12 @@ export type EngineOptions = {
   playerProgress?: Partial<EnginePlayerProgressType>
 }
 
+export type EngineAnimateParams = {
+  playerProgress: EnginePlayerProgressType
+  engineProgress: EngineProgressType
+  gameParams: EngineGameParamsType
+}
+
 export type EngineStartMethodOptions = {
   isResume?: boolean
 }

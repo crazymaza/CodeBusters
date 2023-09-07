@@ -29,6 +29,7 @@ const PlayPage = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const backgroundRef = useRef<HTMLCanvasElement>(null)
   const trackRef = useRef<HTMLCanvasElement>(null)
+  const linesRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
   const barrierRef = useRef<HTMLCanvasElement>(null)
   const endGameMessageRef = useRef<HTMLCanvasElement>(null)
@@ -37,6 +38,7 @@ const PlayPage = () => {
     backgroundRef,
     containerRef,
     trackRef,
+    linesRef,
     carRef,
     barrierRef,
     endGameMessageRef,
@@ -125,6 +127,12 @@ const PlayPage = () => {
             height={800}
           />
           <canvas ref={trackRef} className={cx('play__track')} />
+          <canvas
+            ref={linesRef}
+            width={trackSpecs?.width || 0}
+            height={trackSpecs?.height || 710}
+            className={cx('play__lines')}
+          />
           <canvas
             ref={carRef}
             className={cx('play__car')}

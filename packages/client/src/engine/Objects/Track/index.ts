@@ -12,14 +12,12 @@ import { TrackObjectSpecs } from './types'
  */
 
 export default class TrackObject extends BaseGameObject<TrackObjectSpecs> {
-  protected specs: TrackObjectSpecs = INITIAL_SPECS
-
   constructor(
     key: string,
     canvasApi: ReturnType<typeof canvas>,
     initialSpecs: Partial<TrackObjectSpecs> = {}
   ) {
-    super(key, canvasApi, initialSpecs)
+    super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
 
     this.specs.height = this.canvasApi.element.offsetHeight
   }

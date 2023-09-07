@@ -22,14 +22,12 @@ function getCarPosition() {
 }
 
 export default class CarObject extends BaseGameObject<CarObjectSpecs> {
-  protected specs: CarObjectSpecs = INITIAL_SPECS
-
   constructor(
     key: string,
     canvasApi: ReturnType<typeof canvas>,
     initialSpecs: Partial<CarObjectSpecs> = {}
   ) {
-    super(key, canvasApi, initialSpecs)
+    super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
 
     if (initialSpecs.image) {
       this.specs.image = initialSpecs.image

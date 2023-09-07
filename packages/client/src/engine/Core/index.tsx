@@ -18,6 +18,23 @@ import {
   EngineStartMethodOptions,
 } from './types'
 
+/*
+ * @INFO CodeBustersEngine v0.1.0 ;)
+ *
+ * Движок игры реализует работу с анимацией с помощью canvas api;
+ * Логика обновления кадров обрабатывается в методе animation;
+ * Пока движок работает с двумя объектами - трассой (TrackObject) и машиной игрока (CarObject)
+ * в которых описаны инструкции по отрисовке соответствующих объектов.
+ * Для управления процессом игры пока есть два метода - start() и stop()
+ * При старте начинают двигаться границы трека, создавая ощущение скорости,
+ * которая увеличивается с определенной периодичностью.
+ * В дальнейшем будут добавлены доп.препятствия. На данный момент игра останавливаеться, если
+ * на странице игры нажать на кнопку "Сбросить игру" или
+ * врезавшись в левую или правую границу трека. Добавлено управление машиной
+ * стрелки клавиатуры - влево и вправо.
+ *
+ */
+
 export default class CodeBustersEngine {
   public eventEmitter = new EventBus<EngineEventType>()
 
@@ -232,7 +249,7 @@ export default class CodeBustersEngine {
   }
 
   private onAnimate(timestamp: number) {
-    console.log('animate')
+    console.log('animate', this.playerProgress.speed)
     //let isContinue = true // Флаг для прерывание анимации
 
     // Сбрасываем процесс игры, если timestamp = 0

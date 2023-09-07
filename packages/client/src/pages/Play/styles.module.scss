@@ -116,6 +116,13 @@
     z-index: 1;
   }
 
+  &__lines {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
   &__car {
     position: absolute;
     left: 50%;

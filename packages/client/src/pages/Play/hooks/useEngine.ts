@@ -10,7 +10,7 @@ import spriteImages from 'sprites/sprites.png'
 // import EndGameMessageObject from '@/engine/Objects/EndGame'
 
 import { CodeBustersEngine } from '@/engine'
-import { CarObject, TrackObject } from '@/engine/Objects'
+import { CarObject, TrackObject, CentralLinesObject } from '@/engine/Objects'
 import {
   EngineEvent,
   EngineProcess,
@@ -21,6 +21,7 @@ export type UseEngineProps = {
   backgroundRef: React.RefObject<HTMLCanvasElement>
   containerRef: React.RefObject<HTMLDivElement>
   trackRef: React.RefObject<HTMLCanvasElement>
+  linesRef: React.RefObject<HTMLCanvasElement>
   carRef: React.RefObject<HTMLCanvasElement>
   barrierRef: React.RefObject<HTMLCanvasElement>
   endGameMessageRef: React.RefObject<HTMLCanvasElement>
@@ -30,6 +31,7 @@ export default function useEngine({
   backgroundRef,
   containerRef,
   trackRef,
+  linesRef,
   carRef,
   barrierRef,
   endGameMessageRef,
@@ -57,6 +59,7 @@ export default function useEngine({
     const isDefineLayers =
       carRef.current instanceof HTMLCanvasElement &&
       trackRef.current instanceof HTMLCanvasElement &&
+      linesRef.current instanceof HTMLCanvasElement &&
       barrierRef.current instanceof HTMLCanvasElement &&
       backgroundRef.current instanceof HTMLCanvasElement &&
       containerRef.current instanceof HTMLElement &&
@@ -64,6 +67,7 @@ export default function useEngine({
 
     if (isDefineLayers) {
       const trackCanvasLayer = canvas(trackRef.current)
+      const linesCanvasLayer = canvas(linesRef.current)
       const carCanvasLayer = canvas(carRef.current)
       const barrierCanvasLayer = canvas(barrierRef.current)
       const backgroundLayer = canvas(backgroundRef.current)
@@ -106,6 +110,12 @@ export default function useEngine({
       // Создаем объект трассы для движка с начальными характеристиками
       const trackObject = new TrackObject('track', trackCanvasLayer)
 
+      // Создаем объект центральных линий с начальными характеристиками
+      const centralLinesObject = new CentralLinesObject(
+        'central-lines',
+        linesCanvasLayer
+      )
+
       // Создаем объект машины для движка с начальными характеристиками
       const carObject = new CarObject('car', carCanvasLayer)
 
@@ -116,17 +126,23 @@ export default function useEngine({
         // Рисуем трек
         trackObject.draw()
 
-        // Рисуем машину по центру трассы
+        // Рисуем центральную разметку
+        centralLinesObject.draw({
+          width: trackObject.getSpecs().width,
+          height: trackObject.getSpecs().height,
+        })
 
+        // Рисуем машину по центру трассы
         const carImage = new Image()
+        const xAxisCar =
+          trackObject.getSpecs().width / 2 - carObject.getSpecs().width / 2
 
         carImage.src = spriteImages
 
         setTimeout(() => {
           carObject.draw({
             image: carImage,
-            x:
-              trackObject.getSpecs().width / 2 - carObject.getSpecs().width / 2,
+            x: xAxisCar,
           })
         }, 300)
 
@@ -165,6 +181,7 @@ export default function useEngine({
         // Добавляем объекты игры
         engine
           .addObject<TrackObject>(trackObject)
+          .addObject<CentralLinesObject>(centralLinesObject)
           .addObject<CarObject>(carObject)
 
         // Подписываемся на события движка

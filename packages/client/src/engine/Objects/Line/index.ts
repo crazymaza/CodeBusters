@@ -12,16 +12,12 @@ import { LineObjectSpecs } from './types'
  */
 
 export default class LineObject extends BaseGameObject<LineObjectSpecs> {
-  protected specs: LineObjectSpecs = INITIAL_SPECS
-
   constructor(
     key: string,
     canvasApi: ReturnType<typeof canvas>,
     initialSpecs: Partial<LineObjectSpecs> = {}
   ) {
-    super(key, canvasApi, initialSpecs)
-
-    this.specs.height = this.canvasApi.element.offsetHeight
+    super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
   }
 
   public bindEngine(engine: CodeBustersEngine) {
@@ -38,7 +34,7 @@ export default class LineObject extends BaseGameObject<LineObjectSpecs> {
 
       ctx.fillStyle = specs.fill as string
 
-      ctx.strokeRect(specs.x, specs.y, specs.width, specs.height)
+      // ctx.strokeRect(specs.x, specs.y, specs.width, specs.height)
       ctx.fillRect(specs.x, specs.y, specs.width, specs.height)
     }
   }
@@ -49,8 +45,16 @@ export default class LineObject extends BaseGameObject<LineObjectSpecs> {
     }
 
     if (this.canvasApi.ctx) {
-      this.clear()
       this.drawLine()
     }
+  }
+
+  public clear() {
+    this.canvasApi.ctx?.clearRect(
+      this.specs.x,
+      this.specs.y,
+      this.specs.width,
+      this.specs.height
+    )
   }
 }
