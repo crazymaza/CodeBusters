@@ -101,7 +101,7 @@ services:
     restart: unless-stopped
     networks:
       - codebusters
-    # command: [ "nginx", "-g", "daemon off;" ]
+    command: [ "nginx", "-g", "daemon off;" ]
   ##############
   ## CERBOT ##
   # certbot:
