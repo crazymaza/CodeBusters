@@ -1,3 +1,6 @@
 import { BaseGameObjectSpecs } from '@/engine/Objects/Base/types'
 
-export type LineObjectSpecs = BaseGameObjectSpecs
+export interface LineObjectSpecs extends BaseGameObjectSpecs {
+  stroke?: string
+  round?: number | number[]
+}

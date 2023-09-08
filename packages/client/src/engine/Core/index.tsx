@@ -246,7 +246,7 @@ export default class CodeBustersEngine {
   }
 
   private onAnimate(timestamp: number) {
-    //let isContinue = true // Флаг для прерывание анимации
+    // let isContinue = true // Флаг для прерывание анимации
 
     // Сбрасываем процесс игры, если timestamp = 0
     if (timestamp === 0) {

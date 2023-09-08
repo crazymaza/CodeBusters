@@ -41,13 +41,9 @@ export default class TrackObject extends BaseGameObject<TrackObjectSpecs> {
   }
 
   public draw(specs?: Partial<TrackObjectSpecs>) {
-    if (specs) {
-      this.specs = { ...this.specs, ...specs }
-    }
+    this.specs = { ...this.specs, ...specs }
 
-    if (this.canvasApi.ctx) {
-      this.clear()
-      this.drawTrack()
-    }
+    this.clear()
+    this.drawTrack()
   }
 }

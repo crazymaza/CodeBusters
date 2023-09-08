@@ -17,19 +17,22 @@ import styles from './styles.module.scss'
 const cx = classNames.bind(styles)
 
 const PlayPage = () => {
+  useMakeFullscreen()
+
   const [level, setLevel] = useState(1)
   const [isLoading, setLoading] = useState(true)
+
+  const navigate = useNavigate()
 
   const user = useAppSelector(selectUserInfo)
   const scores = useAppSelector(selectGameScores)
   const dispatch = useAppDispatch()
 
-  const navigate = useNavigate()
-
   const containerRef = useRef<HTMLDivElement>(null)
   const backgroundRef = useRef<HTMLCanvasElement>(null)
   const trackRef = useRef<HTMLCanvasElement>(null)
   const linesRef = useRef<HTMLCanvasElement>(null)
+  const bordersRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
   const barrierRef = useRef<HTMLCanvasElement>(null)
   const endGameMessageRef = useRef<HTMLCanvasElement>(null)
@@ -39,6 +42,7 @@ const PlayPage = () => {
     containerRef,
     trackRef,
     linesRef,
+    bordersRef,
     carRef,
     barrierRef,
     endGameMessageRef,
@@ -47,8 +51,6 @@ const PlayPage = () => {
   const trackSpecs = engine?.getGameObject<TrackObject>('track').getSpecs()
 
   const carSpecs = engine?.getGameObject<CarObject>('car').getSpecs()
-
-  useMakeFullscreen()
 
   const country = useCountry()
 
@@ -122,9 +124,9 @@ const PlayPage = () => {
           className={cx('play__area', { ['play__area_hidden']: isLoading })}>
           <canvas
             ref={backgroundRef}
+            width={containerRef.current?.offsetWidth}
+            height={containerRef.current?.offsetHeight}
             className={cx('play__background')}
-            width={1000}
-            height={800}
           />
           <canvas ref={trackRef} className={cx('play__track')} />
           <canvas
@@ -132,6 +134,12 @@ const PlayPage = () => {
             width={trackSpecs?.width}
             height={trackSpecs?.height}
             className={cx('play__lines')}
+          />
+          <canvas
+            ref={bordersRef}
+            width={trackSpecs?.width}
+            height={trackSpecs?.height}
+            className={cx('play__borders')}
           />
           <canvas
             ref={carRef}

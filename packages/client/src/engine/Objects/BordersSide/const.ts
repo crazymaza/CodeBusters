@@ -1,0 +1,15 @@
+export const INITIAL_SPECS = {
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  fill: '#fff',
+  countLines: 0,
+  paddingLine: 5,
+  heightLine: 40,
+  roundLine: 0,
+  widthLine: 10,
+  offsetSide: 3,
+  fillOdd: '#eeeeee',
+  fillEvent: '#e03a3a',
+}

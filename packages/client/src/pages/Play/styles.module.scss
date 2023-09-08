@@ -108,7 +108,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: 1;
   }
 
   &__track {
@@ -117,6 +117,13 @@
   }
 
   &__lines {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  &__borders {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
