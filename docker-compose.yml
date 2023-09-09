@@ -107,7 +107,7 @@ services:
       - server
     networks:
       - codebusters
-    command: certonly --noninteractive --keep-until-expiring --webroot --webroot-path=/var/www/html --email ${EMAIL_FOR_CERBOT} --agree-tos --no-eff-email --force-renewal -d ${SITE_ADDRESS}
+    command: certonly --noninteractive --keep-until-expiring --webroot --webroot-path=/var/www/html --email ${EMAIL_FOR_CERTBOT} --agree-tos --no-eff-email --force-renewal -d ${SITE_ADDRESS}
 
 
 networks:
