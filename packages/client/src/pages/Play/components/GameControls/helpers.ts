@@ -1,11 +1,11 @@
-import { CodeBustersEngineProcess } from '@/engine/Core/_types'
+import { EngineProcess } from '@/engine/Core/types'
 
-export const getStartButtonName = (gameProcess: CodeBustersEngineProcess) => {
+export const getStartButtonName = (gameProcess: EngineProcess) => {
   switch (gameProcess) {
-    case CodeBustersEngineProcess.PLAY:
+    case EngineProcess.PLAY:
       return 'Пауза'
 
-    case CodeBustersEngineProcess.PAUSE:
+    case EngineProcess.PAUSE:
       return 'Продолжить'
 
     default:

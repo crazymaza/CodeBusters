@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import { selectGameScores } from '@/store/slices/gameSlice/selectrors'
+import { selectGameScores } from '@/store/slices/gameSlice/selectors'
 import { useAppSelector } from '@/store/typedHooks'
 
 const PlayerScores = () => {

@@ -1,6 +1,10 @@
 import { canvas } from '@/utils'
 import { CodeBustersEngine } from '@/engine'
-import { EngineEvent, EngineAnimateParams } from '@/engine/Core/types'
+import {
+  EngineEvent,
+  EngineAnimateParams,
+  EngineIntersection,
+} from '@/engine/Core/types'
 import { BaseGameObject, LineObject } from '@/engine/Objects'
 import { INITIAL_SPECS } from './const'
 import { BordersSideObjectSpecs, BordersSide, BordersItem } from './types'
@@ -20,11 +24,20 @@ export default class BordersSideObject extends BaseGameObject<BordersSideObjectS
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
 
     this.onAnimate = this.onAnimate.bind(this)
-
+    this.onIntersection = this.onIntersection.bind(this)
     this.onDestroy = this.onDestroy.bind(this)
 
     // Устанавливаем высоту всего контейнера по высоте трека
     this.specs.height = this.canvasApi.element.offsetHeight
+  }
+
+  public bindEngine(engine: CodeBustersEngine) {
+    this.engine = engine
+
+    this.engine
+      .subscribe(EngineEvent.ANIMATE, this.onAnimate)
+      .subscribe(EngineEvent.INTERSECTION, this.onIntersection)
+      .subscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
   private onAnimate(timestamp: number, params: EngineAnimateParams) {
@@ -33,9 +46,18 @@ export default class BordersSideObject extends BaseGameObject<BordersSideObjectS
     this.drawBorders()
   }
 
+  private onIntersection(intersectionType: EngineIntersection) {
+    switch (intersectionType) {
+      default:
+        break
+    }
+  }
+
   private onDestroy() {
-    this.engine?.eventEmitter.off(EngineEvent.ANIMATE, this.onAnimate)
-    this.engine?.eventEmitter.off(EngineEvent.DESTROY, this.onDestroy)
+    this.engine
+      ?.unsubscribe(EngineEvent.ANIMATE, this.onAnimate)
+      .unsubscribe(EngineEvent.INTERSECTION, this.onIntersection)
+      .unsubscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
   private calculateOffsetY(index: number, prevOffsetY: number) {
@@ -155,12 +177,5 @@ export default class BordersSideObject extends BaseGameObject<BordersSideObjectS
       ) + 1
 
     this.drawBorders()
-  }
-
-  public bindEngine(engine: CodeBustersEngine) {
-    this.engine = engine
-
-    this.engine.eventEmitter.on(EngineEvent.ANIMATE, this.onAnimate)
-    this.engine.eventEmitter.on(EngineEvent.DESTROY, this.onDestroy)
   }
 }

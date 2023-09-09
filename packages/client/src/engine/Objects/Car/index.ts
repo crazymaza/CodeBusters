@@ -1,27 +1,36 @@
 import { canvas } from '@/utils'
 import { CodeBustersEngine } from '@/engine'
-import { EngineEvent } from '@/engine/Core/types'
-import { BaseGameObject } from '@/engine/Objects'
+import { EngineEvent, EngineIntersection } from '@/engine/Core/types'
+import {
+  BaseGameObject,
+  TrackObject,
+  BordersSideObject,
+} from '@/engine/Objects'
 import { INITIAL_SPECS } from './const'
-import { CarObjectSpecs, CarKeyboardControlEventKey } from './types'
+import {
+  CarObjectSpecs,
+  CarKeyboardControlEventKey,
+  CarKeyboardMove,
+} from './types'
+
 /*
  * @INFO Объект машины
  *
- * Включает в себя описание отрисовки машины и, возможно, других машин на трассе
+ * Включает в себя описание отрисовки машины игрока
  *
  */
 
-// Получаем координаты машинки
-function getCarPosition() {
-  return {
-    x: 0,
-    y: 0,
-    w: 64,
-    h: 128,
-  }
-}
-
 export default class CarObject extends BaseGameObject<CarObjectSpecs> {
+  private xAxisOffset = 0
+
+  private controlMove: CarKeyboardMove = CarKeyboardMove.CENTER
+
+  private isLowSpeed = true
+
+  private trackObject: TrackObject | null = null
+
+  private bordersSideObject: BordersSideObject | null = null
+
   constructor(
     key: string,
     canvasApi: ReturnType<typeof canvas>,
@@ -29,7 +38,9 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
   ) {
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
 
+    this.onAnimate = this.onAnimate.bind(this)
     this.onPressKey = this.onPressKey.bind(this)
+    this.onIntersection = this.onIntersection.bind(this)
     this.onDestroy = this.onDestroy.bind(this)
 
     if (initialSpecs.image) {
@@ -40,28 +51,35 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
   public bindEngine(engine: CodeBustersEngine) {
     this.engine = engine
 
-    this.engine.eventEmitter.on(EngineEvent.PRESS_KEY, this.onPressKey)
+    this.trackObject = this.engine.getGameObject('track')
 
-    this.engine.eventEmitter.on(EngineEvent.DESTROY, this.onDestroy)
+    this.bordersSideObject = this.engine.getGameObject('borders')
+
+    this.engine
+      .subscribe(EngineEvent.ANIMATE, this.onAnimate)
+      .subscribe(EngineEvent.INTERSECTION, this.onIntersection)
+      .subscribe(EngineEvent.KEY_DOWN, this.onPressKey)
+      .subscribe(EngineEvent.KEY_UP, this.onPressKey)
+      .subscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
   public drawCar() {
     if (this.canvasApi.ctx && this.specs) {
-      const carPosition = getCarPosition()
-
       this.canvasApi.ctx.beginPath()
 
       this.canvasApi.ctx.drawImage(
         this.specs.image,
-        carPosition.x,
-        carPosition.y,
-        carPosition.w,
-        carPosition.h,
+        this.specs.positionX,
+        this.specs.positionY,
+        this.specs.positionWidth,
+        this.specs.positionHeight,
         this.specs.x,
         this.specs.y,
         this.specs.width,
         this.specs.height
       )
+
+      this.canvasApi.ctx.rotate(this.specs.rotate)
     }
   }
 
@@ -76,22 +94,150 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
     }
   }
 
+  private checkKeyControlWithBorderIntersection() {
+    const prevSpecs = this.specs
+
+    const trackSpecs = this.trackObject?.getSpecs()
+
+    const bordersSpecs = this.bordersSideObject?.getSpecs()
+
+    const isOutsideLeftTrack =
+      bordersSpecs &&
+      prevSpecs.x <= bordersSpecs.widthLine - bordersSpecs.offsetSide &&
+      this.controlMove === CarKeyboardMove.LEFT
+
+    const isOutSideRightTrack =
+      trackSpecs &&
+      bordersSpecs &&
+      prevSpecs.x >=
+        trackSpecs.width -
+          bordersSpecs.widthLine +
+          bordersSpecs.offsetSide -
+          prevSpecs.width &&
+      this.controlMove === CarKeyboardMove.RIGHT
+
+    return isOutsideLeftTrack || isOutSideRightTrack
+  }
+
+  private checkSpeedAndControlSensitivity() {
+    const prevSpecs = this.specs
+
+    const isMaxSpeed = this.isMaxSpeed()
+
+    if (isMaxSpeed && this.isLowSpeed) {
+      this.specs.sensitivity =
+        prevSpecs.sensitivity / prevSpecs.sensitivityRatio
+
+      this.specs.sensitivityMax =
+        prevSpecs.sensitivityMax / prevSpecs.sensitivityRatio
+
+      this.isLowSpeed = false
+    } else if (!isMaxSpeed && !this.isLowSpeed) {
+      this.isLowSpeed = true
+
+      this.specs.sensitivity =
+        prevSpecs.sensitivity * prevSpecs.sensitivityRatio
+
+      this.specs.sensitivityMax =
+        prevSpecs.sensitivityMax * prevSpecs.sensitivityRatio
+    }
+  }
+
+  private checkSpeedAndControlBottomOffset() {
+    const prevSpecs = this.specs
+
+    const isMaxSpeed = this.isMaxSpeed()
+
+    const instantBottomY = prevSpecs.layerHeight - prevSpecs.height
+
+    if (isMaxSpeed && prevSpecs.y <= instantBottomY && prevSpecs.y !== 0) {
+      return prevSpecs.y - prevSpecs.deltaOffsetY
+    }
+
+    if (!isMaxSpeed && prevSpecs.y < instantBottomY) {
+      return prevSpecs.y + prevSpecs.deltaOffsetY * 4
+    }
+
+    if (isMaxSpeed) {
+      return 0
+    }
+
+    return instantBottomY
+  }
+
+  private onAnimate() {
+    const prevSpecs = this.specs
+
+    this.checkSpeedAndControlSensitivity()
+
+    const bottomOffset = this.checkSpeedAndControlBottomOffset()
+
+    const isBorderIntersection = this.checkKeyControlWithBorderIntersection()
+
+    if (isBorderIntersection) {
+      this.engine?.intersection(EngineIntersection.BORDERS)
+
+      return
+    }
+
+    this.draw({
+      x: prevSpecs.x + this.xAxisOffset,
+      y: bottomOffset,
+    })
+  }
+
   private onPressKey(event: KeyboardEvent) {
-    const prevSpecs = this.specs as CarObjectSpecs
+    const prevSpecs = this.specs
+
+    const isOverSensitivity =
+      Math.abs(this.xAxisOffset) >= prevSpecs.sensitivityMax
 
     switch (event.key) {
-      case CarKeyboardControlEventKey.LEFT:
-        this.draw({
-          x:
-            prevSpecs.x - (this.specs.sensitivity || INITIAL_SPECS.sensitivity),
-        })
-        break
+      case CarKeyboardControlEventKey.LEFT: {
+        this.controlMove = CarKeyboardMove.LEFT
 
-      case CarKeyboardControlEventKey.RIGHT:
-        this.draw({
-          x:
-            prevSpecs.x + (this.specs.sensitivity || INITIAL_SPECS.sensitivity),
-        })
+        this.xAxisOffset = isOverSensitivity
+          ? this.xAxisOffset
+          : this.xAxisOffset - prevSpecs.sensitivity
+
+        break
+      }
+
+      case CarKeyboardControlEventKey.RIGHT: {
+        this.controlMove = CarKeyboardMove.RIGHT
+
+        this.xAxisOffset = isOverSensitivity
+          ? this.xAxisOffset
+          : this.xAxisOffset + prevSpecs.sensitivity
+
+        break
+      }
+
+      case CarKeyboardControlEventKey.DOWN: {
+        const params = this.engine?.getParams()
+
+        if (
+          params &&
+          params?.playerProgress.speed > params?.gameParams.startSpeed
+        ) {
+          this.engine?.setSpeed(params.playerProgress.speed - 0.5)
+        }
+
+        break
+      }
+
+      default: {
+        this.controlMove = CarKeyboardMove.CENTER
+
+        break
+      }
+    }
+
+    switch (event.type) {
+      case 'keyup':
+        this.controlMove = CarKeyboardMove.CENTER
+        this.xAxisOffset = 0
+
         break
 
       default:
@@ -99,8 +245,39 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
     }
   }
 
+  private onIntersection(intersectionType: EngineIntersection) {
+    const params = this.engine?.getParams()
+
+    switch (intersectionType) {
+      case EngineIntersection.BORDERS:
+        {
+          if (
+            params &&
+            params.playerProgress.speed >= params.gameParams.startSpeed
+          ) {
+            this.engine?.setSpeed(params.playerProgress.speed - 0.5)
+          }
+        }
+
+        break
+
+      default:
+        break
+    }
+  }
+
+  private isMaxSpeed() {
+    const params = this.engine?.getParams()
+
+    return params && params?.playerProgress.speed >= params?.gameParams.maxSpeed
+  }
+
   private onDestroy() {
-    this.engine?.eventEmitter.off(EngineEvent.PRESS_KEY, this.onPressKey)
-    this.engine?.eventEmitter.off(EngineEvent.DESTROY, this.onDestroy)
+    this.engine
+      ?.unsubscribe(EngineEvent.ANIMATE, this.onAnimate)
+      .unsubscribe(EngineEvent.KEY_DOWN, this.onPressKey)
+      .unsubscribe(EngineEvent.KEY_UP, this.onPressKey)
+      .unsubscribe(EngineEvent.INTERSECTION, this.onIntersection)
+      .unsubscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 }

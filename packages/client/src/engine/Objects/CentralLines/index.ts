@@ -29,6 +29,14 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
     this.specs.height = this.canvasApi.element.offsetHeight
   }
 
+  public bindEngine(engine: CodeBustersEngine) {
+    this.engine = engine
+
+    this.engine
+      .subscribe(EngineEvent.ANIMATE, this.onAnimate)
+      .subscribe(EngineEvent.DESTROY, this.onDestroy)
+  }
+
   private onAnimate(timestamp: number, params: EngineAnimateParams) {
     this.deltaTopOffset = params.playerProgress.speed
 
@@ -36,8 +44,9 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
   }
 
   private onDestroy() {
-    this.engine?.eventEmitter.off(EngineEvent.ANIMATE, this.onAnimate)
-    this.engine?.eventEmitter.off(EngineEvent.DESTROY, this.onDestroy)
+    this.engine
+      ?.unsubscribe(EngineEvent.ANIMATE, this.onAnimate)
+      .unsubscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
   private calculateOffsetY(index: number, prevOffsetY: number) {
@@ -117,12 +126,5 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
     this.xAxisCenter = this.specs.width / 2 - this.specs.widthLine / 2
 
     this.drawLines()
-  }
-
-  public bindEngine(engine: CodeBustersEngine) {
-    this.engine = engine
-
-    this.engine.eventEmitter.on(EngineEvent.ANIMATE, this.onAnimate)
-    this.engine.eventEmitter.on(EngineEvent.DESTROY, this.onDestroy)
   }
 }

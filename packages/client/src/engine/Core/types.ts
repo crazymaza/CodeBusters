@@ -2,18 +2,21 @@ export enum EngineEvent {
   START = '@ENGINE_EVENT/start',
   PAUSE = '@ENGINE_EVENT/pause',
   STOP = '@ENGINE_EVENT/stop',
+  END = '@ENGINE_EVENT/end',
   CHANGE_PROCESS = '@ENGINE_EVENT/change-process',
   ANIMATE = '@ENGINE_EVENT/animate',
   DESTROY = '@ENGINE_EVENT/destroy',
   INTERSECTION = '@ENGINE_EVENT/intersection',
-  PRESS_KEY = '@ENGINE_EVENT/press-key',
+  KEY_DOWN = '@ENGINE_EVENT/key-down',
+  KEY_UP = '@ENGINE_EVENT/key-up',
+  KEY_PRESS = '@ENGINE_EVENT/key-press',
 }
 
 export enum EngineProcess {
   PLAY = 'play',
   PAUSE = 'pause',
   STOP = 'stop',
-  FAILED = 'failed',
+  END = 'end',
 }
 
 export type EngineGameParamsType = {
@@ -33,6 +36,7 @@ export type EnginePlayerProgressType = {
   speed: number
   distance: number
   playTime: number
+  timeLeft: number
   scores: number
 }
 
@@ -51,4 +55,8 @@ export type EngineAnimateParams = {
 
 export type EngineStartMethodOptions = {
   isResume?: boolean
+}
+
+export enum EngineIntersection {
+  BORDERS = 'intersection-borders',
 }

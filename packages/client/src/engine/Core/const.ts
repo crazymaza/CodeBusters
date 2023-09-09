@@ -4,7 +4,7 @@ export const SECOND = 1000
 
 export const INITIAL_GAME_PARAMS = {
   startSpeed: 5,
-  maxSpeed: 30,
+  maxSpeed: 40,
   diffSpeed: 2,
 }
 
@@ -19,5 +19,6 @@ export const INITIAL_PLAYER_PROGRESS = {
   speed: 0,
   distance: 0,
   playTime: 0, // В секундах
+  timeLeft: 30, // В секундах
   scores: 0,
 }

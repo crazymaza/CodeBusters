@@ -16,6 +16,7 @@ import {
   EngineGameParamsType,
   EnginePlayerProgressType,
   EngineStartMethodOptions,
+  EngineIntersection,
 } from './types'
 
 /*
@@ -23,20 +24,26 @@ import {
  *
  * Движок игры реализует работу с анимацией с помощью canvas api;
  * Логика обновления кадров обрабатывается в методе animation;
- * Пока движок работает с двумя объектами - трассой (TrackObject) и машиной игрока (CarObject)
- * в которых описаны инструкции по отрисовке соответствующих объектов.
- * Для управления процессом игры пока есть два метода - start() и stop()
+ * Движок может работать с множеством объектов, в которых описаны инструкции
+ * по их отрисовке. Благодаря шине событий,
+ * каждый объект может подключаться к дивжку с помощью метода addObject().
+ * Внутри объект должен реализовать абстрактный метод bindEngine().
+ * Для управления процессом игры есть несколько методов - start(), pause(), stop() и end()
  * При старте начинают двигаться границы трека, создавая ощущение скорости,
  * которая увеличивается с определенной периодичностью.
- * В дальнейшем будут добавлены доп.препятствия. На данный момент игра останавливаеться, если
- * на странице игры нажать на кнопку "Сбросить игру" или
- * врезавшись в левую или правую границу трека. Добавлено управление машиной
- * стрелки клавиатуры - влево и вправо.
+ * Добавлены доп.препятствия. На данный момент игра останавливается, если
+ * на странице игры нажать на кнопку "Завершить игру",
+ * врезавшись в препятствие или если закончится бензин. Если заехать на границы трека, то
+ * скорость будет замедляться, а также очки игрока начнут списываться.
+ * При достижении максимальной скорости - управление становится менее отзывчивым,
+ * а машина смещается на определенное расстояние к вверху экрана,
+ * для увеличения сложности игры. Добавлено управление машиной
+ * стрелки клавиатуры - влево, вправо, вниз (тормоз) и пауза - пробел
  *
  */
 
 export default class CodeBustersEngine {
-  public eventEmitter = new EventBus<EngineEventType>()
+  private eventEmitter = new EventBus<EngineEventType>()
 
   private gameObjects: Record<string, BaseGameObjectType> = {}
 
@@ -55,29 +62,9 @@ export default class CodeBustersEngine {
       }
     }
 
-    this.eventEmitter.on(EngineEvent.START, this.onStart.bind(this))
+    this.bindEventsHandlers()
 
-    this.eventEmitter.on(EngineEvent.PAUSE, this.onPause.bind(this))
-
-    this.eventEmitter.on(EngineEvent.STOP, this.onStop.bind(this))
-
-    this.eventEmitter.on(
-      EngineEvent.CHANGE_PROCESS,
-      this.onChangeProcess.bind(this)
-    )
-
-    this.eventEmitter.on(EngineEvent.ANIMATE, this.onAnimate.bind(this))
-
-    this.eventEmitter.on(EngineEvent.DESTROY, this.onDestroy.bind(this))
-
-    this.eventEmitter.on(
-      EngineEvent.INTERSECTION,
-      this.onIntersection.bind(this)
-    )
-
-    this.eventEmitter.on(EngineEvent.PRESS_KEY, this.onPressKey.bind(this))
-
-    this.keyboardListener = this.keyboardListener.bind(this)
+    this.subscribeOnEvents()
 
     this.addKeyboardListeners()
   }
@@ -92,15 +79,34 @@ export default class CodeBustersEngine {
     return this
   }
 
+  public getParams() {
+    return {
+      engineProgress: this.engineProgress,
+      playerProgress: this.playerProgress,
+      gameParams: this.gameParams,
+    }
+  }
+
   public getGameObject<TGameObject>(key: string): TGameObject {
     return this.gameObjects[key] as TGameObject
   }
 
-  public subscribe(listener: {
-    engineEvent: EngineEventType
-    callback: EventCallback
-  }) {
-    this.eventEmitter.on(listener.engineEvent, listener.callback)
+  public setSpeed(updatedSpeed: number) {
+    this.playerProgress.speed = updatedSpeed
+
+    if (this.engineProgress.intervalId === null) {
+      this.addSpeedProgress()
+    }
+  }
+
+  public subscribe(engineEvent: EngineEventType, callback: EventCallback) {
+    this.eventEmitter.on(engineEvent, callback)
+
+    return this
+  }
+
+  public unsubscribe(engineEvent: EngineEventType, callback: EventCallback) {
+    this.eventEmitter.off(engineEvent, callback)
 
     return this
   }
@@ -115,6 +121,14 @@ export default class CodeBustersEngine {
 
   public stop() {
     this.eventEmitter.emit(EngineEvent.STOP)
+  }
+
+  public end() {
+    this.eventEmitter.emit(EngineEvent.END)
+  }
+
+  public intersection(intersectionType: EngineIntersection) {
+    this.eventEmitter.emit(EngineEvent.INTERSECTION, intersectionType)
   }
 
   public destroy() {
@@ -133,12 +147,21 @@ export default class CodeBustersEngine {
     this.eventEmitter.emit(EngineEvent.CHANGE_PROCESS, updatedProcess)
   }
 
-  private intersection(...args: unknown[]) {
-    this.eventEmitter.emit(EngineEvent.INTERSECTION, ...args)
+  private keyboardListener(event: KeyboardEvent) {
+    this.eventEmitter.emit(EngineEvent.KEY_DOWN, event)
   }
 
-  private keyboardListener(...args: unknown[]) {
-    this.eventEmitter.emit(EngineEvent.PRESS_KEY, ...args)
+  private addSpeedProgress() {
+    this.engineProgress.intervalId = setInterval(() => {
+      // Увеличение скорости с интервалом в 1с
+      if (this.playerProgress.speed < this.gameParams.maxSpeed) {
+        this.playerProgress.speed += this.gameParams.diffSpeed
+      } else {
+        clearInterval(this.engineProgress.intervalId as NodeJS.Timer)
+
+        this.engineProgress.intervalId = null
+      }
+    }, SECOND)
   }
 
   private onStart(options?: EngineStartMethodOptions) {
@@ -150,25 +173,7 @@ export default class CodeBustersEngine {
       this.playerProgress.speed = this.gameParams.startSpeed
     }
 
-    // this.options.objects.forEach(object => {
-    //   if (object instanceof CarObject) {
-    //     // Подключение управления машиной
-    //     object.addListeners()
-    //   }
-
-    //   if (object instanceof EndGameMessageObject) {
-    //     object.clear()
-    //   }
-    // })
-
-    this.engineProgress.intervalId = setInterval(() => {
-      // Увеличение скорости с интервалом в 1с
-      if (this.playerProgress.speed < this.gameParams.maxSpeed) {
-        this.playerProgress.speed += this.gameParams.diffSpeed
-      } else {
-        clearInterval(this.engineProgress.intervalId as NodeJS.Timer)
-      }
-    }, SECOND)
+    this.addSpeedProgress()
 
     this.animate(options?.isResume ? this.engineProgress.timestamp : 0)
 
@@ -179,13 +184,6 @@ export default class CodeBustersEngine {
     if (this.process === EngineProcess.PAUSE) {
       return
     }
-
-    // Отключение управления
-    // this.options.objects.forEach(object => {
-    //   if (object instanceof CarObject) {
-    //     object.removeListeners()
-    //   }
-    // })
 
     // Сбрасывание счетчиков
     this.dropCounters()
@@ -198,47 +196,16 @@ export default class CodeBustersEngine {
       return
     }
 
-    // this.options.objects.forEach(object => {
-    //   if (object instanceof EndGameMessageObject) {
-    //     object.clear()
-    //     object.drawEndGameMessage(this.playerProgress.scores)
-    //   }
-    //   // Восстановление первоначального состояние объектов
-    //   if (object instanceof TrackObject) {
-    //     this.trackObjectsTopOffset = 0
-
-    //     object.clear()
-    //     object.drawTrack()
-    //     object.drawBoundary(this.trackObjectsTopOffset)
-    //     object.drawLines(this.trackObjectsTopOffset)
-    //   }
-
-    //   if (object instanceof CarObject) {
-    //     const prevSpecs = object.getSpecs() as CarObjectSpecs
-    //     const xPositionCar = object.getCenterOnTrack(TrackObject.width)
-
-    //     object.clear()
-    //     object.draw(0, {
-    //       ...prevSpecs,
-    //       x: xPositionCar,
-    //       y: 0,
-    //     })
-
-    //     // Отключение управления
-    //     object.removeListeners()
-    //   }
-
-    //   if (object instanceof BarrierObject) {
-    //     object.clear()
-    //     object.setBarrierXAxis(-200)
-    //     object.drawBarrier()
-    //   }
-    // })
-
     // Сбрасывание счетчиков
     this.dropCounters()
 
     this.changeProcess(EngineProcess.STOP)
+  }
+
+  private onEnd() {
+    this.changeProcess(EngineProcess.END)
+
+    this.destroy()
   }
 
   private onChangeProcess(updatedProcess: EngineProcess) {
@@ -246,7 +213,7 @@ export default class CodeBustersEngine {
   }
 
   private onAnimate(timestamp: number) {
-    // let isContinue = true // Флаг для прерывание анимации
+    let isContinue = true // Флаг для прерывание анимации
 
     // Сбрасываем процесс игры, если timestamp = 0
     if (timestamp === 0) {
@@ -256,19 +223,32 @@ export default class CodeBustersEngine {
     this.engineProgress.timestamp = timestamp
 
     this.playerProgress.playTime += 1 / FPS
+    this.playerProgress.timeLeft = this.playerProgress.timeLeft - 1 / FPS
 
-    this.engineProgress.frame = Math.round(
-      SECOND / FPS - timestamp - this.engineProgress.timestamp
-    )
+    // Если закончилось время
+    if (this.playerProgress.timeLeft <= 0) {
+      isContinue = false
 
-    // Добавил счетчик дистанции, предположительно для смены уровня и счета очков
-    this.playerProgress.distance =
-      this.playerProgress.speed * this.playerProgress.playTime
+      this.eventEmitter.emit(EngineEvent.END)
+    } else {
+      // Сохраняем разницу по времени между кадоами
+      this.engineProgress.frame = Math.round(
+        SECOND / FPS - timestamp - this.engineProgress.timestamp
+      )
 
-    // Пока что очки считаются как сумма пройденной дистанции и времени
-    this.playerProgress.scores = Math.floor(
-      this.playerProgress.distance + this.playerProgress.playTime
-    )
+      // Добавил счетчик дистанции, предположительно для смены уровня и счета очков
+      this.playerProgress.distance =
+        this.playerProgress.speed * this.playerProgress.playTime
+
+      // Пока что очки считаются как сумма пройденной дистанции и времени
+      this.playerProgress.scores = Math.floor(
+        this.playerProgress.distance + this.playerProgress.playTime
+      )
+    }
+
+    if (this.process === EngineProcess.END) {
+      isContinue = false
+    }
 
     if (isContinue) {
       this.engineProgress.sessionId = requestAnimationFrame(
@@ -277,27 +257,23 @@ export default class CodeBustersEngine {
     }
   }
 
-  private onIntersection() {
-    console.log('intersection')
+  private onIntersection(intersectionType: EngineIntersection) {
+    switch (intersectionType) {
+      default:
+        break
+    }
   }
 
   private onDestroy() {
     this.stop()
     this.removeKeyboardListeners()
+    this.subscribeOnEvents('off')
   }
 
-  private onPressKey(event: KeyboardEvent) {
-    if (event.key === 'Space') {
+  private onKeyboardAction(event: KeyboardEvent) {
+    if (event.key === 'Space' && event.type === 'keydown') {
       this.process === EngineProcess.PLAY ? this.pause() : this.start()
     }
-  }
-
-  private addKeyboardListeners() {
-    document.addEventListener('keydown', this.keyboardListener)
-  }
-
-  private removeKeyboardListeners() {
-    document.removeEventListener('keydown', this.keyboardListener)
   }
 
   private dropPlayerProgress() {
@@ -311,5 +287,43 @@ export default class CodeBustersEngine {
   private dropCounters() {
     clearInterval(this.engineProgress.intervalId as NodeJS.Timer)
     cancelAnimationFrame(this.engineProgress.sessionId)
+  }
+
+  private addKeyboardListeners() {
+    document.addEventListener('keydown', this.keyboardListener)
+    document.addEventListener('keyup', this.keyboardListener)
+    document.addEventListener('keypress', this.keyboardListener)
+  }
+
+  private removeKeyboardListeners() {
+    document.removeEventListener('keydown', this.keyboardListener)
+    document.removeEventListener('keyup', this.keyboardListener)
+    document.removeEventListener('keypress', this.keyboardListener)
+  }
+
+  private bindEventsHandlers() {
+    this.onStart = this.onStart.bind(this)
+    this.onPause = this.onPause.bind(this)
+    this.onStop = this.onStop.bind(this)
+    this.onEnd = this.onEnd.bind(this)
+    this.onChangeProcess = this.onChangeProcess.bind(this)
+    this.onAnimate = this.onAnimate.bind(this)
+    this.onIntersection = this.onIntersection.bind(this)
+    this.onDestroy = this.onDestroy.bind(this)
+    this.keyboardListener = this.keyboardListener.bind(this)
+  }
+
+  private subscribeOnEvents(action: 'on' | 'off' = 'on') {
+    this.eventEmitter[action](EngineEvent.START, this.onStart)
+    this.eventEmitter[action](EngineEvent.PAUSE, this.onPause)
+    this.eventEmitter[action](EngineEvent.STOP, this.onStop)
+    this.eventEmitter[action](EngineEvent.END, this.onEnd)
+    this.eventEmitter[action](EngineEvent.ANIMATE, this.onAnimate)
+    this.eventEmitter[action](EngineEvent.CHANGE_PROCESS, this.onChangeProcess)
+    this.eventEmitter[action](EngineEvent.INTERSECTION, this.onIntersection)
+    this.eventEmitter[action](EngineEvent.KEY_DOWN, this.onKeyboardAction)
+    this.eventEmitter[action](EngineEvent.KEY_UP, this.onKeyboardAction)
+    this.eventEmitter[action](EngineEvent.KEY_PRESS, this.onKeyboardAction)
+    this.eventEmitter[action](EngineEvent.DESTROY, this.onDestroy)
   }
 }

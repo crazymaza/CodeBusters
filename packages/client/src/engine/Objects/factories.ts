@@ -1,4 +1,5 @@
 import { canvas } from '@/utils'
+import { loadImage } from '@/helpers'
 import {
   TrackObject,
   CarObject,
@@ -33,7 +34,7 @@ export const createCar = (
   const xAxis = trackWidth / 2 - carSpecs.width / 2
 
   carCanvasLayer.element.width = trackWidth
-  carCanvasLayer.element.height = carSpecs.height
+  carCanvasLayer.element.height = carSpecs.layerHeight
 
   const carImage = new Image()
 
@@ -43,6 +44,7 @@ export const createCar = (
     carObject.draw({
       image: carImage,
       x: xAxis,
+      y: carSpecs.layerHeight - carSpecs.height,
     })
   }
 
@@ -61,9 +63,11 @@ export const createCentralLines = (
     centralLinesCanvasLayer
   )
 
-  centralLinesObject.draw({
-    width: trackWidth,
-    height: trackHeight,
+  loadImage(carImages).then(() => {
+    centralLinesObject.draw({
+      width: trackWidth,
+      height: trackHeight,
+    })
   })
 
   return centralLinesObject
@@ -78,9 +82,11 @@ export const createBorders = (
 
   const bordersSideObject = new BordersSideObject('borders', bordersCanvasLayer)
 
-  bordersSideObject.draw({
-    width: trackWidth,
-    height: trackHeight,
+  loadImage(carImages).then(() => {
+    bordersSideObject.draw({
+      width: trackWidth,
+      height: trackHeight,
+    })
   })
 
   return bordersSideObject

@@ -1,13 +1,13 @@
-import { useRef, useState, useMemo, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { EngineStartMethodOptions } from '@/engine/Core/types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { MainLayout } from '@/layouts'
-import { selectGameScores } from '@/store/slices/gameSlice/selectrors'
+import { selectGameScores } from '@/store/slices/gameSlice/selectors'
 import { setLeaderboardData } from '@/store/slices/leaderboardSlice/thunks'
 import { selectUserInfo } from '@/store/slices/userSlice/selectors'
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
-import { GameControls, PlayerScores } from './components'
+import { GameControls, PlayerScores, RaceTimeLeft } from './components'
 import { useEngine, useMakeFullscreen, useCountry } from './hooks'
 import { CircularProgress } from '@mui/material'
 
@@ -74,7 +74,7 @@ const PlayPage = () => {
     }
     dispatch(setLeaderboardData(data))
 
-    engine?.destroy()
+    engine?.end()
   }
 
   const leaderboard = () => {
@@ -108,6 +108,7 @@ const PlayPage = () => {
           <span className={cx('level__number')}>{level}</span>
           <span>уровень</span>
           <PlayerScores />
+          <RaceTimeLeft />
         </div>
         <div className={cx('play__buttons')}>
           <GameControls
@@ -145,8 +146,8 @@ const PlayPage = () => {
             ref={carRef}
             className={cx('play__car')}
             width={trackSpecs?.width}
-            height={carSpecs?.height}
-            style={{ bottom: 30 }}
+            height={carSpecs?.layerHeight}
+            style={{ bottom: carSpecs?.bottomOffset }}
           />
           <canvas
             ref={barrierRef}

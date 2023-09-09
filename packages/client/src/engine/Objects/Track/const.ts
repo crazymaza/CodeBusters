@@ -3,5 +3,5 @@ export const INITIAL_SPECS = {
   y: 0,
   width: 500,
   height: 0,
-  fill: 'gray',
+  fill: '#686868',
 }
