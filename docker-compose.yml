@@ -46,7 +46,6 @@ services:
     networks:
       - codebusters
     command: ["./wait-for.sh", "${POSTGRES_DB}:${POSTGRES_PORT}", "--", "node", "/app/index.js" ]
-    # command: ["nginx", "-g", "daemon off;"]
   ##############
   ## POSTGRES ##
   postgres:
@@ -87,32 +86,29 @@ services:
     image: nginx:latest
     volumes:
       - ./utils/nginx.conf:/etc/nginx/nginx.conf
-      - web-root:/var/www/html
-      # - ./utils/certbot/www/:/var/www/certbot/:ro
-      # - ./utils/certbot/conf/:/etc/nginx/ssl/:ro
+      - ./utils/certbot/www/:/var/www/certbot/:ro
+      - ./utils/certbot/conf/:/etc/nginx/ssl/:ro
     ports:
       - "80:80"
       - "443:443"
     depends_on:
-      - server
-    restart: unless-stopped
+      - certbot
+    restart: always
     networks:
       - codebusters
     command: ["nginx", "-g", "daemon off;" ]
   ##############
   ## CERBOT ##
-  # certbot:
-  #   image: certbot/certbot
-  #   container_name: certbot
-  #   volumes:
-  #     - ./utils/certbot/www/:/var/www/certbot/:rw
-  #     - ./utils/certbot/conf/:/etc/letsencrypt/:rw
-  #   depends_on:
-  #     - server
-  #   command: ["certbot certonly --webroot --webroot-path /var/www/certbot/ -d ${SITE_ADDRESS}"]
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./utils/certbot/www/:/var/www/certbot/:rw
+    depends_on:
+      - server
+    networks:
+      - codebusters
+    command: certonly --noninteractive --keep-until-expiring --webroot --webroot-path=/var/www/html --email ${EMAIL_FOR_CERBOT} --agree-tos --no-eff-email --force-renewal -d ${SITE_ADDRESS}
 
-volumes:
-  web-root:
 
 networks:
   codebusters:
