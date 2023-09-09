@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_ROOT = process.env.VITE_BASE_YANDEX_API_URL //'https://ya-praktikum.tech/api/v2/'
+const API_ROOT = 'https://ya-praktikum.tech/api/v2'
 
 export default class YandexAPI {
   constructor(private _cookieHeader: string | undefined) {}

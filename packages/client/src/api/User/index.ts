@@ -9,23 +9,11 @@ import {
   OAuthResponseService,
 } from './types'
 
-const isDev = import.meta.env.MODE === 'development'
+const oauthUrl = 'https://oauth.yandex.ru/authorize'
 
-const yandexApiPath = import.meta.env.VITE_YANDEX_API_PATH
+const yandexUrl = 'https://ya-praktikum.tech/api/v2'
 
-const clientPort = import.meta.env.VITE_CLIENT_PORT
-
-const serverPort = import.meta.env.VITE_SERVER_PORT
-
-const oauthUrl = import.meta.env.VITE_OAUTH_URL
-
-const yandexUrl = import.meta.env.VITE_BASE_YANDEX_API_URL
-
-const baseUri = isDev
-  ? import.meta.env.VITE_SERVER_URL_DEV
-  : import.meta.env.VITE_SERVER_URL_PROD
-
-const baseURL = `${baseUri}:${serverPort}/${yandexApiPath}`
+const baseURL = `/api/v2`
 
 class UserApi extends BaseApi {
   constructor(cookie?: string) {
@@ -76,14 +64,14 @@ class UserApi extends BaseApi {
 
   fetchServiceId() {
     return this.request.get<OAuthResponseService>(
-      `/oauth/yandex/service-id?redirect_uri=${baseUri}:${serverPort}`
+      `/oauth/yandex/service-id?redirect_uri=${window.location.origin}`
     )
   }
 
   postToAccess(params: OAuthRequestParams) {
     return this.request.post(
       '/oauth/yandex',
-      { ...params, redirect_uri: `${baseUri}:${serverPort}` },
+      { ...params, redirect_uri: `${window.location.origin}` },
       {
         headers: {
           Accept: 'application/json',
@@ -95,7 +83,7 @@ class UserApi extends BaseApi {
 
   redirectToOauthYandexPage(serviceId: string) {
     window.location.replace(
-      `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${baseUri}:${serverPort}`
+      `${oauthUrl}?response_type=code&client_id=${serviceId}&redirect_uri=${window.location.origin}`
     )
   }
 }
