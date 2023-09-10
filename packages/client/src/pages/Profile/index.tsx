@@ -21,10 +21,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { modalSchema, schema } from './validation'
 
+import useNotification from '@/hooks/useNotification'
+import notifyIcon from '@/assets/icons/stub_avatar.png'
+
 const cx = classNames.bind(styles)
 
 const ProfilePage = () => {
   const user = useAppSelector(selectUserInfo)
+  const notification = useNotification()
 
   const defaultValues = {
     first_name: user?.first_name || '',
@@ -107,7 +111,16 @@ const ProfilePage = () => {
 
   const onSubmit = async (data: UserUpdateModel) => {
     try {
-      await dispatch(changeUserInfo(data)).unwrap()
+      await dispatch(changeUserInfo(data))
+        .unwrap()
+        .then(() =>
+          notification({
+            title: 'Успешно',
+            icon: notifyIcon,
+            body: 'Профиль успешно изменен',
+          })
+        )
+
       navigate('/')
     } catch (error) {
       console.log(error)
