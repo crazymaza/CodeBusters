@@ -5,7 +5,7 @@ services:
   ## CLIENT ##
   client:
     container_name: prakticum-client
-    image: ghcr.io/crazymaza/codebusters/client:935ffd20d9dd1eb5ba64636b3a87e59514cf98a6
+    image: ghcr.io/crazymaza/codebusters/client:aa780b4209bf683a3f5e6c66f5bad2907608d9a9
     # build:
     #   context: .
     #   dockerfile: Dockerfile.client
@@ -27,7 +27,7 @@ services:
   ## SERVER ##
   server:
     container_name: prakticum-server
-    image: ghcr.io/crazymaza/codebusters/server:ec189ff17d5d29a7f90da6c5e937b28016ee281a
+    image: ghcr.io/crazymaza/codebusters/server:aa780b4209bf683a3f5e6c66f5bad2907608d9a9
     # build:
       # context: .
       # dockerfile: Dockerfile.server
@@ -85,30 +85,33 @@ services:
     hostname: nginx
     image: nginx:latest
     volumes:
+      - www-html:/var/www/html
       - ./utils/nginx.conf:/etc/nginx/nginx.conf
-      - ./utils/certbot/www/:/var/www/certbot/:ro
-      - ./utils/certbot/conf/:/etc/nginx/ssl/:ro
+      - etc-letsencrypt:/etc/letsencrypt
     ports:
       - "80:80"
       - "443:443"
     depends_on:
-      - certbot
+      - server
     restart: always
     networks:
       - codebusters
-    command: ["nginx", "-g", "daemon off;" ]
   ##############
   ## CERBOT ##
   certbot:
-    image: certbot/certbot:latest
+    image: certbot/certbot
     volumes:
-      - ./utils/certbot/www/:/var/www/certbot/:rw
+      - etc-letsencrypt:/etc/letsencrypt
+      - www-html:/var/www/html
     depends_on:
-      - server
+      - nginx
     networks:
       - codebusters
-    command: certonly --noninteractive --keep-until-expiring --webroot --webroot-path=/var/www/html --email ${EMAIL_FOR_CERTBOT} --agree-tos --no-eff-email --force-renewal -d ${SITE_ADDRESS}
+    command: certonly --webroot --webroot-path=/var/www/html --email lyalyavava@yandex.ru --agree-tos --no-eff-email --staging -d codebusters-road-rider-27.ya-praktikum.tech
 
+volumes:
+  www-html:
+  etc-letsencrypt:
 
 networks:
   codebusters:
