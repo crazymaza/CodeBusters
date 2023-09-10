@@ -10,6 +10,8 @@ export default abstract class BaseGameObject<
   protected engine: CodeBustersEngine | null = null
   protected canvasApi: ReturnType<typeof canvas>
   protected specs: TGameObjectSpecs = {} as TGameObjectSpecs
+  protected initialSpecs: Partial<TGameObjectSpecs> = {}
+  protected isFirstDraw = true
 
   public key = ''
 
@@ -25,6 +27,12 @@ export default abstract class BaseGameObject<
       ...this.specs,
       ...(initialSpecs as TGameObjectSpecs),
     }
+  }
+
+  protected onEnd() {
+    this.clear()
+
+    this.draw(this.initialSpecs)
   }
 
   public abstract bindEngine(engine: CodeBustersEngine): void

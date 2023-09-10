@@ -22,7 +22,7 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
 
     this.onAnimate = this.onAnimate.bind(this)
-
+    this.onEnd = this.onEnd.bind(this)
     this.onDestroy = this.onDestroy.bind(this)
 
     // Устанавливаем высоту всего контейнера по высоте трека
@@ -34,6 +34,7 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
 
     this.engine
       .subscribe(EngineEvent.ANIMATE, this.onAnimate)
+      .subscribe(EngineEvent.END, this.onEnd)
       .subscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
@@ -46,6 +47,7 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
   private onDestroy() {
     this.engine
       ?.unsubscribe(EngineEvent.ANIMATE, this.onAnimate)
+      .unsubscribe(EngineEvent.END, this.onEnd)
       .unsubscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
@@ -112,8 +114,12 @@ export default class CentralLinesObject extends BaseGameObject<CentralLinesObjec
   }
 
   public draw(specs?: Partial<CentralLinesObjectSpecs>) {
-    if (specs) {
-      this.specs = { ...this.specs, ...specs }
+    this.specs = { ...this.specs, ...specs }
+
+    if (this.isFirstDraw) {
+      this.initialSpecs = this.specs
+
+      this.isFirstDraw = false
     }
 
     // Считаем сколько линий нужно на треке, исходя из размеров линии и высоты трека

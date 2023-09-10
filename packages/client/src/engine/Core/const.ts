@@ -19,6 +19,6 @@ export const INITIAL_PLAYER_PROGRESS = {
   speed: 0,
   distance: 0,
   playTime: 0, // В секундах
-  timeLeft: 30, // В секундах
+  timeLeft: 30, // В секундах - остаток бензина
   scores: 0,
 }

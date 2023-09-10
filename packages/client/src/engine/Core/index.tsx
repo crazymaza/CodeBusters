@@ -99,6 +99,10 @@ export default class CodeBustersEngine {
     }
   }
 
+  public setTimeLeft(updatedTimeLeft: number) {
+    this.playerProgress.timeLeft = updatedTimeLeft
+  }
+
   public subscribe(engineEvent: EngineEventType, callback: EventCallback) {
     this.eventEmitter.on(engineEvent, callback)
 
@@ -169,15 +173,15 @@ export default class CodeBustersEngine {
       return
     }
 
+    this.changeProcess(EngineProcess.PLAY)
+
     if (!options?.isResume) {
-      this.playerProgress.speed = this.gameParams.startSpeed
+      this.dropPlayerProgress()
     }
 
     this.addSpeedProgress()
 
     this.animate(options?.isResume ? this.engineProgress.timestamp : 0)
-
-    this.changeProcess(EngineProcess.PLAY)
   }
 
   private onPause() {
@@ -203,9 +207,9 @@ export default class CodeBustersEngine {
   }
 
   private onEnd() {
-    this.changeProcess(EngineProcess.END)
+    this.dropCounters()
 
-    this.destroy()
+    this.changeProcess(EngineProcess.END)
   }
 
   private onChangeProcess(updatedProcess: EngineProcess) {
@@ -265,7 +269,7 @@ export default class CodeBustersEngine {
   }
 
   private onDestroy() {
-    this.stop()
+    this.end()
     this.removeKeyboardListeners()
     this.subscribeOnEvents('off')
   }
@@ -279,7 +283,12 @@ export default class CodeBustersEngine {
   private dropPlayerProgress() {
     // Создаем новую ссылку на объект прогрессв игрока, для сброса кеша в requestAnimationFrame
     this.playerProgress = {
-      ...this.playerProgress,
+      speed: INITIAL_GAME_PARAMS.startSpeed,
+      timeLeft: INITIAL_PLAYER_PROGRESS.timeLeft,
+      scores: 0,
+      distance: 0,
+      playTime: 0,
+
       ...this?.options?.playerProgress,
     }
   }

@@ -18,6 +18,7 @@ import {
   createCentralLines,
   createBorders,
   createBackground,
+  createMessage,
 } from '@/engine/Objects/factories'
 
 export type UseEngineProps = {
@@ -28,7 +29,7 @@ export type UseEngineProps = {
   bordersRef: React.RefObject<HTMLCanvasElement>
   carRef: React.RefObject<HTMLCanvasElement>
   barrierRef: React.RefObject<HTMLCanvasElement>
-  endGameMessageRef: React.RefObject<HTMLCanvasElement>
+  messageRef: React.RefObject<HTMLCanvasElement>
 }
 
 export default function useEngine(props: UseEngineProps) {
@@ -49,6 +50,7 @@ export default function useEngine(props: UseEngineProps) {
   }
 
   const onEngineStart = () => {
+    dispatch(setTimeLeft(INITIAL_PLAYER_PROGRESS.timeLeft))
     dispatch(setGameScores(0))
   }
 
@@ -79,15 +81,19 @@ export default function useEngine(props: UseEngineProps) {
       width
     )
 
+    const messageObject = createMessage(
+      props.messageRef.current as HTMLCanvasElement
+    )
+
     const engine = new CodeBustersEngine()
 
-    // Добавляем объекты игры
     engine
       .addObject(trackObject)
       .addObject(backgroundObject)
       .addObject(centralLinesObject)
       .addObject(bordersSideObject)
       .addObject(carObject)
+      .addObject(messageObject)
 
     // Подписываемся на события движка
     engine

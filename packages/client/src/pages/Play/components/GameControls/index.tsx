@@ -1,4 +1,4 @@
-import { useState, useMemo, MouseEventHandler } from 'react'
+import { useState, useMemo, useEffect, MouseEventHandler } from 'react'
 import { selectGameProcess } from '@/store/slices/gameSlice/selectors'
 import { useAppSelector } from '@/store/typedHooks'
 import { EngineProcess, EngineStartMethodOptions } from '@/engine/Core/types'
@@ -30,12 +30,24 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
   const onStart = () => {
     const isResume = prevGameProcess === EngineProcess.PLAY
 
-    gameProcess == EngineProcess.PLAY
-      ? controls.pauseGame()
-      : controls.startGame({ isResume })
+    if (gameProcess === EngineProcess.END) {
+      controls.startGame()
+    } else {
+      gameProcess == EngineProcess.PLAY
+        ? controls.pauseGame()
+        : controls.startGame({ isResume })
+    }
 
     setPrevGameProcess(gameProcess)
   }
+
+  const renderStartGameButton = useMemo(() => {
+    return (
+      <Button variant="contained" onClick={onStart}>
+        {startButtonName}
+      </Button>
+    )
+  }, [onStart, startButtonName])
 
   const renderEndGameButton = useMemo(() => {
     const isGameProcess =
@@ -43,7 +55,7 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
 
     const onEnd = () => {
       controls.endGame()
-      setPrevGameProcess(EngineProcess.STOP)
+      setPrevGameProcess(EngineProcess.END)
     }
 
     return isGameProcess ? (
@@ -68,9 +80,7 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
 
   return (
     <>
-      <Button variant="contained" onClick={onStart}>
-        {startButtonName}
-      </Button>
+      {renderStartGameButton}
 
       {renderLeaderboardButton}
 

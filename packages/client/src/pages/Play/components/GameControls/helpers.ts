@@ -8,6 +8,9 @@ export const getStartButtonName = (gameProcess: EngineProcess) => {
     case EngineProcess.PAUSE:
       return 'Продолжить'
 
+    case EngineProcess.END:
+      return 'Начать заново'
+
     default:
       return 'Начать игру'
   }

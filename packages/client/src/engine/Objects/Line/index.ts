@@ -2,6 +2,7 @@ import { canvas } from '@/utils'
 import { CodeBustersEngine } from '@/engine'
 import { BaseGameObject } from '@/engine/Objects'
 import { INITIAL_SPECS } from './const'
+import { EngineEvent } from '@/engine/Core/types'
 import { LineObjectSpecs } from './types'
 
 /*
@@ -18,10 +19,23 @@ export default class LineObject extends BaseGameObject<LineObjectSpecs> {
     initialSpecs: Partial<LineObjectSpecs> = {}
   ) {
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
+
+    this.onEnd = this.onEnd.bind(this)
+    this.onDestroy = this.onDestroy.bind(this)
   }
 
   public bindEngine(engine: CodeBustersEngine) {
     this.engine = engine
+
+    this.engine
+      ?.subscribe(EngineEvent.END, this.onEnd)
+      .subscribe(EngineEvent.DESTROY, this.onDestroy)
+  }
+
+  private onDestroy() {
+    this.engine
+      ?.unsubscribe(EngineEvent.END, this.onEnd)
+      .unsubscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
   public drawLine() {
@@ -40,8 +54,12 @@ export default class LineObject extends BaseGameObject<LineObjectSpecs> {
   }
 
   public draw(specs?: Partial<LineObjectSpecs>) {
-    if (specs) {
-      this.specs = { ...this.specs, ...specs }
+    this.specs = { ...this.specs, ...specs }
+
+    if (this.isFirstDraw) {
+      this.initialSpecs = this.specs
+
+      this.isFirstDraw = false
     }
 
     this.drawLine()

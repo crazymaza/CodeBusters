@@ -2,6 +2,7 @@ import { canvas } from '@/utils'
 import { CodeBustersEngine } from '@/engine'
 import { BaseGameObject } from '@/engine/Objects'
 import { INITIAL_SPECS } from './const'
+import { EngineEvent } from '@/engine/Core/types'
 import { TrackObjectSpecs } from './types'
 
 /*
@@ -18,6 +19,9 @@ export default class TrackObject extends BaseGameObject<TrackObjectSpecs> {
     initialSpecs: Partial<TrackObjectSpecs> = {}
   ) {
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
+
+    this.onEnd = this.onEnd.bind(this)
+    this.onDestroy = this.onDestroy.bind(this)
 
     this.specs.height = this.canvasApi.element.offsetHeight
   }
@@ -43,7 +47,19 @@ export default class TrackObject extends BaseGameObject<TrackObjectSpecs> {
   public draw(specs?: Partial<TrackObjectSpecs>) {
     this.specs = { ...this.specs, ...specs }
 
+    if (this.isFirstDraw) {
+      this.initialSpecs = this.specs
+
+      this.isFirstDraw = false
+    }
+
     this.clear()
     this.drawTrack()
+  }
+
+  private onDestroy() {
+    this.engine
+      ?.unsubscribe(EngineEvent.END, this.onEnd)
+      .unsubscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 }

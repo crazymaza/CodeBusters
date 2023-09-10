@@ -41,6 +41,7 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
     this.onAnimate = this.onAnimate.bind(this)
     this.onPressKey = this.onPressKey.bind(this)
     this.onIntersection = this.onIntersection.bind(this)
+    this.onEnd = this.onEnd.bind(this)
     this.onDestroy = this.onDestroy.bind(this)
 
     if (initialSpecs.image) {
@@ -60,6 +61,7 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
       .subscribe(EngineEvent.INTERSECTION, this.onIntersection)
       .subscribe(EngineEvent.KEY_DOWN, this.onPressKey)
       .subscribe(EngineEvent.KEY_UP, this.onPressKey)
+      .subscribe(EngineEvent.END, this.onEnd)
       .subscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
@@ -86,6 +88,12 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
   public draw(specs?: Partial<CarObjectSpecs>) {
     if (specs) {
       this.specs = { ...this.specs, ...specs }
+
+      if (this.isFirstDraw) {
+        this.initialSpecs = this.specs
+
+        this.isFirstDraw = false
+      }
     }
 
     if (this.canvasApi.ctx) {
@@ -266,6 +274,16 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
     }
   }
 
+  protected onEnd() {
+    this.clear()
+
+    this.isLowSpeed = true
+
+    this.controlMove = CarKeyboardMove.CENTER
+
+    this.draw(this.initialSpecs)
+  }
+
   private isMaxSpeed() {
     const params = this.engine?.getParams()
 
@@ -278,6 +296,7 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
       .unsubscribe(EngineEvent.KEY_DOWN, this.onPressKey)
       .unsubscribe(EngineEvent.KEY_UP, this.onPressKey)
       .unsubscribe(EngineEvent.INTERSECTION, this.onIntersection)
+      .unsubscribe(EngineEvent.END, this.onEnd)
       .unsubscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 }

@@ -35,7 +35,7 @@ const PlayPage = () => {
   const bordersRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
   const barrierRef = useRef<HTMLCanvasElement>(null)
-  const endGameMessageRef = useRef<HTMLCanvasElement>(null)
+  const messageRef = useRef<HTMLCanvasElement>(null)
 
   const engine = useEngine({
     backgroundRef,
@@ -45,7 +45,7 @@ const PlayPage = () => {
     bordersRef,
     carRef,
     barrierRef,
-    endGameMessageRef,
+    messageRef,
   })
 
   const trackSpecs = engine?.getGameObject<TrackObject>('track').getSpecs()
@@ -156,8 +156,8 @@ const PlayPage = () => {
             height={trackSpecs?.height}
           />
           <canvas
-            ref={endGameMessageRef}
-            className={cx('play__endgame')}
+            ref={messageRef}
+            className={cx('play__message')}
             width={trackSpecs?.width}
             height={trackRef?.current?.height}
           />

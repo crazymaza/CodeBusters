@@ -2,6 +2,7 @@ import { canvas } from '@/utils'
 import { CodeBustersEngine } from '@/engine'
 import BaseObject from '@/engine/Objects/Base'
 import { INITIAL_SPECS } from './const'
+import { EngineEvent } from '@/engine/Core/types'
 import { BackgroundObjectSpecs } from './types'
 
 export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> {
@@ -11,6 +12,9 @@ export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> 
     initialSpecs: Partial<BackgroundObjectSpecs> = {}
   ) {
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
+
+    this.onEnd = this.onEnd.bind(this)
+    this.onDestroy = this.onDestroy.bind(this)
   }
 
   public bindEngine(engine: CodeBustersEngine) {
@@ -34,7 +38,19 @@ export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> 
   public draw(specs: BackgroundObjectSpecs) {
     this.specs = { ...this.specs, ...specs }
 
+    if (this.isFirstDraw) {
+      this.initialSpecs = this.specs
+
+      this.isFirstDraw = false
+    }
+
     this.clear()
     this.drawBackground()
+  }
+
+  private onDestroy() {
+    this.engine
+      ?.unsubscribe(EngineEvent.END, this.onEnd)
+      .unsubscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 }

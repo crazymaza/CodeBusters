@@ -6,10 +6,12 @@ import {
   CentralLinesObject,
   BordersSideObject,
   BackgroundObject,
+  MessageObject,
 } from '@/engine/Objects'
 
 import carImages from 'sprites/sprites.png'
 import backgroundImage from 'sprites/background.png'
+import messageFont from 'fonts/PressStart2P-Regular.ttf'
 
 export const createTrack = (canvasElement: HTMLCanvasElement) => {
   const trackCanvasLayer = canvas(canvasElement)
@@ -113,9 +115,24 @@ export const createBackground = (
       y: -500,
       image: bgImage,
       width: 800,
-      height: 800,
+      height: trackHeight,
     })
   }
 
   return backgroundObject
+}
+
+export const createMessage = (canvasElement: HTMLCanvasElement) => {
+  const messageCanvasLayer = canvas(canvasElement)
+
+  const pressStartFont = new FontFace('PressStart', messageFont)
+
+  pressStartFont.load()
+
+  const messageObject = new MessageObject('message', messageCanvasLayer)
+
+  messageObject.draw()
+  messageObject.clear()
+
+  return messageObject
 }
