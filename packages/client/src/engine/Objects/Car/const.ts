@@ -7,7 +7,7 @@ export const INITIAL_SPECS = {
   y: 0,
   width: 70,
   height: 140,
-  layerHeight: 200,
+  layerHeight: 180,
   fill: '#fff',
   image: new Image(),
   sensitivity: 10,
