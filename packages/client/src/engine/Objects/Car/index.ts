@@ -1,6 +1,10 @@
 import { canvas } from '@/utils'
 import { CodeBustersEngine } from '@/engine'
-import { EngineEvent, EngineIntersection } from '@/engine/Core/types'
+import {
+  EngineEvent,
+  EngineIntersection,
+  EngineStartMethodOptions,
+} from '@/engine/Core/types'
 import {
   BaseGameObject,
   TrackObject,
