@@ -1,8 +1,6 @@
-import CodeBustersEngine from '.'
+import CodeBustersEngine from './index'
 import { CarObject, TrackObject } from '../Objects'
-import { fireEvent } from '@testing-library/react'
 import 'jest-canvas-mock'
-import BarrierObject from '../Objects/Barrier'
 
 jest
   .spyOn(window, 'alert')
@@ -12,32 +10,30 @@ describe('Тест игрового движка', () => {
   const createTestEngine = () => {
     const canvas: HTMLCanvasElement = document.createElement('canvas')
     const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d')
-    const container: HTMLElement = document.createElement('div')
 
-    const Track = new TrackObject({ ctx, element: canvas })
-    const trackSpecs = TrackObject.createBaseTrackSpecs(container)
+    const trackObject = new TrackObject('track', { ctx, element: canvas })
 
-    const Car = new CarObject({ ctx, element: canvas })
-    const xPositionCar = Car.getCenterOnTrack(500)
-    const carSpecs = CarObject.createBaseCarSpecs('', xPositionCar, 0, 10)
+    const carObject = new CarObject('car', { ctx, element: canvas })
 
-    const barrierImage = ''
-    const Barrier = new BarrierObject({ ctx, element: canvas })
-    const barrierSpec = BarrierObject.createBaseBarrierSpecs(
-      container,
-      barrierImage
-    )
+    const trackSpecs = trackObject.getSpecs()
 
-    Track.draw(0, trackSpecs)
-    Car.draw(0, carSpecs)
-    Barrier.draw(0, barrierSpec)
+    const carSpecs = carObject.getSpecs()
 
-    const engine = new CodeBustersEngine({ objects: [Car, Track, Barrier] })
+    trackObject.draw()
+
+    carObject.draw({
+      image: new Image(),
+      x: trackSpecs.width / 2 - carSpecs.positionWidth / 2,
+    })
+
+    const engine = new CodeBustersEngine()
+
+    engine.addObject(trackObject).addObject(carObject)
 
     return {
-      engine: engine,
-      CarObject: Car,
-      TrackObject: Track,
+      engine,
+      carObject,
+      trackObject,
     }
   }
 
@@ -55,12 +51,13 @@ describe('Тест игрового движка', () => {
     const { engine } = createTestEngine()
 
     if (engine) {
-      const [beforeRunCarObject, beforeRunTrackObject] =
-        engine.getEngineObjects()
+      const beforeRunTrackObject = engine.getGameObject('track')
+      const beforeRunCarObject = engine.getGameObject('car')
 
-      engine.run()
+      engine.start()
 
-      const [afterRunCarObject, afterRunTrackObject] = engine.getEngineObjects()
+      const afterRunTrackObject = engine.getGameObject('track')
+      const afterRunCarObject = engine.getGameObject('car')
 
       expect(beforeRunCarObject).toEqual(afterRunCarObject)
       expect(beforeRunTrackObject).toEqual(afterRunTrackObject)
@@ -72,11 +69,12 @@ describe('Тест игрового движка', () => {
 
     const requestAnimationFrameSpy = jest.spyOn(window, 'requestAnimationFrame')
 
-    engine.run()
+    engine.start()
 
     const process = engine.getProcess()
 
     expect(process).toBe('play')
+
     expect(requestAnimationFrameSpy).toBeCalled()
   })
 
@@ -85,9 +83,10 @@ describe('Тест игрового движка', () => {
 
     const cancelAnimationFrameSpy = jest.spyOn(window, 'cancelAnimationFrame')
 
-    engine.run()
+    engine.start()
 
     const processAfterStart = engine.getProcess()
+
     expect(processAfterStart).toBe('play')
 
     engine.stop()
@@ -95,30 +94,7 @@ describe('Тест игрового движка', () => {
     const processAfterStop = engine.getProcess()
 
     expect(processAfterStop).toBe('stop')
+
     expect(cancelAnimationFrameSpy).toBeCalled()
-  })
-
-  test('Перерисовывается объект Car при нажатии стрелки влево', () => {
-    const { engine, CarObject } = createTestEngine()
-
-    engine.run()
-
-    const carDrawSpy = jest.spyOn(CarObject, 'draw')
-
-    fireEvent.keyDown(document, { key: 'ArrowLeft', which: 37, keyCode: 37 })
-
-    expect(carDrawSpy).toBeCalled()
-  })
-
-  test('Перерисовывается объект Car при нажатии стрелки вправо', () => {
-    const { engine, CarObject } = createTestEngine()
-
-    engine.run()
-
-    const carDrawSpy = jest.spyOn(CarObject, 'draw')
-
-    fireEvent.keyDown(document, { key: 'ArrowRight', which: 39, keyCode: 39 })
-
-    expect(carDrawSpy).toBeCalled()
   })
 })

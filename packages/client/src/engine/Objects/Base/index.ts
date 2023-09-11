@@ -1,43 +1,46 @@
 import { canvas } from '@/utils'
-import { BaseObjectSpecs } from './types'
+import CodeBustersEngine from '@/engine/Core'
+import { BaseGameObjectSpecs } from './types'
 
-/*
- * @INFO Базовый объект
- *
- * Служит для описания общих характеристик объектов
- *
- */
+export type BaseGameObjectType = BaseGameObject<BaseGameObjectSpecs>
 
-export default abstract class BaseObject<TObjectSpecs extends BaseObjectSpecs> {
+export default abstract class BaseGameObject<
+  TGameObjectSpecs extends BaseGameObjectSpecs
+> {
+  protected engine: CodeBustersEngine | null = null
   protected canvasApi: ReturnType<typeof canvas>
-  protected deltaTime = 0
-  protected specs: TObjectSpecs | null = null
+  protected specs: TGameObjectSpecs = {} as TGameObjectSpecs
+  protected initialSpecs: Partial<TGameObjectSpecs> = {}
+  protected isFirstDraw = true
 
-  constructor(canvasApi: ReturnType<typeof canvas>) {
-    this.canvasApi = canvasApi
-  }
+  public key = ''
 
-  protected updateSpecs(
-    newSpecs: Partial<TObjectSpecs>,
-    callback?: (
-      prevSpecs: TObjectSpecs,
-      newSpecs: Partial<TObjectSpecs>
-    ) => TObjectSpecs
+  constructor(
+    key: string,
+    canvasApi: ReturnType<typeof canvas>,
+    initialSpecs: Partial<TGameObjectSpecs> = {}
   ) {
-    if (this.specs && typeof callback === 'function') {
-      callback(this.specs, newSpecs)
+    this.key = key
+    this.canvasApi = canvasApi
 
-      return (this.specs = { ...this.specs, ...newSpecs })
+    this.specs = {
+      ...this.specs,
+      ...(initialSpecs as TGameObjectSpecs),
     }
   }
 
-  public draw(deltaTime: number, specs: TObjectSpecs) {
-    this.deltaTime = deltaTime
-    this.specs = specs
+  protected onEnd() {
+    this.clear()
+
+    this.draw(this.initialSpecs)
   }
 
-  public getUniqSpecs(): Partial<TObjectSpecs> | null {
-    return null
+  public abstract bindEngine(engine: CodeBustersEngine): void
+
+  public draw(specs?: Partial<TGameObjectSpecs>) {
+    if (specs) {
+      this.specs = { ...this.specs, ...specs } as TGameObjectSpecs
+    }
   }
 
   public getSpecs() {

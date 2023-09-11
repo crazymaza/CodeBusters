@@ -1,4 +1,4 @@
-import CarObject from '.'
+import CarObject from './index'
 import 'jest-canvas-mock'
 
 describe('Тест объекта Car', () => {
@@ -7,10 +7,9 @@ describe('Тест объекта Car', () => {
 
   const createTestCar = () => {
     if (canvas && ctx) {
-      const Car = new CarObject({ ctx, element: canvas })
-      const xPositionCar = Car.getCenterOnTrack(500)
-      const specs = CarObject.createBaseCarSpecs('', xPositionCar, 0, 10)
-      Car.draw(0, specs)
+      const Car = new CarObject('car', { ctx, element: canvas })
+
+      Car.draw({ image: new Image() })
 
       return Car
     }

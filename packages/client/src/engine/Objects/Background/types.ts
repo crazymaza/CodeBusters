@@ -1,9 +1,12 @@
-import { BaseObjectSpecs } from '../Base/types'
+import { BaseGameObjectSpecs } from '@/engine/Objects/Base/types'
 
-export interface BackgroundObjectSpecs extends BaseObjectSpecs {
+export interface BackgroundObjectSpecs extends BaseGameObjectSpecs {
   x: number
   y: number
   width: number
   height: number
-  image: CanvasImageSource
+  imageLeft: CanvasImageSource
+  imageRight: CanvasImageSource
+  trackWidth: number
+  trackHeight: number
 }

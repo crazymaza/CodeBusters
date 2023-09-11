@@ -1,51 +1,65 @@
-import { RunMethodOptions } from '@/engine/Core/types'
+import { useRef, useState, useEffect } from 'react'
+import { EngineStartMethodOptions } from '@/engine/Core/types'
 import { CarObject, TrackObject } from '@/engine/Objects'
 import { MainLayout } from '@/layouts'
-import { selectGameScores } from '@/store/slices/gameSlice/selectrors'
+import { selectGameScores } from '@/store/slices/gameSlice/selectors'
 import { setLeaderboardData } from '@/store/slices/leaderboardSlice/thunks'
 import { selectUserInfo } from '@/store/slices/userSlice/selectors'
 import { useAppDispatch, useAppSelector } from '@/store/typedHooks'
-import classNames from 'classnames/bind'
-import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { GameControls, PlayerScores } from './components'
+import { GameControls, PlayerScores, RaceTimeLeft } from './components'
 import { useEngine, useMakeFullscreen, useCountry } from './hooks'
+import { CircularProgress } from '@mui/material'
+
+import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 
 const cx = classNames.bind(styles)
 
 const PlayPage = () => {
+  useMakeFullscreen()
+
   const [level, setLevel] = useState(1)
+  const [isLoading, setLoading] = useState(true)
+
+  const navigate = useNavigate()
+
   const user = useAppSelector(selectUserInfo)
   const scores = useAppSelector(selectGameScores)
   const dispatch = useAppDispatch()
 
-  const navigate = useNavigate()
-
   const containerRef = useRef<HTMLDivElement>(null)
   const backgroundRef = useRef<HTMLCanvasElement>(null)
   const trackRef = useRef<HTMLCanvasElement>(null)
+  const linesRef = useRef<HTMLCanvasElement>(null)
+  const bordersRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
-  const barrierRef = useRef<HTMLCanvasElement>(null)
-  const endGameMessageRef = useRef<HTMLCanvasElement>(null)
+  const enemyRef = useRef<HTMLCanvasElement>(null)
+  const fuelRef = useRef<HTMLCanvasElement>(null)
+  const messageRef = useRef<HTMLCanvasElement>(null)
 
   const engine = useEngine({
     backgroundRef,
     containerRef,
     trackRef,
+    linesRef,
+    bordersRef,
+    enemyRef,
     carRef,
-    barrierRef,
-    endGameMessageRef,
+    fuelRef,
+    messageRef,
   })
 
-  useMakeFullscreen()
+  const trackSpecs = engine?.getGameObject<TrackObject>('track').getSpecs()
+
+  const carSpecs = engine?.getGameObject<CarObject>('car').getSpecs()
 
   const country = useCountry()
 
-  const startGame = (options?: RunMethodOptions) => {
+  const startGame = (options?: EngineStartMethodOptions) => {
     setLevel(1)
 
-    engine?.run(options)
+    engine?.start(options)
   }
 
   const pauseGame = () => {
@@ -62,7 +76,7 @@ const PlayPage = () => {
     }
     dispatch(setLeaderboardData(data))
 
-    engine?.destroy()
+    engine?.end()
   }
 
   const leaderboard = () => {
@@ -83,6 +97,12 @@ const PlayPage = () => {
     }
   }
 
+  useEffect(() => {
+    if (trackSpecs && carSpecs) {
+      setLoading(false)
+    }
+  }, [trackSpecs, carSpecs])
+
   return (
     <MainLayout>
       <div className={cx('play__page')}>
@@ -90,38 +110,64 @@ const PlayPage = () => {
           <span className={cx('level__number')}>{level}</span>
           <span>уровень</span>
           <PlayerScores />
+          <RaceTimeLeft />
         </div>
         <div className={cx('play__buttons')}>
           <GameControls
             controls={{ startGame, pauseGame, endGame, leaderboard, exitGame }}
           />
         </div>
-        <div ref={containerRef} className={cx('play__area')}>
+        {isLoading && (
+          <div className={cx(['play__loader'])}>
+            <CircularProgress />
+          </div>
+        )}
+        <div
+          ref={containerRef}
+          className={cx('play__area', { ['play__area_hidden']: isLoading })}>
           <canvas
             ref={backgroundRef}
+            width={containerRef.current?.offsetWidth}
+            height={containerRef.current?.offsetHeight}
             className={cx('play__background')}
-            width={1000}
-            height={800}
           />
           <canvas ref={trackRef} className={cx('play__track')} />
           <canvas
+            ref={linesRef}
+            width={trackSpecs?.width}
+            height={trackSpecs?.height}
+            className={cx('play__lines')}
+          />
+          <canvas
+            ref={bordersRef}
+            width={trackSpecs?.width}
+            height={trackSpecs?.height}
+            className={cx('play__borders')}
+          />
+          <canvas
+            ref={fuelRef}
+            className={cx('play__fuel')}
+            width={trackSpecs?.width}
+            height={trackSpecs?.height}
+          />
+          <canvas
             ref={carRef}
             className={cx('play__car')}
-            width={TrackObject.width}
-            height={CarObject.dimensions.height}
-            style={{ bottom: CarObject.dimensions.bottomMargin }}
+            width={trackSpecs?.width}
+            height={carSpecs?.layerHeight}
+            style={{ bottom: carSpecs?.bottomOffset }}
           />
           <canvas
-            ref={barrierRef}
-            className={cx('play__barrier')}
-            width={TrackObject.width}
-            height={trackRef?.current?.height || 710}
+            ref={enemyRef}
+            className={cx('play__enemy')}
+            width={trackSpecs?.width}
+            height={trackSpecs?.height}
           />
           <canvas
-            ref={endGameMessageRef}
-            className={cx('play__endgame')}
-            width={TrackObject.width}
-            height={trackRef?.current?.height || 710}
+            ref={messageRef}
+            className={cx('play__message')}
+            width={trackSpecs?.width}
+            height={trackRef?.current?.height}
           />
         </div>
       </div>

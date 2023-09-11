@@ -1,4 +1,4 @@
-export interface BaseObjectSpecs {
+export interface BaseGameObjectSpecs {
   x: number
   y: number
   width: number

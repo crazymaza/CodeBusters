@@ -1,11 +1,11 @@
-import { useState, useMemo, MouseEventHandler } from 'react'
-import { selectGameProcess } from '@/store/slices/gameSlice/selectrors'
+import { useState, useMemo, useEffect, MouseEventHandler } from 'react'
+import { selectGameProcess } from '@/store/slices/gameSlice/selectors'
 import { useAppSelector } from '@/store/typedHooks'
-import { CodeBustersEngineProcess, RunMethodOptions } from '@/engine/Core/types'
+import { EngineProcess, EngineStartMethodOptions } from '@/engine/Core/types'
 import { Button } from '@mui/material'
 import { getStartButtonName } from './helpers'
 
-type ControlHandler = (options?: RunMethodOptions) => void
+type ControlHandler = (options?: EngineStartMethodOptions) => void
 
 type ControlHandlerName =
   | 'startGame'
@@ -23,28 +23,39 @@ export type GameControlsProps = {
 const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
   const gameProcess = useAppSelector(selectGameProcess)
 
-  const [prevGameProcces, setPrevGameProcess] = useState(gameProcess)
+  const [prevGameProcess, setPrevGameProcess] = useState(gameProcess)
 
   const startButtonName = getStartButtonName(gameProcess)
 
   const onStart = () => {
-    const isResume = prevGameProcces === CodeBustersEngineProcess.PLAY
+    const isResume = prevGameProcess === EngineProcess.PLAY
 
-    gameProcess == CodeBustersEngineProcess.PLAY
-      ? controls.pauseGame()
-      : controls.startGame({ isResume })
+    if (gameProcess === EngineProcess.END) {
+      controls.startGame()
+    } else {
+      gameProcess == EngineProcess.PLAY
+        ? controls.pauseGame()
+        : controls.startGame({ isResume })
+    }
 
     setPrevGameProcess(gameProcess)
   }
 
+  const renderStartGameButton = useMemo(() => {
+    return (
+      <Button variant="contained" onClick={onStart}>
+        {startButtonName}
+      </Button>
+    )
+  }, [onStart, startButtonName])
+
   const renderEndGameButton = useMemo(() => {
     const isGameProcess =
-      gameProcess === CodeBustersEngineProcess.PLAY ||
-      gameProcess === CodeBustersEngineProcess.PAUSE
+      gameProcess === EngineProcess.PLAY || gameProcess === EngineProcess.PAUSE
 
     const onEnd = () => {
       controls.endGame()
-      setPrevGameProcess(CodeBustersEngineProcess.STOP)
+      setPrevGameProcess(EngineProcess.END)
     }
 
     return isGameProcess ? (
@@ -56,8 +67,7 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
 
   const renderLeaderboardButton = useMemo(() => {
     const isStop =
-      gameProcess !== CodeBustersEngineProcess.PLAY &&
-      gameProcess !== CodeBustersEngineProcess.PAUSE
+      gameProcess !== EngineProcess.PLAY && gameProcess !== EngineProcess.PAUSE
 
     return isStop ? (
       <Button
@@ -70,9 +80,7 @@ const GameControls: React.FC<GameControlsProps> = ({ controls }) => {
 
   return (
     <>
-      <Button variant="contained" onClick={onStart}>
-        {startButtonName}
-      </Button>
+      {renderStartGameButton}
 
       {renderLeaderboardButton}
 
