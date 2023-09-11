@@ -5,6 +5,7 @@ import {
   EngineEvent,
   EngineAnimateParams,
   EngineIntersection,
+  EngineStartMethodOptions,
 } from '@/engine/Core/types'
 import { BaseGameObject, TrackObject } from '@/engine/Objects'
 import { INITIAL_SPECS } from './const'
@@ -57,27 +58,29 @@ export default class EnemyObject extends BaseGameObject<EnemyObjectSpecs> {
       .subscribe(EngineEvent.DESTROY, this.onDestroy)
   }
 
-  private onStart() {
+  private onStart(options?: EngineStartMethodOptions) {
     const params = this.engine?.getParams()
 
-    this.isAllowDraw = false
+    if (!options?.isResume) {
+      this.isAllowDraw = false
 
-    this.clear()
+      this.clear()
 
-    this.intervalId = setInterval(() => {
-      if (
-        this.specs.y <= this.trackObject!.getSpecs().height &&
-        this.isAllowDraw
-      ) {
-        return
-      }
+      this.intervalId = setInterval(() => {
+        if (
+          this.specs.y <= this.trackObject!.getSpecs().height &&
+          this.isAllowDraw
+        ) {
+          return
+        }
 
-      this.xAxis = null
+        this.xAxis = null
 
-      this.isAllowDraw = true
+        this.isAllowDraw = true
 
-      this.specs.y = -this.specs.height
-    }, params?.gameParams.enemyInterval)
+        this.specs.y = -this.specs.height
+      }, params?.gameParams.enemyInterval)
+    }
   }
 
   private onAnimate(timestamp: number, params: EngineAnimateParams) {

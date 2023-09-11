@@ -247,10 +247,12 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
     return false
   }
 
-  private onStart() {
-    this.clear()
+  private onStart(options?: EngineStartMethodOptions) {
+    if (!options?.isResume) {
+      this.clear()
 
-    this.draw(this.initialSpecs)
+      this.draw(this.initialSpecs)
+    }
   }
 
   private onAnimate() {
