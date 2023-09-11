@@ -65,6 +65,13 @@ export default class EnemyObject extends BaseGameObject<EnemyObjectSpecs> {
     this.clear()
 
     this.intervalId = setInterval(() => {
+      if (
+        this.specs.y <= this.trackObject!.getSpecs().height &&
+        this.isAllowDraw
+      ) {
+        return
+      }
+
       this.xAxis = null
 
       this.isAllowDraw = true
