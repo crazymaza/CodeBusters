@@ -5,7 +5,6 @@ import {
   EngineEvent,
   EngineAnimateParams,
   EngineIntersection,
-  EngineProcess,
 } from '@/engine/Core/types'
 import { BaseGameObject, TrackObject } from '@/engine/Objects'
 import { INITIAL_SPECS } from './const'
@@ -125,6 +124,10 @@ export default class EnemyObject extends BaseGameObject<EnemyObjectSpecs> {
         this.initialSpecs = this.specs
 
         this.isFirstDraw = false
+      }
+
+      if (this.specs.y > this.trackObject!.getSpecs().height) {
+        this.isAllowDraw = false
       }
     }
 

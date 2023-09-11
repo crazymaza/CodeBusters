@@ -79,6 +79,10 @@ export default class CodeBustersEngine {
     return this
   }
 
+  public getProcess() {
+    return this.process
+  }
+
   public getParams() {
     return {
       engineProgress: this.engineProgress,

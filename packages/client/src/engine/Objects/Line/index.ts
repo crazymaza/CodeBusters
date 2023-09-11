@@ -41,16 +41,26 @@ export default class LineObject extends BaseGameObject<LineObjectSpecs> {
   public drawLine() {
     const specs = this.specs as LineObjectSpecs
 
-    const ctx = this.canvasApi.ctx as CanvasRenderingContext2D
+    const ctx = this.canvasApi.ctx
 
-    ctx.fillStyle = specs.fill as string
-    ctx.strokeStyle = specs.stroke as string
+    if (ctx) {
+      ctx.fillStyle = specs.fill as string
+      ctx.strokeStyle = specs.stroke as string
 
-    ctx.beginPath()
+      ctx.beginPath()
 
-    ctx.roundRect(specs.x, specs.y, specs.width, specs.height, specs.round)
-    ctx.stroke()
-    ctx.fill()
+      const ctxForRound = ctx as any
+
+      ctxForRound.roundRect(
+        specs.x,
+        specs.y,
+        specs.width,
+        specs.height,
+        specs.round
+      )
+      ctx.stroke()
+      ctx.fill()
+    }
   }
 
   public draw(specs?: Partial<LineObjectSpecs>) {

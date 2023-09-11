@@ -1,18 +1,10 @@
-import BaseObject from './_index'
-import { BaseObjectSpecs } from './_types'
+import BaseGameObject from './index'
+import { BaseGameObjectSpecs } from './types'
 import 'jest-canvas-mock'
 
-class DummyClass extends BaseObject<BaseObjectSpecs> {
-  public updateSpecs(
-    newSpecs: Partial<BaseObjectSpecs>,
-    callback?:
-      | ((
-          prevSpecs: BaseObjectSpecs,
-          newSpecs: Partial<BaseObjectSpecs>
-        ) => BaseObjectSpecs)
-      | undefined
-  ) {
-    return super.updateSpecs(newSpecs, callback)
+class DummyClass extends BaseGameObject<BaseGameObjectSpecs> {
+  public bindEngine() {
+    return true
   }
 }
 
@@ -34,9 +26,12 @@ describe('Тест базового класса для объектов игр�
     }
 
     if (canvas && ctx) {
-      const dummyInstance = new DummyClass({ ctx, element: canvas })
-      expect(dummyInstance.getSpecs()).toBeNull()
-      dummyInstance.draw(1, specs)
+      const dummyInstance = new DummyClass('dummy', { ctx, element: canvas })
+
+      expect(dummyInstance.getSpecs().width).toBeUndefined()
+
+      dummyInstance.draw(specs)
+
       expect(dummyInstance.getSpecs()?.width).toBe(specs.width)
     }
   })
@@ -55,14 +50,16 @@ describe('Тест базового класса для объектов игр�
       width: 3,
       height: 3,
     }
-    const callback = jest.fn()
 
     if (canvas && ctx) {
-      const dummyInstance = new DummyClass({ ctx, element: canvas })
-      dummyInstance.draw(1, oldArgs)
+      const dummyInstance = new DummyClass('dummy', { ctx, element: canvas })
+
+      dummyInstance.draw(oldArgs)
 
       expect(dummyInstance.getSpecs()?.width).toBe(oldArgs.width)
-      dummyInstance.updateSpecs(newArgs, callback)
+
+      dummyInstance.draw(newArgs)
+
       expect(dummyInstance.getSpecs()?.width).toBe(newArgs.width)
     }
   })

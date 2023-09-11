@@ -23,6 +23,7 @@ export default class FuelObject extends BaseGameObject<FuelObjectSpecs> {
   private intervalId: NodeJS.Timer | null = null
   private xAxis: number | null = null
   private isFuelGet = false
+  private isAllowDraw = false
 
   constructor(
     key: string,
@@ -68,6 +69,7 @@ export default class FuelObject extends BaseGameObject<FuelObjectSpecs> {
     this.intervalId = setInterval(() => {
       this.xAxis = null
       this.isFuelGet = false
+      this.isAllowDraw = true
 
       this.specs.y = -this.specs.height
     }, params?.gameParams.fuelInterval)
@@ -108,7 +110,7 @@ export default class FuelObject extends BaseGameObject<FuelObjectSpecs> {
 
     if (this.isFuelGet) {
       this.clear()
-    } else {
+    } else if (this.isAllowDraw) {
       this.draw({
         x: this.xAxis,
         y: this.specs.y + this.deltaTopOffset,
@@ -149,6 +151,10 @@ export default class FuelObject extends BaseGameObject<FuelObjectSpecs> {
       this.initialSpecs = this.specs
 
       this.isFirstDraw = false
+    }
+
+    if (this.specs.y > this.specs.trackHeight) {
+      this.isAllowDraw = false
     }
 
     this.clear()

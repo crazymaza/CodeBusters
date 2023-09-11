@@ -1,6 +1,6 @@
 import { isFunction } from '@/helpers'
 
-export type EventCallback<T = any> = (...args: T[]) => void
+export type EventCallback = (...args: any[]) => void
 
 export type Listener<TEventType extends string> = {
   [key in TEventType]?: EventCallback[]
@@ -15,7 +15,10 @@ export default class EventBus<TEvent extends string> {
 
   public on(event: TEvent, callback?: EventCallback) {
     if (isFunction(callback)) {
-      this.listeners[event] = [...(this.listeners[event] || []), callback]
+      this.listeners[event] = [
+        ...(this.listeners[event] || []),
+        callback,
+      ] as EventCallback[]
     }
   }
 
@@ -33,7 +36,7 @@ export default class EventBus<TEvent extends string> {
     }
   }
 
-  public emit(event: TEvent, ...args: unknown[]) {
+  public emit(event: TEvent, ...args: any[]) {
     if (this.isFoundEvent(event)) {
       this.listeners[event]?.forEach(listener => listener(...args))
     } else {
