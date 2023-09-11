@@ -139,16 +139,16 @@ export default class CodeBustersEngine {
     this.eventEmitter.emit(EngineEvent.DESTROY)
   }
 
+  public changeProcess(updatedProcess: EngineProcess) {
+    this.eventEmitter.emit(EngineEvent.CHANGE_PROCESS, updatedProcess)
+  }
+
   private animate(timestamp: number) {
     this.eventEmitter.emit(EngineEvent.ANIMATE, timestamp, {
       playerProgress: this.playerProgress,
       engineProgress: this.engineProgress,
       gameParams: this.gameParams,
     })
-  }
-
-  private changeProcess(updatedProcess: EngineProcess) {
-    this.eventEmitter.emit(EngineEvent.CHANGE_PROCESS, updatedProcess)
   }
 
   private keyboardListener(event: KeyboardEvent) {

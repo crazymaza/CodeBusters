@@ -5,5 +5,8 @@ export interface BackgroundObjectSpecs extends BaseGameObjectSpecs {
   y: number
   width: number
   height: number
-  image: CanvasImageSource
+  imageLeft: CanvasImageSource
+  imageRight: CanvasImageSource
+  trackWidth: number
+  trackHeight: number
 }

@@ -136,7 +136,11 @@
     transform: translateX(-50%);
     z-index: 2;
   }
-  &__barrier {
+  &__fuel {
+    position: absolute;
+    z-index: 2;
+  }
+  &__enemy {
     position: absolute;
     z-index: 2;
   }

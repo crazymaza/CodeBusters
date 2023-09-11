@@ -4,6 +4,8 @@ import { EngineEvent, EngineIntersection } from '@/engine/Core/types'
 import {
   BaseGameObject,
   TrackObject,
+  EnemyObject,
+  FuelObject,
   BordersSideObject,
 } from '@/engine/Objects'
 import { INITIAL_SPECS } from './const'
@@ -29,6 +31,10 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
 
   private trackObject: TrackObject | null = null
 
+  private enemyObject: EnemyObject | null = null
+
+  private fuelObject: FuelObject | null = null
+
   private bordersSideObject: BordersSideObject | null = null
 
   constructor(
@@ -38,6 +44,7 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
   ) {
     super(key, canvasApi, { ...INITIAL_SPECS, ...initialSpecs })
 
+    this.onStart = this.onStart.bind(this)
     this.onAnimate = this.onAnimate.bind(this)
     this.onPressKey = this.onPressKey.bind(this)
     this.onIntersection = this.onIntersection.bind(this)
@@ -52,11 +59,22 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
   public bindEngine(engine: CodeBustersEngine) {
     this.engine = engine
 
+    const params = this.engine.getParams()
+
+    this.specs.sensitivity = params.gameParams.sensitivity
+    this.specs.sensitivityMax = params.gameParams.sensitivityMax
+    this.specs.sensitivityRatio = params.gameParams.sensitivityRatio
+
     this.trackObject = this.engine.getGameObject('track')
+
+    this.enemyObject = this.engine.getGameObject('enemy')
+
+    this.fuelObject = this.engine.getGameObject('fuel')
 
     this.bordersSideObject = this.engine.getGameObject('borders')
 
     this.engine
+      .subscribe(EngineEvent.START, this.onStart)
       .subscribe(EngineEvent.ANIMATE, this.onAnimate)
       .subscribe(EngineEvent.INTERSECTION, this.onIntersection)
       .subscribe(EngineEvent.KEY_DOWN, this.onPressKey)
@@ -173,6 +191,68 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
     return instantBottomY
   }
 
+  private checkFuelIntersection() {
+    if (this.fuelObject && this.trackObject) {
+      const fuelSpec = this.fuelObject.getSpecs()
+
+      const { xRangePositionCar, yRangePositionCar } =
+        this.getAxisRangePositionCar()
+
+      const xRangePositionFuel = [fuelSpec.x, fuelSpec.x + fuelSpec.width]
+
+      const yRangePositionFuel = [fuelSpec.y, fuelSpec.y + fuelSpec.height]
+
+      const isIntersectionByX =
+        xRangePositionCar[0] < xRangePositionFuel[1] &&
+        xRangePositionFuel[0] < xRangePositionCar[1]
+
+      const isIntersectionByY =
+        yRangePositionFuel[0] < yRangePositionCar[1] &&
+        yRangePositionCar[0] < yRangePositionFuel[1]
+
+      return isIntersectionByX && isIntersectionByY
+    }
+
+    return false
+  }
+
+  private checkEnemyIntersection() {
+    if (this.enemyObject && this.trackObject) {
+      const enemySpec = this.enemyObject.getSpecs()
+
+      const { xRangePositionCar, yRangePositionCar } =
+        this.getAxisRangePositionCar()
+
+      const xRangePositionEnemy = [
+        enemySpec.x,
+        enemySpec.x + enemySpec.positionWidth,
+      ]
+
+      const yRangePositionEnemy = [
+        enemySpec.y,
+        enemySpec.y + enemySpec.positionHeight,
+      ]
+
+      const isIntersectionByX =
+        xRangePositionCar[0] < xRangePositionEnemy[1] &&
+        xRangePositionEnemy[0] < xRangePositionCar[1]
+
+      const isIntersectionByY =
+        yRangePositionEnemy[0] < yRangePositionCar[1] &&
+        yRangePositionCar[0] < yRangePositionEnemy[1]
+
+      return isIntersectionByX && isIntersectionByY
+    }
+
+    return false
+  }
+
+  private onStart() {
+    this.clear()
+
+    this.draw(this.initialSpecs)
+  }
+
   private onAnimate() {
     const prevSpecs = this.specs
 
@@ -180,7 +260,21 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
 
     const bottomOffset = this.checkSpeedAndControlBottomOffset()
 
+    const isEnemyIntersection = this.checkEnemyIntersection()
+
+    const isFuelIntersection = this.checkFuelIntersection()
+
     const isBorderIntersection = this.checkKeyControlWithBorderIntersection()
+
+    if (isFuelIntersection) {
+      this.engine?.intersection(EngineIntersection.FUEL)
+    }
+
+    if (isEnemyIntersection) {
+      this.engine?.intersection(EngineIntersection.ENEMY)
+
+      return
+    }
 
     if (isBorderIntersection) {
       this.engine?.intersection(EngineIntersection.BORDERS)
@@ -254,34 +348,40 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
   }
 
   private onIntersection(intersectionType: EngineIntersection) {
-    const params = this.engine?.getParams()
-
     switch (intersectionType) {
-      case EngineIntersection.BORDERS:
-        {
-          if (
-            params &&
-            params.playerProgress.speed >= params.gameParams.startSpeed
-          ) {
-            this.engine?.setSpeed(params.playerProgress.speed - 0.5)
-          }
-        }
-
-        break
-
       default:
         break
     }
   }
 
   protected onEnd() {
-    this.clear()
-
     this.isLowSpeed = true
 
     this.controlMove = CarKeyboardMove.CENTER
+  }
 
-    this.draw(this.initialSpecs)
+  private getAxisRangePositionCar() {
+    if (this.trackObject) {
+      const carSpecs = this.getSpecs()
+      const trackSpecs = this.trackObject.getSpecs()
+
+      const yCar =
+        trackSpecs.height -
+        carSpecs.bottomOffset -
+        carSpecs.layerHeight +
+        carSpecs.y
+
+      const xRangePositionCar = [
+        carSpecs.x,
+        carSpecs.x + carSpecs.positionWidth,
+      ]
+
+      const yRangePositionCar = [yCar, yCar + carSpecs.positionHeight]
+
+      return { xRangePositionCar, yRangePositionCar }
+    }
+
+    return { xRangePositionCar: [0, 0], yRangePositionCar: [0, 0] }
   }
 
   private isMaxSpeed() {
@@ -292,7 +392,8 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
 
   private onDestroy() {
     this.engine
-      ?.unsubscribe(EngineEvent.ANIMATE, this.onAnimate)
+      ?.unsubscribe(EngineEvent.START, this.onStart)
+      .unsubscribe(EngineEvent.ANIMATE, this.onAnimate)
       .unsubscribe(EngineEvent.KEY_DOWN, this.onPressKey)
       .unsubscribe(EngineEvent.KEY_UP, this.onPressKey)
       .unsubscribe(EngineEvent.INTERSECTION, this.onIntersection)

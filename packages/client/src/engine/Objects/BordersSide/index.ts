@@ -49,7 +49,20 @@ export default class BordersSideObject extends BaseGameObject<BordersSideObjectS
   }
 
   private onIntersection(intersectionType: EngineIntersection) {
+    const params = this.engine?.getParams()
+
     switch (intersectionType) {
+      case EngineIntersection.BORDERS: {
+        if (
+          params &&
+          params.playerProgress.speed >= params.gameParams.startSpeed
+        ) {
+          this.engine?.setSpeed(params.playerProgress.speed - 0.5)
+        }
+
+        break
+      }
+
       default:
         break
     }

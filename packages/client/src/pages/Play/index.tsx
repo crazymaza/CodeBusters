@@ -34,7 +34,8 @@ const PlayPage = () => {
   const linesRef = useRef<HTMLCanvasElement>(null)
   const bordersRef = useRef<HTMLCanvasElement>(null)
   const carRef = useRef<HTMLCanvasElement>(null)
-  const barrierRef = useRef<HTMLCanvasElement>(null)
+  const enemyRef = useRef<HTMLCanvasElement>(null)
+  const fuelRef = useRef<HTMLCanvasElement>(null)
   const messageRef = useRef<HTMLCanvasElement>(null)
 
   const engine = useEngine({
@@ -43,8 +44,9 @@ const PlayPage = () => {
     trackRef,
     linesRef,
     bordersRef,
+    enemyRef,
     carRef,
-    barrierRef,
+    fuelRef,
     messageRef,
   })
 
@@ -143,6 +145,12 @@ const PlayPage = () => {
             className={cx('play__borders')}
           />
           <canvas
+            ref={fuelRef}
+            className={cx('play__fuel')}
+            width={trackSpecs?.width}
+            height={trackSpecs?.height}
+          />
+          <canvas
             ref={carRef}
             className={cx('play__car')}
             width={trackSpecs?.width}
@@ -150,8 +158,8 @@ const PlayPage = () => {
             style={{ bottom: carSpecs?.bottomOffset }}
           />
           <canvas
-            ref={barrierRef}
-            className={cx('play__barrier')}
+            ref={enemyRef}
+            className={cx('play__enemy')}
             width={trackSpecs?.width}
             height={trackSpecs?.height}
           />

@@ -23,6 +23,13 @@ export type EngineGameParamsType = {
   startSpeed: number
   maxSpeed: number
   diffSpeed: number
+  fuelInterval: number
+  fuelCapacity: number
+  sensitivity: number
+  sensitivityMax: number
+  sensitivityRatio: number
+  enemyDelta: number
+  enemyInterval: number
 }
 
 export type EngineProgressType = {
@@ -59,4 +66,6 @@ export type EngineStartMethodOptions = {
 
 export enum EngineIntersection {
   BORDERS = 'intersection-borders',
+  FUEL = 'intersection-fuel',
+  ENEMY = 'intersection-enemy',
 }

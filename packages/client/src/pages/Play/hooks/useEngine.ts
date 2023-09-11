@@ -14,9 +14,11 @@ import {
 } from '@/engine/Core/types'
 import {
   createTrack,
+  createEnemy,
   createCar,
   createCentralLines,
   createBorders,
+  createFuel,
   createBackground,
   createMessage,
 } from '@/engine/Objects/factories'
@@ -27,8 +29,9 @@ export type UseEngineProps = {
   trackRef: React.RefObject<HTMLCanvasElement>
   linesRef: React.RefObject<HTMLCanvasElement>
   bordersRef: React.RefObject<HTMLCanvasElement>
+  enemyRef: React.RefObject<HTMLCanvasElement>
   carRef: React.RefObject<HTMLCanvasElement>
-  barrierRef: React.RefObject<HTMLCanvasElement>
+  fuelRef: React.RefObject<HTMLCanvasElement>
   messageRef: React.RefObject<HTMLCanvasElement>
 }
 
@@ -61,6 +64,7 @@ export default function useEngine(props: UseEngineProps) {
 
     const backgroundObject = createBackground(
       props.backgroundRef.current as HTMLCanvasElement,
+      width,
       height
     )
 
@@ -72,6 +76,18 @@ export default function useEngine(props: UseEngineProps) {
 
     const bordersSideObject = createBorders(
       props.bordersRef.current as HTMLCanvasElement,
+      width,
+      height
+    )
+
+    const fuelObject = createFuel(
+      props.fuelRef.current as HTMLCanvasElement,
+      width,
+      height
+    )
+
+    const enemyObject = createEnemy(
+      props.enemyRef.current as HTMLCanvasElement,
       width,
       height
     )
@@ -92,6 +108,8 @@ export default function useEngine(props: UseEngineProps) {
       .addObject(backgroundObject)
       .addObject(centralLinesObject)
       .addObject(bordersSideObject)
+      .addObject(fuelObject)
+      .addObject(enemyObject)
       .addObject(carObject)
       .addObject(messageObject)
 

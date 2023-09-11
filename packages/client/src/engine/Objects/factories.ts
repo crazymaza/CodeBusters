@@ -5,12 +5,17 @@ import {
   CarObject,
   CentralLinesObject,
   BordersSideObject,
+  FuelObject,
+  EnemyObject,
   BackgroundObject,
   MessageObject,
 } from '@/engine/Objects'
 
 import carImages from 'sprites/sprites.png'
-import backgroundImage from 'sprites/background.png'
+import canisterImage from 'sprites/canister.png'
+import truckImage from 'sprites/truck.png'
+import backgroundLeftImage from 'sprites/background-left.png'
+import backgroundRightImage from 'sprites/background-right.png'
 import messageFont from 'fonts/PressStart2P-Regular.ttf'
 
 export const createTrack = (canvasElement: HTMLCanvasElement) => {
@@ -51,6 +56,37 @@ export const createCar = (
   }
 
   return carObject
+}
+
+export const createEnemy = (
+  canvasElement: HTMLCanvasElement,
+  trackWidth: number,
+  trackHeight: number
+) => {
+  const enemyCanvasLayer = canvas(canvasElement)
+
+  const enemyObject = new EnemyObject('enemy', enemyCanvasLayer)
+
+  // const carSpecs = enemyObject.getSpecs()
+
+  enemyCanvasLayer.element.width = trackWidth
+  enemyCanvasLayer.element.height = trackHeight
+
+  const enemyImage = new Image()
+
+  enemyImage.src = truckImage
+
+  enemyImage.onload = () => {
+    enemyObject.draw({
+      image: enemyImage,
+      x: 0,
+      y: 0,
+    })
+
+    enemyObject.clear()
+  }
+
+  return enemyObject
 }
 
 export const createCentralLines = (
@@ -94,8 +130,35 @@ export const createBorders = (
   return bordersSideObject
 }
 
+export const createFuel = (
+  canvasElement: HTMLCanvasElement,
+  trackWidth: number,
+  trackHeight: number
+) => {
+  const fuelCanvasLayer = canvas(canvasElement)
+
+  const fuelObject = new FuelObject('fuel', fuelCanvasLayer)
+
+  const fuelImage = new Image()
+
+  fuelImage.src = canisterImage
+
+  fuelImage.onload = () => {
+    fuelObject.draw({
+      image: fuelImage,
+      trackWidth,
+      trackHeight,
+    })
+
+    fuelObject.clear()
+  }
+
+  return fuelObject
+}
+
 export const createBackground = (
   canvasElement: HTMLCanvasElement,
+  trackWidth: number,
   trackHeight: number
 ) => {
   const backgroundCanvasLayer = canvas(canvasElement)
@@ -105,17 +168,18 @@ export const createBackground = (
     backgroundCanvasLayer
   )
 
-  const bgImage = new Image()
+  const bgLeftImage = new Image()
+  const bgRightImage = new Image()
 
-  bgImage.src = backgroundImage
+  bgLeftImage.src = backgroundLeftImage
+  bgRightImage.src = backgroundRightImage
 
-  bgImage.onload = () => {
+  bgLeftImage.onload = () => {
     backgroundObject.draw({
-      x: 0,
-      y: -500,
-      image: bgImage,
-      width: 800,
-      height: trackHeight,
+      imageLeft: bgLeftImage,
+      imageRight: bgRightImage,
+      trackWidth,
+      trackHeight,
     })
   }
 
