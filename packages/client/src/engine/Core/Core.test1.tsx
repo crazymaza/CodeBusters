@@ -1,6 +1,11 @@
 import CodeBustersEngine from './index'
 import { CarObject, TrackObject } from '../Objects'
+import { JSDOM } from 'jsdom'
 import 'jest-canvas-mock'
+
+global.document = new JSDOM('') as any
+global.window = document.defaultView as any
+global.Image = window.Image
 
 jest
   .spyOn(window, 'alert')

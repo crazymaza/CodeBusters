@@ -1,5 +1,10 @@
 import CarObject from './index'
+import { JSDOM } from 'jsdom'
 import 'jest-canvas-mock'
+
+global.document = new JSDOM('') as any
+global.window = document.defaultView as any
+global.Image = window.Image
 
 describe('Тест объекта Car', () => {
   let canvas: HTMLCanvasElement | null = null
