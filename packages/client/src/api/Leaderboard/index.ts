@@ -1,10 +1,12 @@
 import BaseApi from '../Base'
 import { LeaderboardValues } from './types'
 
+const baseURL = `/api/v2`
+
 class LeaderboardApi extends BaseApi {
   constructor(cookie?: string) {
     super({
-      baseURL: 'http://localhost:3001/api/v2',
+      baseURL,
       // baseURL: 'https://ya-praktikum.tech/api/v2',
       withCredentials: true,
       headers: {
