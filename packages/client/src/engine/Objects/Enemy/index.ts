@@ -113,7 +113,7 @@ export default class EnemyObject extends BaseGameObject<EnemyObjectSpecs> {
       this.canvasApi.ctx.beginPath()
 
       this.canvasApi.ctx.drawImage(
-        this.specs.image,
+        this.specs.image as CanvasImageSource,
         this.specs.positionX,
         this.specs.positionY,
         this.specs.positionWidth,
