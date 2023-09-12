@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 
 import { useAppDispatch } from '@/store/typedHooks'
 import { useNavigate } from 'react-router-dom'
-import { signup } from '@/store/slices/userSlice/thunks'
+import { getUserInfo, signup } from '@/store/slices/userSlice/thunks'
 import { Link } from 'react-router-dom'
 import { Grid, Typography, Button, TextFieldVariants } from '@mui/material'
 import { TextField } from '@/components'
@@ -52,6 +52,7 @@ const SignUp = () => {
   const onSubmit = async (data: SignupData) => {
     try {
       await dispatch(signup(data)).unwrap()
+      await dispatch(getUserInfo())
       navigate('/')
     } catch (error) {
       console.log(error)
