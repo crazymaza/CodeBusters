@@ -5,5 +5,5 @@ export interface EnemyObjectSpecs extends BaseGameObjectSpecs {
   positionY: number
   positionWidth: number
   positionHeight: number
-  image: CanvasImageSource
+  image: CanvasImageSource | null
 }

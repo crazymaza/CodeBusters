@@ -135,7 +135,7 @@ export default class FuelObject extends BaseGameObject<FuelObjectSpecs> {
       this.canvasApi.ctx.beginPath()
 
       this.canvasApi.ctx.drawImage(
-        this.specs.image,
+        this.specs.image as CanvasImageSource,
         this.specs.x,
         this.specs.y,
         this.specs.width,

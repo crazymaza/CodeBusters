@@ -63,7 +63,7 @@ export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> 
         this.canvasApi.element.width / 2 + this.specs.trackWidth / 2
 
       this.canvasApi.ctx.drawImage(
-        this.specs.imageLeft,
+        this.specs.imageLeft as CanvasImageSource,
         xLeftAxis,
         this.specs.y,
         this.specs.width,
@@ -71,7 +71,7 @@ export default class BackgroundObject extends BaseObject<BackgroundObjectSpecs> 
       )
 
       this.canvasApi.ctx.drawImage(
-        this.specs.imageRight,
+        this.specs.imageRight as CanvasImageSource,
         xRightAxis,
         this.specs.y,
         this.specs.width,

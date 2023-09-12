@@ -24,5 +24,5 @@ export interface CarObjectSpecs extends BaseGameObjectSpecs {
   layerHeight: number
   rotate: number
   bottomOffset: number
-  image: CanvasImageSource
+  image: CanvasImageSource | null
 }

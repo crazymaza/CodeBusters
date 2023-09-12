@@ -92,7 +92,7 @@ export default class CarObject extends BaseGameObject<CarObjectSpecs> {
       this.canvasApi.ctx.beginPath()
 
       this.canvasApi.ctx.drawImage(
-        this.specs.image,
+        this.specs.image as CanvasImageSource,
         this.specs.positionX,
         this.specs.positionY,
         this.specs.positionWidth,

@@ -8,5 +8,5 @@ export const INITIAL_SPECS = {
   width: 120,
   height: 350,
   fill: '#fff',
-  image: new Image(),
+  image: null,
 }

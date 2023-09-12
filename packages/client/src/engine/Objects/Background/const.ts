@@ -4,6 +4,6 @@ export const INITIAL_SPECS = {
   width: 650,
   height: 2400,
   fill: '#fff',
-  imageLeft: new Image(),
-  imageRight: new Image(),
+  imageLeft: null,
+  imageRight: null,
 }

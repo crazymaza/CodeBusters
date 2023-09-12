@@ -4,7 +4,7 @@ export const INITIAL_SPECS = {
   width: 60,
   height: 60,
   fill: '#686868',
-  image: new Image(),
+  image: null,
   trackWidth: 0,
   trackHeight: 0,
   capacity: 15,
