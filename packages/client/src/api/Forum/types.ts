@@ -17,6 +17,7 @@ export interface CommentInfo {
   updatedAt: string
   createdAt: string
   user: UserCommentInfo
+  reaction: ReactionInfo[]
 }
 
 export interface UserCommentInfo {
@@ -41,6 +42,20 @@ export interface CreateCommentData {
   topic_id: number
   text: string
   parent_comment_id?: number
+}
+
+export interface CreateReactionData {
+  comment_id: number
+  reaction: string
+}
+
+export interface ReactionInfo {
+  id: number
+  comment_id: number
+  createdAt: string
+  reaction: string
+  updatedAt: string
+  user_id: number
 }
 
 export interface ForumData {

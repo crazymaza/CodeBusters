@@ -1,7 +1,9 @@
 import {
   CommentInfo,
   CreateCommentData,
+  CreateReactionData,
   CreateTopicData,
+  ReactionInfo,
   TopicInfo,
 } from '@/api/Forum/types'
 import { IExtraArgument } from '@/store'
@@ -79,6 +81,45 @@ export const addNewComment = createAsyncThunk<CommentInfo, CreateCommentData>(
       const forumApi = (thunkApi.extra as IExtraArgument).forumService
       const newComment = await forumApi.addNewComment(createCommentData)
       return newComment.data
+    } catch (error) {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+)
+
+export const addNewReaction = createAsyncThunk<
+  ReactionInfo,
+  CreateReactionData
+>('forum/addNewReaction', async (createReactionData, thunkApi) => {
+  try {
+    const forumApi = (thunkApi.extra as IExtraArgument).forumService
+    const newReaction = await forumApi.addNewReaction(createReactionData)
+    return newReaction.data
+  } catch (error) {
+    return thunkApi.rejectWithValue(false)
+  }
+})
+
+export const getReactionByCommentId = createAsyncThunk<ReactionInfo, number>(
+  'forum/getReactionById',
+  async (comment_id, thunkApi) => {
+    try {
+      const forumApi = (thunkApi.extra as IExtraArgument).forumService
+      const reactionsList = await forumApi.getReactionsByCommentId(comment_id)
+      return reactionsList.data
+    } catch (error) {
+      return thunkApi.rejectWithValue(false)
+    }
+  }
+)
+
+export const deleteReaction = createAsyncThunk<number, number>(
+  'forum/deleteReaction',
+  async (reactionId, thunkApi) => {
+    try {
+      const forumApi = (thunkApi.extra as IExtraArgument).forumService
+      await forumApi.deleteReaction(reactionId)
+      return reactionId
     } catch (error) {
       return thunkApi.rejectWithValue(false)
     }

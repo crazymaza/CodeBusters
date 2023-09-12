@@ -80,13 +80,24 @@
     }
 }
 
-.emoji-picker {
-    position: absolute;
-    top: 32rem;
-    left: 120rem;
+.forum-reactions {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 300px;
+    padding: 10px;
+    margin: 20px;
+    background-color: lightblue;
+    border-radius: 25px;
+    gap: 2rem
+}
 
-    &-container {
-        position: relative;
-        z-index: 9999;
-    }
+.emoji-picker {
+    @include mx.themify('background-color', 'border-grey-color');
+    position: absolute;
+    width: 140px;
+    text-align: center;
+    border-radius: 25px;
+    right:270px;
+    z-index: 9999;
 }
