@@ -24,9 +24,9 @@ const HomePage: React.FC = () => {
           <MainStage>
             <div className={cx('main__page_box-container')}>
               <div className={cx('box__about')}>
-                <p>Описание самой лучшей, классной игры</p>
-                <p>Описание самой лучшей, классной игры</p>
-                <p>Описание самой лучшей, классной игры</p>
+                <p align="center" className={cx('box__about_greeting')}>Добро пожаловать в Road Rider!</p>
+                <p align="center" className={cx('box__about_description')}>Управляйте кнопками ←, → и ↓  Набирайте наибольшее число очков в гонке, обходите препятствия и не забывайте собирать топливо</p>
+                <p align="center" className={cx('box__about_forum')}>Мы с нетерпением ждем ваших предложений по улучшению игры на нашем форуме</p>
               </div>
               <hr />
               <div className={cx('box__menu')}>{menu}</div>
