@@ -68,7 +68,8 @@ const PlayPage = () => {
 
   const endGame = () => {
     const data = {
-      nickname: user?.display_name,
+      nickname:
+        user?.display_name || `${user?.first_name} ${user?.second_name}`,
       avatar: user?.avatar,
       codebustersScores: scores,
       userId: user?.id ?? 0,

@@ -41,6 +41,13 @@
   &__row:hover {
     @include mx.themify('background-color', 'leaderboard_item_hover');
   }
+
+  .leaderboard__avatar {
+    @include mx.themify('background-color', 'avatar-bg');
+    width: 100px;
+    height: 100px;
+    padding: 0.1rem;
+  }
 }
 
 .icon__img {

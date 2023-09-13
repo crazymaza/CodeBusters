@@ -1,4 +1,4 @@
-import { Table, TableBody, TableRow, TableCell, Avatar } from '@mui/material'
+import { Table, TableBody, TableRow, TableCell } from '@mui/material'
 import { useState } from 'react'
 import { Order, ILeaderList, OrderTypes } from '@/pages/LeaderBoard/types'
 import TableHeader from '../TableHeader'
@@ -7,7 +7,7 @@ import classNames from 'classnames/bind'
 import styles from './styles.module.scss'
 import { useAppSelector } from '@/store/typedHooks'
 import { selectLeaderboardData } from '@/store/slices/leaderboardSlice/selectors'
-import AvatarIcon from 'icons/stub_avatar.png'
+import Avatar from '@/components/Avatar'
 
 const cx = classNames.bind(styles)
 
@@ -50,7 +50,7 @@ const CustomizedTable = () => {
               </TableCell>
               <TableCell className={cx('table__column-login')}>
                 <div className={cx('table__column-wrapper')}>
-                  <Avatar src={avatar || AvatarIcon} />
+                  <Avatar src={avatar} className={cx('leaderboard__avatar')} />
                   <span>{nickname || 'Безымянный гонщик'}</span>
                 </div>
               </TableCell>
